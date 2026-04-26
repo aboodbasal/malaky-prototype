@@ -1,39 +1,32 @@
-import { auth, signOut } from "@/auth";
+import { auth } from "@/auth";
+import { listConversations } from "@/lib/db/queries";
+import { Sidebar } from "@/components/sidebar";
+import { ChatInput } from "@/components/chat-input";
 
 export const dynamic = "force-dynamic";
 
 export default async function AppHome() {
   const session = await auth();
+  const userId = session?.user?.id;
+  const businessId = session?.user?.businessId;
 
-  async function logoutAction() {
-    "use server";
-    await signOut({ redirectTo: "/" });
-  }
+  const conversations =
+    userId && businessId ? await listConversations(businessId, userId) : [];
 
   return (
-    <main className="flex min-h-screen flex-col items-center justify-center px-6">
-      <div className="w-full max-w-2xl text-center">
-        <h1 className="text-4xl font-bold">ملاكي</h1>
-        <p className="mt-2 text-gray-600">
-          مرحباً {session?.user?.email ?? ""}
-        </p>
-        <p className="mt-1 text-xs text-gray-400">
-          المنشأة: {session?.user?.businessId ?? "—"}
-        </p>
-
-        <p className="mt-10 text-sm text-gray-500">
-          واجهة المحادثة قادمة بعد قليل...
-        </p>
-
-        <form action={logoutAction} className="mt-8">
-          <button
-            type="submit"
-            className="text-sm text-gray-500 underline hover:text-gray-700"
-          >
-            تسجيل الخروج
-          </button>
-        </form>
-      </div>
-    </main>
+    <div className="flex min-h-screen">
+      <main className="flex flex-1 items-center justify-center px-6">
+        <div className="w-full max-w-2xl text-center">
+          <h1 className="text-5xl font-bold tracking-tight">ملاكي</h1>
+          <p className="mt-4 text-lg text-gray-600">
+            مساعدك الذكي — اسأل أي شيء للبدء
+          </p>
+          <div className="mt-10">
+            <ChatInput autoFocus />
+          </div>
+        </div>
+      </main>
+      <Sidebar conversations={conversations} userEmail={session?.user?.email} />
+    </div>
   );
 }
