@@ -1,5 +1,5 @@
 {
-  "id": "5a4f4fad-3356-4004-b949-1b572103032e",
+  "id": "8663754c-ab2b-4438-b237-b634d9cfb178",
   "prevId": "00000000-0000-0000-0000-000000000000",
   "version": "7",
   "dialect": "postgresql",
@@ -379,7 +379,7 @@
           "name": "business_id",
           "type": "uuid",
           "primaryKey": false,
-          "notNull": true
+          "notNull": false
         },
         "created_at": {
           "name": "created_at",

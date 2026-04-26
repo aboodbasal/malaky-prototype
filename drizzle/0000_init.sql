@@ -49,7 +49,7 @@ CREATE TABLE IF NOT EXISTS "users" (
 	"email" text NOT NULL,
 	"email_verified" timestamp with time zone,
 	"image" text,
-	"business_id" uuid NOT NULL,
+	"business_id" uuid,
 	"created_at" timestamp with time zone DEFAULT now() NOT NULL,
 	CONSTRAINT "users_email_unique" UNIQUE("email")
 );

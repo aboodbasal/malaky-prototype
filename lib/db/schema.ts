@@ -32,9 +32,9 @@ export const users = pgTable("users", {
   email: text("email").notNull().unique(),
   emailVerified: timestamp("email_verified", { withTimezone: true, mode: "date" }),
   image: text("image"),
-  businessId: uuid("business_id")
-    .notNull()
-    .references(() => businesses.id, { onDelete: "cascade" }),
+  businessId: uuid("business_id").references(() => businesses.id, {
+    onDelete: "cascade",
+  }),
   createdAt: timestamp("created_at", { withTimezone: true })
     .notNull()
     .defaultNow(),
