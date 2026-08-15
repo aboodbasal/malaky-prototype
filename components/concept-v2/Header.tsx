@@ -2,7 +2,7 @@
 
 import Link from "next/link";
 import { useEffect, useState } from "react";
-import { Wordmark } from "./BrandMark";
+import { MalakyLogo } from "./MalakyLogo";
 import { Button } from "./ui";
 import styles from "./Header.module.css";
 
@@ -30,7 +30,7 @@ export function Header() {
     <header className={styles.header} data-scrolled={scrolled || undefined}>
       <div className={`shell ${styles.bar}`}>
         <Link href="/concept-v2" className={styles.logo} aria-label="Malaky — home">
-          <Wordmark size={26} />
+          <MalakyLogo size="nav" />
         </Link>
 
         <nav className={styles.nav} aria-label="Primary">

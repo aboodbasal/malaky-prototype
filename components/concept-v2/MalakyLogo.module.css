@@ -1,0 +1,29 @@
+/* Sizing only. The artwork is never recoloured, filtered or reproportioned. */
+
+.logo {
+  display: block;
+  width: auto;
+  object-fit: contain;
+  /* Transparency in the source PNG is preserved — no background is painted. */
+  background: none;
+  user-select: none;
+}
+
+.nav {
+  height: 34px;
+}
+
+.footer {
+  height: 48px;
+}
+
+@media (max-width: 520px) {
+  /* Still clearly legible on a small header, never shrunk to an afterthought. */
+  .nav {
+    height: 30px;
+  }
+
+  .footer {
+    height: 42px;
+  }
+}

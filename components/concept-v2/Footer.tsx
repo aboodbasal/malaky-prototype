@@ -1,5 +1,5 @@
 import Link from "next/link";
-import { Wordmark } from "./BrandMark";
+import { MalakyLogo } from "./MalakyLogo";
 import styles from "./Footer.module.css";
 
 /**
@@ -37,7 +37,7 @@ export function Footer() {
     <footer className={styles.footer}>
       <div className={`shell ${styles.grid}`}>
         <div className={styles.brand}>
-          <Wordmark size={30} />
+          <MalakyLogo size="footer" />
           <p className={styles.tagline}>
             A proactive marketing operating system.
             <br />

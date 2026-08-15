@@ -40,12 +40,10 @@ await page.getByRole("button", { name: "Replay the sequence" }).click();
 await page.waitForTimeout(2400);
 console.log("future draft shown:", await page.getByText("From the 14th, same-day").isVisible());
 
-// 4. Brand demo simulation.
+// 4. Brand demo — covered in depth by scripts/pass2-qa.mjs. Here we only
+// confirm the section still mounts in its initial state.
 await page.locator("#brand-demo").scrollIntoViewIfNeeded();
-await page.getByRole("button", { name: /Falak Logistics/ }).click();
-await page.waitForTimeout(3600);
-console.log("ingest complete:", await page.getByText("Falak Logistics is set up").isVisible());
-await page.screenshot({ path: "screenshots/branddemo-after.png" });
+console.log("brand demo input present:", await page.locator("#company-url").isVisible());
 
 // 5. Pricing: engagement framing replaces the billing toggle.
 await page.goto("http://localhost:3000/concept-v2/pricing", { waitUntil: "networkidle" });
