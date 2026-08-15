@@ -20,11 +20,7 @@ export function NewsletterPreview({ piece }: { piece: MarketingPiece }) {
         {piece.copy.subhead && <span className={s.mailPreheader}>{piece.copy.subhead}</span>}
       </div>
       {piece.media && (
-        <BrandMedia
-          scene={piece.media.scene}
-          alt={piece.media.alt}
-          aspect={piece.media.aspect}
-        />
+        <BrandMedia {...piece.media} />
       )}
       <p className={s.mailBody}>{piece.copy.body}</p>
       {piece.copy.cta && (

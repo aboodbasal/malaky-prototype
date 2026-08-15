@@ -24,12 +24,7 @@ export function InstagramPost({ piece }: { piece: MarketingPiece }) {
         </div>
       </div>
       {piece.media && (
-        <BrandMedia
-          scene={piece.media.scene}
-          alt={piece.media.alt}
-          aspect={piece.media.aspect}
-          overline={piece.media.overline}
-        />
+        <BrandMedia {...piece.media} />
       )}
       <div className={s.igActions}>
         <HeartIcon size={16} />
@@ -46,11 +41,24 @@ export function InstagramPost({ piece }: { piece: MarketingPiece }) {
       )}
       <p
         className={`${s.caption} ${rtl ? s.arabic : ""}`}
-        style={{ paddingBottom: "0.75rem" }}
+        style={piece.postedAt ? undefined : { paddingBottom: "0.75rem" }}
       >
         <span className={s.captionName}>{brand.handle}</span>
         {piece.copy.body}
       </p>
+
+      {piece.postedAt && (
+        <>
+          {piece.engagement?.comments != null && (
+            <p className={s.igComments}>
+              View all {piece.engagement.comments} comments
+            </p>
+          )}
+          <p className={s.igTime} dir="ltr">
+            {piece.postedAt}
+          </p>
+        </>
+      )}
     </PostShell>
   );
 }

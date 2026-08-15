@@ -21,11 +21,7 @@ export function LinkedInCompanyPost({ piece }: { piece: MarketingPiece }) {
       </div>
       <p className={s.body}>{piece.copy.body}</p>
       {piece.media && (
-        <BrandMedia
-          scene={piece.media.scene}
-          alt={piece.media.alt}
-          aspect={piece.media.aspect}
-        />
+        <BrandMedia {...piece.media} />
       )}
       <EngagementRow {...piece.engagement} style="linkedin" />
     </PostShell>

@@ -1,4 +1,5 @@
 import { getBrand } from "@/lib/concept-v2/brands";
+import { isVideo } from "@/lib/concept-v2/media";
 import type { MarketingPiece } from "@/lib/concept-v2/content";
 import { BrandMedia } from "../BrandMedia";
 import { BrandMark } from "../BrandMark";
@@ -11,21 +12,22 @@ import { PostShell, postStyles as s } from "./shared";
  */
 export function ReelPreview({ piece }: { piece: MarketingPiece }) {
   const brand = piece.brand ?? getBrand(piece.brandId);
+  // Once a real video is attached its own duration wins; the piece-level
+  // value is the placeholder until then.
+  const duration =
+    (piece.media && isVideo(piece.media) ? piece.media.durationLabel : undefined) ??
+    piece.duration;
   return (
     <PostShell>
       <div className={s.reelWrap}>
         {piece.media && (
-          <BrandMedia
-            scene={piece.media.scene}
-            alt={piece.media.alt}
-            aspect={piece.media.aspect}
-          />
+          <BrandMedia {...piece.media} />
         )}
         <div className={s.reelOverlay}>
           <div className={s.reelTop}>
             <BrandMark brand={brand} size={18} />
             {piece.label}
-            {piece.duration && <span className={s.reelDuration}>{piece.duration}</span>}
+            {duration && <span className={s.reelDuration}>{duration}</span>}
           </div>
           <div className={s.reelFoot}>
             {piece.copy.headline && <p className={s.reelTitle}>{piece.copy.headline}</p>}

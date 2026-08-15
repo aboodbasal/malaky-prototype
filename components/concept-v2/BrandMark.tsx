@@ -58,12 +58,35 @@ export function Portrait({
   brand,
   initials,
   size = 40,
+  src,
+  alt,
 }: {
   brand: Brand;
   initials: string;
   size?: number;
+  /** Real portrait. When absent the generated silhouette stands in. */
+  src?: string;
+  alt?: string;
 }) {
   const id = `pt-${brand.id}`;
+
+  if (src) {
+    return (
+      <span className={styles.portrait} style={{ width: size, height: size }}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          src={src}
+          alt={alt ?? ""}
+          width={size}
+          height={size}
+          loading="lazy"
+          decoding="async"
+          style={{ width: "100%", height: "100%", objectFit: "cover" }}
+        />
+      </span>
+    );
+  }
+
   return (
     <span className={styles.portrait} style={{ width: size, height: size }} aria-hidden="true">
       <svg viewBox="0 0 48 48" width={size} height={size}>

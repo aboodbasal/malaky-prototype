@@ -11,7 +11,13 @@ export function LinkedInExecutivePost({ piece }: { piece: MarketingPiece }) {
     <PostShell>
       <PlatformBar platform="linkedin-executive" label={piece.label} />
       <div className={s.account}>
-        <Portrait brand={brand} initials={exec.initials} size={32} />
+        <Portrait
+          brand={brand}
+          initials={exec.initials}
+          size={32}
+          src={exec.portrait?.src}
+          alt={exec.portrait?.alt ?? exec.name}
+        />
         <div className={s.accountText}>
           <span className={s.accountName}>{exec.name}</span>
           <span className={s.accountMeta}>
@@ -22,11 +28,7 @@ export function LinkedInExecutivePost({ piece }: { piece: MarketingPiece }) {
       </div>
       <p className={`${s.body} ${s.bodyStrong}`}>{piece.copy.body}</p>
       {piece.media && (
-        <BrandMedia
-          scene={piece.media.scene}
-          alt={piece.media.alt}
-          aspect={piece.media.aspect}
-        />
+        <BrandMedia {...piece.media} />
       )}
       <EngagementRow {...piece.engagement} style="linkedin" />
     </PostShell>

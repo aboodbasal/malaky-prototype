@@ -130,6 +130,18 @@ export interface Executive {
   brandId: BrandId;
   /** Initials used by the generated avatar. */
   initials: string;
+  /**
+   * The executive's portrait. One asset per person, referenced everywhere
+   * that executive appears, so their identity stays consistent across the
+   * hero, the fan-out and the brand demo.
+   *
+   * Until a portrait is supplied, the generated silhouette stands in.
+   */
+  portrait?: {
+    src: string;
+    /** Defaults to the executive's name when omitted. */
+    alt?: string;
+  };
 }
 
 export const EXECUTIVES: Record<string, Executive> = {

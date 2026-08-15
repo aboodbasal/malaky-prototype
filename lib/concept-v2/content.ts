@@ -7,6 +7,7 @@
  */
 
 import type { Brand, BrandId, Executive } from "./brands";
+import type { MediaScene, PieceMedia } from "./media";
 
 export type Platform =
   | "instagram"
@@ -16,30 +17,16 @@ export type Platform =
   | "newsletter"
   | "reel";
 
-/**
- * Generated media scenes. Each one is drawn with layered CSS gradients in
- * BrandMedia — no image files, so the concept stays visually rich and light.
- */
-export type MediaScene =
-  | "nura-room"
-  | "nura-still"
-  | "falak-port"
-  | "falak-ship"
-  | "meezan-office"
-  | "sidra-colonnade"
-  | "sidra-table";
-
-export type AspectRatio = "1:1" | "4:5" | "16:9" | "9:16" | "3:2";
-
-export interface PieceMedia {
-  scene: MediaScene;
-  /** Descriptive alt text — these are decorative-but-meaningful creatives. */
-  alt: string;
-  aspect: AspectRatio;
-  /** Text burned into the creative, as a real marketing image would have. */
-  overline?: string;
-  caption?: string;
-}
+/* Media types live in ./media — a creative belongs to a channel, and framing
+   travels with the asset. Re-exported so existing imports keep working. */
+export type {
+  AspectRatio,
+  FocalPoint,
+  ImageMedia,
+  MediaScene,
+  PieceMedia,
+  VideoMedia,
+} from "./media";
 
 export interface Engagement {
   likes?: number;
@@ -66,7 +53,13 @@ export interface MarketingPiece {
   /** Overrides the EXECUTIVES lookup, for generated companies. */
   executive?: Executive;
   status?: PieceStatus;
+  /** Malaky's own state, e.g. "Prepared 05:47". */
   timestamp?: string;
+  /**
+   * Platform-native posting time, e.g. "2 hours ago". Only set where the
+   * piece is shown as a published post rather than as prepared work.
+   */
+  postedAt?: string;
   dir?: "ltr" | "rtl";
   copy: {
     /** Newsletter subject / reel title / instagram overline. */
@@ -512,106 +505,3 @@ export const TRUST_PILLARS: TrustPillar[] = [
     state: "planned",
   },
 ];
-
-/** Additional pieces, kept addressable through getPiece(). */
-export const EXTRA_PIECES: MarketingPiece[] = [
-  {
-    id: "meezan-linkedin",
-    brandId: "meezan",
-    platform: "linkedin-company",
-    label: "LinkedIn Company",
-    timestamp: "Prepared",
-    copy: {
-      body:
-        "Our 2026 outlook for regional mid-market operators is out. Three shifts we think boards should be budgeting for, and one we think is overstated.",
-    },
-    media: {
-      scene: "meezan-office",
-      alt: "A quiet advisory office in deep teal and charcoal",
-      aspect: "16:9",
-    },
-    engagement: { likes: 34, comments: 5, reposts: 3 },
-  },
-  {
-    id: "meezan-newsletter",
-    brandId: "meezan",
-    platform: "newsletter",
-    label: "Newsletter",
-    copy: {
-      headline: "The quarter in three decisions",
-      subhead: "What we're advising clients this month",
-      body:
-        "A short read for operators: where cost pressure is real, where it is seasonal, and the one line item worth protecting.",
-      cta: "Read the note",
-    },
-    media: {
-      scene: "meezan-office",
-      alt: "A quiet advisory office in deep teal and charcoal",
-      aspect: "3:2",
-    },
-  },
-  {
-    id: "meezan-reel",
-    brandId: "meezan",
-    platform: "reel",
-    label: "Reel / Video",
-    duration: "0:22",
-    copy: {
-      headline: "One chart, one decision",
-      body: "The cost line most boards read backwards.",
-    },
-    media: {
-      scene: "meezan-office",
-      alt: "A quiet advisory office in deep teal and charcoal, shot vertically",
-      aspect: "9:16",
-    },
-    engagement: { views: "870" },
-  },
-  {
-    id: "sidra-newsletter",
-    brandId: "sidra",
-    platform: "newsletter",
-    label: "Newsletter",
-    copy: {
-      headline: "Thursdays at Dar Sidra",
-      subhead: "The open table returns this month",
-      body:
-        "Long tables in the courtyard, one seasonal menu, and rooms kept quiet for anyone staying the night.",
-      cta: "Reserve a seat",
-    },
-    media: {
-      scene: "sidra-table",
-      alt: "A long dining table set in warm cream and burgundy tones",
-      aspect: "3:2",
-    },
-  },
-  {
-    id: "sidra-reel",
-    brandId: "sidra",
-    platform: "reel",
-    label: "Reel / Video",
-    duration: "0:15",
-    copy: {
-      headline: "Before the guests arrive",
-      body: "The hour the courtyard belongs to the house.",
-    },
-    media: {
-      scene: "sidra-colonnade",
-      alt: "An arched colonnade in olive and cream with evening light",
-      aspect: "9:16",
-    },
-    engagement: { views: "1,610" },
-  },
-];
-
-/** Every piece, addressable by id. */
-export const ALL_PIECES: MarketingPiece[] = [
-  ...HERO_PIECES,
-  ...EVENT_FANOUT,
-  ...EXTRA_PIECES,
-  APPROVAL_PIECE,
-];
-
-export function getPiece(id: string): MarketingPiece | undefined {
-  return ALL_PIECES.find((p) => p.id === id);
-}

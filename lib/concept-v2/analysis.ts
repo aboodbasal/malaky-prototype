@@ -17,7 +17,12 @@
  */
 
 import { BRANDS, type Brand, type BrandId, type Executive } from "./brands";
-import type { MarketingPiece, MediaScene } from "./content";
+import type { MarketingPiece } from "./content";
+import {
+  resolveChannelMedia,
+  type BrandMediaSet,
+  type MediaScene,
+} from "./media";
 
 /* ------------------------------------------------------------------ *
  * Shape
@@ -120,7 +125,13 @@ interface Profile {
   tone: string[];
   opportunity: Opportunity;
   executive: Executive;
-  scene: MediaScene;
+  /**
+   * Purpose-built creative per channel. Empty today — every channel falls
+   * back to `fallbackScene` until real assets are supplied.
+   */
+  media?: BrandMediaSet;
+  /** Placeholder used by any channel with no assigned asset. Temporary. */
+  fallbackScene: MediaScene;
   /** Copy per channel — written for the channel, not reformatted. */
   copy: {
     company: string;
@@ -150,7 +161,7 @@ const PROFILES: Record<BrandId, Profile> = {
       brandId: "falak",
       initials: "AF",
     },
-    scene: "falak-port",
+    fallbackScene: "falak-port",
     copy: {
       company:
         "Our regional network moves to a two-day standard on Monday. Committed arrival windows on contracted volume, tracked end to end, and no change to how you book.",
@@ -188,7 +199,7 @@ const PROFILES: Record<BrandId, Profile> = {
       brandId: "nura",
       initials: "LH",
     },
-    scene: "nura-room",
+    fallbackScene: "nura-room",
     copy: {
       company:
         "The new collection opens to trade partners on Sunday. Made-to-order upholstery, eight-week lead times, and a full specification pack for designers working to a deadline.",
@@ -226,7 +237,7 @@ const PROFILES: Record<BrandId, Profile> = {
       brandId: "meezan",
       initials: "HN",
     },
-    scene: "meezan-office",
+    fallbackScene: "meezan-office",
     copy: {
       company:
         "Our 2026 outlook for regional mid-market operators is out. Three shifts we think boards should be budgeting for, and one we think is overstated.",
@@ -264,7 +275,7 @@ const PROFILES: Record<BrandId, Profile> = {
       brandId: "sidra",
       initials: "RQ",
     },
-    scene: "sidra-colonnade",
+    fallbackScene: "sidra-colonnade",
     copy: {
       company:
         "The courtyard reopens in October. One seasonal menu, long tables every Thursday, and rooms kept quiet for anyone staying the night.",
@@ -306,7 +317,7 @@ const SECTORS: Array<{
   products: string[];
   audiences: string[];
   tone: string[];
-  scene: MediaScene;
+  fallbackScene: MediaScene;
   mark: Brand["mark"];
   palette: Brand["palette"];
   opportunity: (name: string, market: string) => Opportunity;
@@ -316,7 +327,7 @@ const SECTORS: Array<{
     products: ["Wholesale supply", "Regional distribution"],
     audiences: ["Procurement and operations teams"],
     tone: ["Professional", "Clear", "Direct"],
-    scene: "falak-ship",
+    fallbackScene: "falak-ship",
     mark: "wing",
     palette: {
       primary: "#1b3350",
@@ -335,7 +346,7 @@ const SECTORS: Array<{
     products: ["Advisory retainers", "Operating reviews"],
     audiences: ["Founders and finance leads"],
     tone: ["Credible", "Precise", "Measured"],
-    scene: "meezan-office",
+    fallbackScene: "meezan-office",
     mark: "scales",
     palette: {
       primary: "#164a4a",
@@ -354,7 +365,7 @@ const SECTORS: Array<{
     products: ["Seasonal collections", "Made-to-order pieces"],
     audiences: ["Considered buyers", "Repeat customers"],
     tone: ["Warm", "Considered", "Plain-spoken"],
-    scene: "nura-room",
+    fallbackScene: "nura-room",
     mark: "arch",
     palette: {
       primary: "#a9927d",
@@ -373,7 +384,7 @@ const SECTORS: Array<{
     products: ["Rooms and stays", "Seasonal dining"],
     audiences: ["Weekend travellers", "Private groups"],
     tone: ["Warm", "Unhurried", "Hospitable"],
-    scene: "sidra-colonnade",
+    fallbackScene: "sidra-colonnade",
     mark: "canopy",
     palette: {
       primary: "#3e4a32",
@@ -392,7 +403,7 @@ const SECTORS: Array<{
     products: ["Fleet operations", "Contract haulage"],
     audiences: ["Operations and supply chain leads"],
     tone: ["Direct", "Operational", "Factual"],
-    scene: "falak-port",
+    fallbackScene: "falak-port",
     mark: "wing",
     palette: {
       primary: "#12233d",
@@ -442,11 +453,24 @@ function companyNameFromDomain(domain: string): string {
 function buildOutputs(args: {
   brand: Brand;
   executive: Executive;
-  scene: MediaScene;
+  /** Purpose-built creative per channel. */
+  media?: BrandMediaSet;
+  /** Stand-in for any channel without an assigned asset. */
+  fallbackScene: MediaScene;
   copy: Profile["copy"];
 }): AnalysisOutput[] {
-  const { brand, executive, scene, copy } = args;
-  const alt = `Campaign creative prepared for ${brand.name}`;
+  const { brand, executive, media, fallbackScene, copy } = args;
+  const fallback = {
+    scene: fallbackScene,
+    alt: `Campaign creative prepared for ${brand.name}`,
+  };
+
+  /**
+   * Each channel asks for its own creative. Nothing shares one artwork any
+   * more: assigning `media["instagram"]` changes only the Instagram output.
+   */
+  const mediaFor = (channel: Parameters<typeof resolveChannelMedia>[0]) =>
+    resolveChannelMedia(channel, media, fallback);
 
   return [
     {
@@ -460,7 +484,7 @@ function buildOutputs(args: {
         label: "LinkedIn Company Post",
         timestamp: "Prepared",
         copy: { body: copy.company },
-        media: { scene, alt, aspect: "16:9" },
+        media: mediaFor("linkedin-company"),
         engagement: { likes: 38, comments: 5, reposts: 2 },
       },
     },
@@ -474,8 +498,9 @@ function buildOutputs(args: {
         platform: "instagram",
         label: "Instagram Post",
         dir: copy.instagram.dir,
+        postedAt: "2 hours ago",
         copy: { body: copy.instagram.caption },
-        media: { scene, alt, aspect: "1:1", overline: copy.instagram.overline },
+        media: { ...mediaFor("instagram"), overline: copy.instagram.overline },
         engagement: { likes: 92, comments: 7 },
       },
     },
@@ -510,7 +535,7 @@ function buildOutputs(args: {
           body: copy.newsletter.body,
           cta: copy.newsletter.cta,
         },
-        media: { scene, alt, aspect: "3:2" },
+        media: mediaFor("newsletter"),
       },
     },
   ];
@@ -549,7 +574,8 @@ export function analyzeBrand(domain: string): BrandAnalysis {
       outputs: buildOutputs({
         brand,
         executive: profile.executive,
-        scene: profile.scene,
+        media: profile.media,
+        fallbackScene: profile.fallbackScene,
         copy: profile.copy,
       }),
     };
@@ -601,7 +627,7 @@ export function analyzeBrand(domain: string): BrandAnalysis {
     outputs: buildOutputs({
       brand,
       executive,
-      scene: sector.scene,
+      fallbackScene: sector.fallbackScene,
       copy: {
         company: `From next month, ${product.toLowerCase()} from ${name} covers ${nextMarket} as well as ${homeMarket}. Same team, same commitments, wider coverage.`,
         instagram: {

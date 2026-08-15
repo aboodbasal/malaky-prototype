@@ -1,4 +1,12 @@
-import type { AspectRatio, MediaScene } from "@/lib/concept-v2/content";
+import {
+  ASPECT_CSS,
+  focalToObjectPosition,
+  focalToPreserveAspectRatio,
+  type AspectRatio,
+  type FocalPoint,
+  type MediaScene,
+} from "@/lib/concept-v2/media";
+import { BrandVideo } from "./BrandVideo";
 import styles from "./BrandMedia.module.css";
 
 /**
@@ -9,14 +17,6 @@ import styles from "./BrandMedia.module.css";
  * composed vector still. Gradients live in <MediaDefs />, rendered once per
  * page, so repeated scenes cost almost nothing.
  */
-
-const ASPECT: Record<AspectRatio, string> = {
-  "1:1": "1 / 1",
-  "4:5": "4 / 5",
-  "16:9": "16 / 9",
-  "9:16": "9 / 16",
-  "3:2": "3 / 2",
-};
 
 export function MediaDefs() {
   return (
@@ -448,40 +448,96 @@ const SCENES: Record<MediaScene, () => React.JSX.Element> = {
 };
 
 export interface BrandMediaProps {
-  scene: MediaScene;
+  /** "image" (default) or "video". */
+  type?: "image" | "video";
+  /** Real asset path. When absent, the generated scene stands in. */
+  src?: string;
+  srcSet?: string;
+  /** Video poster, and the whole frame under reduced motion. */
+  poster?: string;
+  /** Generated placeholder. Temporary — every scene is due for replacement. */
+  scene?: MediaScene;
   alt: string;
   aspect?: AspectRatio;
+  /** Anchors the crop. Omit for centre, which is the historical behaviour. */
+  focal?: FocalPoint;
   overline?: string;
   className?: string;
-  /** Renders a play affordance + duration, for reel previews. */
   children?: React.ReactNode;
 }
 
+/**
+ * Renders one creative at one aspect ratio.
+ *
+ * Three cases, in order: a real video, a real image, or the generated scene
+ * that stands in until a real asset is supplied. Framing is driven by the
+ * asset's focal point in every case, so a 16:9 crop of a portrait subject no
+ * longer silently takes the middle of the frame.
+ */
 export function BrandMedia({
+  type = "image",
+  src,
+  srcSet,
+  poster,
   scene,
   alt,
   aspect = "16:9",
+  focal,
   overline,
   className,
   children,
 }: BrandMediaProps) {
-  const Scene = SCENES[scene];
+  const wrapper = [styles.media, className].filter(Boolean).join(" ");
+  const frame = { aspectRatio: ASPECT_CSS[aspect] };
+
+  if (type === "video" && src) {
+    return (
+      <div className={wrapper} style={frame} role="img" aria-label={alt}>
+        <BrandVideo src={src} poster={poster} focal={focal} />
+        <span className={styles.vignette} aria-hidden="true" />
+        {overline ? <span className={styles.overline}>{overline}</span> : null}
+        {children}
+      </div>
+    );
+  }
+
+  // A video with no source yet still shows its poster, if one exists.
+  const imageSrc = src ?? (type === "video" ? poster : undefined);
+
+  if (imageSrc) {
+    return (
+      <div className={wrapper} style={frame}>
+        {/* eslint-disable-next-line @next/next/no-img-element */}
+        <img
+          className={styles.canvas}
+          src={imageSrc}
+          srcSet={srcSet}
+          alt={alt}
+          loading="lazy"
+          decoding="async"
+          style={{ objectFit: "cover", objectPosition: focalToObjectPosition(focal) }}
+        />
+        <span className={styles.vignette} aria-hidden="true" />
+        {overline ? <span className={styles.overline}>{overline}</span> : null}
+        {children}
+      </div>
+    );
+  }
+
+  const Scene = scene ? SCENES[scene] : null;
   return (
-    <div
-      className={[styles.media, className].filter(Boolean).join(" ")}
-      style={{ aspectRatio: ASPECT[aspect] }}
-      role="img"
-      aria-label={alt}
-    >
-      <svg
-        className={styles.canvas}
-        viewBox="0 0 400 400"
-        preserveAspectRatio="xMidYMid slice"
-        aria-hidden="true"
-        focusable="false"
-      >
-        <Scene />
-      </svg>
+    <div className={wrapper} style={frame} role="img" aria-label={alt}>
+      {Scene && (
+        <svg
+          className={styles.canvas}
+          viewBox="0 0 400 400"
+          preserveAspectRatio={focalToPreserveAspectRatio(focal)}
+          aria-hidden="true"
+          focusable="false"
+        >
+          <Scene />
+        </svg>
+      )}
       <span className={styles.vignette} aria-hidden="true" />
       {overline ? <span className={styles.overline}>{overline}</span> : null}
       {children}

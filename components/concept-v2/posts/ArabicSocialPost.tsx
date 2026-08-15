@@ -25,11 +25,7 @@ export function ArabicSocialPost({ piece }: { piece: MarketingPiece }) {
       {piece.copy.headline && <p className={s.arabicHeadline}>{piece.copy.headline}</p>}
       <p className={s.arabicBody}>{piece.copy.body}</p>
       {piece.media && (
-        <BrandMedia
-          scene={piece.media.scene}
-          alt={piece.media.alt}
-          aspect={piece.media.aspect}
-        />
+        <BrandMedia {...piece.media} />
       )}
       {piece.copy.cta && (
         <span className={s.arabicCta} style={{ color: brand.palette.accent }}>
