@@ -96,25 +96,7 @@ export const HERO_PIECES: MarketingPiece[] = [
       aspect: "1:1",
       overline: "New collection",
     },
-    engagement: { likes: 1284, comments: 96 },
-  },
-  {
-    id: "hero-linkedin-company",
-    brandId: "falak",
-    platform: "linkedin-company",
-    label: "LinkedIn Company Post",
-    status: "ready",
-    timestamp: "2h",
-    copy: {
-      body:
-        "Our new regional delivery service launches Monday. Built for speed. Designed for businesses that plan around arrival times.",
-    },
-    media: {
-      scene: "falak-port",
-      alt: "Stacked shipping containers and crane gantries at dusk",
-      aspect: "16:9",
-    },
-    engagement: { likes: 128, comments: 36, reposts: 6 },
+    engagement: { likes: 96, comments: 7 },
   },
   {
     id: "hero-linkedin-executive",
@@ -128,7 +110,7 @@ export const HERO_PIECES: MarketingPiece[] = [
       body:
         "Three years ago, five days was a normal regional delivery quote. From Monday, we quote two. The network our team rebuilt is what made that ordinary.",
     },
-    engagement: { likes: 142, comments: 24 },
+    engagement: { likes: 58, comments: 9 },
   },
   {
     id: "hero-arabic-social",
@@ -148,7 +130,7 @@ export const HERO_PIECES: MarketingPiece[] = [
       alt: "An arched colonnade in olive and cream with evening light",
       aspect: "1:1",
     },
-    engagement: { likes: 863, comments: 41 },
+    engagement: { likes: 74, comments: 5 },
   },
   {
     id: "hero-newsletter",
@@ -171,6 +153,24 @@ export const HERO_PIECES: MarketingPiece[] = [
     },
   },
   {
+    id: "hero-linkedin-company",
+    brandId: "falak",
+    platform: "linkedin-company",
+    label: "LinkedIn Company Post",
+    status: "ready",
+    timestamp: "2h",
+    copy: {
+      body:
+        "Our new regional delivery service launches Monday. Built for speed. Designed for businesses that plan around arrival times.",
+    },
+    media: {
+      scene: "falak-port",
+      alt: "Stacked shipping containers and crane gantries at dusk",
+      aspect: "16:9",
+    },
+    engagement: { likes: 41, comments: 6, reposts: 2 },
+  },
+  {
     id: "hero-reel",
     brandId: "falak",
     platform: "reel",
@@ -187,7 +187,7 @@ export const HERO_PIECES: MarketingPiece[] = [
       alt: "A container ship at berth during blue hour",
       aspect: "9:16",
     },
-    engagement: { views: "12.4K" },
+    engagement: { views: "1,240" },
   },
 ];
 
@@ -245,7 +245,7 @@ export const INTELLIGENCE_STATES: IntelligenceState[] = [
       "Malaky writes like the executive, not merely like the company. Their cadence, their examples, their restraint.",
     proof: [
       { label: "Voice model", value: "Huda Nasser" },
-      { label: "Source", value: "41 approved posts" },
+      { label: "Source", value: "24 approved posts" },
       { label: "Signature", value: "Specifics over adjectives" },
     ],
   },
@@ -296,7 +296,7 @@ export const EVENT_FANOUT: MarketingPiece[] = [
       aspect: "1:1",
       overline: "From Monday",
     },
-    engagement: { likes: 942, comments: 28 },
+    engagement: { likes: 88, comments: 6 },
   },
   {
     id: "fanout-linkedin-company",
@@ -313,7 +313,7 @@ export const EVENT_FANOUT: MarketingPiece[] = [
       alt: "Stacked shipping containers and crane gantries at sunset",
       aspect: "16:9",
     },
-    engagement: { likes: 128, comments: 36, reposts: 6 },
+    engagement: { likes: 41, comments: 6, reposts: 2 },
   },
   {
     id: "fanout-linkedin-executive",
@@ -326,7 +326,7 @@ export const EVENT_FANOUT: MarketingPiece[] = [
       body:
         "We used to quote five days and hope. Rebuilding the network took three years and a lot of unglamorous work. From Monday we quote two, and we mean it.",
     },
-    engagement: { likes: 142, comments: 24 },
+    engagement: { likes: 58, comments: 9 },
   },
   {
     id: "fanout-arabic-social",
@@ -344,7 +344,7 @@ export const EVENT_FANOUT: MarketingPiece[] = [
       alt: "A container ship at berth during blue hour",
       aspect: "1:1",
     },
-    engagement: { likes: 411, comments: 19 },
+    engagement: { likes: 52, comments: 4 },
   },
   {
     id: "fanout-newsletter",
@@ -379,7 +379,7 @@ export const EVENT_FANOUT: MarketingPiece[] = [
       alt: "Container terminal at dusk, composed vertically",
       aspect: "4:5",
     },
-    engagement: { views: "12.4K" },
+    engagement: { views: "1,240" },
   },
 ];
 
@@ -403,7 +403,7 @@ export const APPROVAL_PIECE: MarketingPiece = {
     alt: "Stacked shipping containers and crane gantries at dusk",
     aspect: "16:9",
   },
-  engagement: { likes: 128, comments: 36, reposts: 6 },
+  engagement: { likes: 41, comments: 6, reposts: 2 },
 };
 
 export const APPROVAL_STAGES = ["Ready for review", "Approved", "Scheduled"] as const;
@@ -462,6 +462,51 @@ export const BILINGUAL_CAMPAIGN = {
 };
 
 /* ------------------------------------------------------------------ *
+ * Trust and control
+ * ------------------------------------------------------------------ */
+
+/**
+ * Honesty rule for this section: `state` records what the *concept* can
+ * currently show, not what the production product does. "demonstrated" means
+ * the behaviour is actually exercised elsewhere on this page. "planned" means
+ * it is described but not built anywhere yet, and is labelled as such in the
+ * UI so nothing reads as a shipped capability.
+ */
+export interface TrustPillar {
+  id: string;
+  title: string;
+  body: string;
+  state: "demonstrated" | "planned";
+}
+
+export const TRUST_PILLARS: TrustPillar[] = [
+  {
+    id: "human-approval",
+    title: "Human approval",
+    body: "Nothing publishes until the required approval is given.",
+    state: "demonstrated",
+  },
+  {
+    id: "business-knowledge",
+    title: "Business knowledge",
+    body: "Malaky works from information the company has provided and approved.",
+    state: "demonstrated",
+  },
+  {
+    id: "roles-workflows",
+    title: "Roles & workflows",
+    body: "Different people can prepare, review and approve.",
+    state: "planned",
+  },
+  {
+    id: "source-visibility",
+    title: "Source visibility",
+    body: "When factual information matters, show where the suggestion came from before approval.",
+    state: "planned",
+  },
+];
+
+/* ------------------------------------------------------------------ *
  * Section 7 — see Malaky with your brand (simulated)
  * ------------------------------------------------------------------ */
 
@@ -500,7 +545,7 @@ export const EXTRA_PIECES: MarketingPiece[] = [
       alt: "A quiet advisory office in deep teal and charcoal",
       aspect: "16:9",
     },
-    engagement: { likes: 214, comments: 31, reposts: 12 },
+    engagement: { likes: 34, comments: 5, reposts: 3 },
   },
   {
     id: "meezan-newsletter",
@@ -535,7 +580,7 @@ export const EXTRA_PIECES: MarketingPiece[] = [
       alt: "A quiet advisory office in deep teal and charcoal, shot vertically",
       aspect: "9:16",
     },
-    engagement: { views: "8.1K" },
+    engagement: { views: "870" },
   },
   {
     id: "sidra-newsletter",
@@ -570,7 +615,7 @@ export const EXTRA_PIECES: MarketingPiece[] = [
       alt: "An arched colonnade in olive and cream with evening light",
       aspect: "9:16",
     },
-    engagement: { views: "21.7K" },
+    engagement: { views: "1,610" },
   },
 ];
 

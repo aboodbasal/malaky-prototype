@@ -20,7 +20,7 @@ const COLUMNS = [
     title: "Company",
     links: [
       { label: "About", href: "/concept-v2#about" },
-      { label: "Contact", href: "/concept-v2#request-access" },
+      { label: "Contact", href: "/concept-v2#request-demo" },
     ],
   },
   {
@@ -62,7 +62,7 @@ export function Footer() {
       <div className={`shell ${styles.base}`}>
         <p>© 2026 Malaky</p>
         <p className={styles.baseEnd}>
-          <span>Made in Saudi Arabia</span>
+          <span>Built for businesses across the region</span>
           <span className={styles.ar} lang="ar" dir="rtl">
             العربية
           </span>

@@ -46,8 +46,8 @@ export function Header() {
         </nav>
 
         <div className={styles.actions}>
-          <Button href="/concept-v2#request-access" tone="primary" arrow className={styles.cta}>
-            Request access
+          <Button href="/concept-v2#request-demo" tone="primary" arrow className={styles.cta}>
+            Request a private demo
           </Button>
           <button
             type="button"
@@ -72,8 +72,8 @@ export function Header() {
             </li>
           ))}
         </ul>
-        <Button href="/concept-v2#request-access" tone="primary" full arrow>
-          Request access
+        <Button href="/concept-v2#request-demo" tone="primary" full arrow>
+          Request a private demo
         </Button>
       </div>
     </header>

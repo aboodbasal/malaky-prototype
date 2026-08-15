@@ -35,22 +35,42 @@ const SCALE_MAX = 1.02;
 const OPACITY_MIN = 0.44;
 const OPACITY_MAX = 1;
 
-/** Per-card composition: width and a small vertical offset for looseness. */
-const LAYOUT = [
-  { width: 172, y: -14, roll: -1.2 },
-  { width: 202, y: -48, roll: 0.8 },
-  { width: 186, y: 10, roll: 1.4 },
-  { width: 166, y: 38, roll: -1 },
-  { width: 196, y: -26, roll: 0.6 },
-  { width: 146, y: 26, roll: -1.6 },
-];
+/**
+ * Composition of the orbit, keyed by piece id rather than array index.
+ *
+ * Four primary outputs carry the hero. The remaining two ride a tighter,
+ * dimmer inner path so the cross-channel story stays legible instead of all
+ * six competing at once — same shared centre, same revolution.
+ */
+const BACKGROUND_RADIUS = 0.7;
+const BACKGROUND_SCALE = 0.82;
+const BACKGROUND_OPACITY = 0.5;
 
-interface CardState {
-  outer: HTMLDivElement;
+interface OrbitSlot {
+  /** Position on the ring, in turns (0–1). */
   phase: number;
   width: number;
   y: number;
   roll: number;
+  background?: boolean;
+}
+
+const LAYOUT: Record<string, OrbitSlot> = {
+  "hero-instagram": { phase: 0, width: 186, y: -16, roll: -1.2 },
+  "hero-linkedin-executive": { phase: 0.25, width: 202, y: 34, roll: 1.4 },
+  "hero-arabic-social": { phase: 0.5, width: 178, y: -44, roll: -1 },
+  "hero-newsletter": { phase: 0.75, width: 196, y: 20, roll: 0.6 },
+  "hero-linkedin-company": { phase: 0.125, width: 150, y: -30, roll: 0.8, background: true },
+  "hero-reel": { phase: 0.625, width: 118, y: 28, roll: -1.6, background: true },
+};
+
+const FALLBACK_SLOT: OrbitSlot = { phase: 0, width: 180, y: 0, roll: 0 };
+
+interface CardState extends OrbitSlot {
+  outer: HTMLDivElement;
+  radiusScale: number;
+  scaleMul: number;
+  opacityMul: number;
 }
 
 export function Orbit({
@@ -69,13 +89,14 @@ export function Orbit({
     const cards: CardState[] = [];
     cardRefs.current.forEach((outer, i) => {
       if (!outer) return;
-      const l = LAYOUT[i % LAYOUT.length];
+      const slot = LAYOUT[pieces[i]?.id ?? ""] ?? FALLBACK_SLOT;
       cards.push({
+        ...slot,
         outer,
-        phase: (i / cardRefs.current.length) * Math.PI * 2,
-        width: l.width,
-        y: l.y,
-        roll: l.roll,
+        phase: slot.phase * Math.PI * 2,
+        radiusScale: slot.background ? BACKGROUND_RADIUS : 1,
+        scaleMul: slot.background ? BACKGROUND_SCALE : 1,
+        opacityMul: slot.background ? BACKGROUND_OPACITY : 1,
       });
     });
     if (!cards.length) return;
@@ -86,14 +107,15 @@ export function Orbit({
         const sin = Math.sin(a);
         const cos = Math.cos(a);
 
-        const x = RADIUS_X * sin;
-        const z = RADIUS_Z * cos;
-        const y = c.y + TILT_Y * cos;
+        const x = RADIUS_X * c.radiusScale * sin;
+        const z = RADIUS_Z * c.radiusScale * cos;
+        const y = c.y + TILT_Y * c.radiusScale * cos;
 
         // 0 at the far side, 1 nearest the viewer.
         const depth = (cos + 1) / 2;
-        const scale = SCALE_MIN + (SCALE_MAX - SCALE_MIN) * depth;
-        const opacity = OPACITY_MIN + (OPACITY_MAX - OPACITY_MIN) * depth;
+        const scale = (SCALE_MIN + (SCALE_MAX - SCALE_MIN) * depth) * c.scaleMul;
+        const opacity =
+          (OPACITY_MIN + (OPACITY_MAX - OPACITY_MIN) * depth) * c.opacityMul;
 
         // Cards stay mostly square to the viewer — just enough yaw to read
         // as dimensional.
@@ -105,7 +127,9 @@ export function Orbit({
           `rotateY(${rotY.toFixed(2)}deg) rotateX(${rotX.toFixed(2)}deg) ` +
           `rotateZ(${c.roll}deg) scale(${scale.toFixed(3)}) translate(-50%, -50%)`;
         c.outer.style.opacity = opacity.toFixed(3);
-        c.outer.style.zIndex = String(Math.round(depth * 1000));
+        c.outer.style.zIndex = String(
+          Math.round(depth * 1000) - (c.background ? 1200 : 0),
+        );
       }
     };
 
@@ -137,7 +161,7 @@ export function Orbit({
 
     raf = requestAnimationFrame(tick);
     return () => cancelAnimationFrame(raf);
-  }, [pieces.length, reducedMotion, active, isVisible]);
+  }, [pieces, reducedMotion, active, isVisible]);
 
   const onEnter = () => {
     hoverCount.current += 1;
@@ -167,7 +191,8 @@ export function Orbit({
                 cardRefs.current[i] = el;
               }}
               className={styles.card}
-              style={{ width: LAYOUT[i % LAYOUT.length].width }}
+              data-background={LAYOUT[piece.id]?.background || undefined}
+              style={{ width: (LAYOUT[piece.id] ?? FALLBACK_SLOT).width }}
               onPointerEnter={onEnter}
               onPointerLeave={onLeave}
             >

@@ -14,7 +14,8 @@ export function LinkedInCompanyPost({ piece }: { piece: MarketingPiece }) {
         <div className={s.accountText}>
           <span className={s.accountName}>{brand.name}</span>
           <span className={s.accountMeta}>
-            {brand.followers} followers{piece.timestamp ? ` · ${piece.timestamp}` : ""}
+            {brand.shortCategory}
+            {piece.timestamp ? ` · ${piece.timestamp}` : ""}
           </span>
         </div>
       </div>

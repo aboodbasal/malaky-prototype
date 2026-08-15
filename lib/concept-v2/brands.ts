@@ -33,8 +33,6 @@ export interface Brand {
   palette: BrandPalette;
   /** Social handle, without the @. */
   handle: string;
-  /** Plausible LinkedIn follower count, formatted. */
-  followers: string;
   website: string;
   /** Which mark BrandMark renders. */
   mark: "arch" | "wing" | "scales" | "canopy";
@@ -55,7 +53,6 @@ export const BRANDS: Record<BrandId, Brand> = {
       paper: "#efe6da", // cream
     },
     handle: "nuraliving",
-    followers: "48,210",
     website: "nuraliving.com",
     mark: "arch",
   },
@@ -74,7 +71,6 @@ export const BRANDS: Record<BrandId, Brand> = {
       paper: "#ffffff",
     },
     handle: "falaklogistics",
-    followers: "102,345",
     website: "falaklogistics.com",
     mark: "wing",
   },
@@ -92,7 +88,6 @@ export const BRANDS: Record<BrandId, Brand> = {
       paper: "#e8e2d6", // cream
     },
     handle: "meezanadvisory",
-    followers: "31,880",
     website: "meezanadvisory.com",
     mark: "scales",
   },
@@ -111,7 +106,6 @@ export const BRANDS: Record<BrandId, Brand> = {
       paper: "#eae0ce", // warm cream
     },
     handle: "darsidra",
-    followers: "76,540",
     website: "darsidra.com",
     mark: "canopy",
   },

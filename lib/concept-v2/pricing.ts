@@ -1,18 +1,21 @@
 /**
  * Pricing data for /concept-v2/pricing.
  *
- * Nothing here is wired to billing. Features are described only as far as the
- * concept can honestly describe them — anything that would depend on a
- * deployment is marked `scoped` and rendered with a qualifier rather than
- * presented as shipped.
+ * Nothing here is wired to billing. Two deliberate shapes:
+ *
+ * 1. `capabilities` lead. What Malaky does for the business is the offer;
+ *    `limits` are operational ceilings and sit below the fold of the card.
+ * 2. Anything that would depend on a deployment lives in `scoped` and is
+ *    rendered under an explicit qualifier rather than claimed as shipped.
  */
 
-export const ANNUAL_DISCOUNT = 0.1;
+/** Every engagement is annual; monthly billing is the default rhythm. */
+export const ENGAGEMENT_LINE = "12-month engagement · billed monthly";
+export const ANNUAL_NOTE = "Annual prepayment saves 10%";
 
-export interface PlanFeature {
+export interface PlanLimit {
   label: string;
-  /** Rendered with an "available with enterprise deployment" qualifier. */
-  scoped?: boolean;
+  value: string;
 }
 
 export interface Plan {
@@ -21,15 +24,31 @@ export interface Plan {
   tagline: string;
   /** Monthly list price, or null for custom pricing. */
   monthly: number | null;
-  /** One-time intelligence setup. */
-  setup: string;
   /** Extra price context for the custom tier. */
   priceNote?: string;
+  /** One-time intelligence setup. */
+  setup: string;
   popular?: boolean;
-  features: PlanFeature[];
+  /** What the business gets. Leads the card. */
+  capabilities: string[];
+  /** Operational ceilings. Deliberately secondary. */
+  limits: PlanLimit[];
+  /** Scoped during deployment — never presented as shipped. */
+  scoped?: string[];
   cta: string;
   footnote?: string;
 }
+
+/** The seven things every deployment includes, in the same order throughout. */
+const CORE_CAPABILITIES = [
+  "Persistent brand memory",
+  "Proactive campaign planning",
+  "Arabic + English",
+  "Company + executive marketing",
+  "Cross-channel adaptation",
+  "Human approval",
+  "All supported channels",
+];
 
 export const PLANS: Plan[] = [
   {
@@ -38,20 +57,21 @@ export const PLANS: Plan[] = [
     tagline: "Your marketing operation, without building the department.",
     monthly: 3500,
     setup: "$7,500 one-time intelligence setup",
-    features: [
-      { label: "1 brand" },
-      { label: "5 users" },
-      { label: "80 prepared outputs / month" },
-      { label: "1 executive voice" },
-      { label: "4 AI videos / month" },
-      { label: "All supported channels" },
-      { label: "Arabic + English" },
-      { label: "Standard approvals" },
-      { label: "Core analytics" },
-      { label: "Priority support" },
-      { label: "Quarterly strategy review" },
+    capabilities: [
+      ...CORE_CAPABILITIES,
+      "Standard approvals",
+      "Core analytics",
+      "Priority support",
+      "Quarterly strategy review",
     ],
-    cta: "Request a demo",
+    limits: [
+      { label: "Brands", value: "1" },
+      { label: "Users", value: "5" },
+      { label: "Prepared outputs", value: "80 / month" },
+      { label: "Executive voices", value: "1" },
+      { label: "Short-form video", value: "4 / month" },
+    ],
+    cta: "Request a private demo",
   },
   {
     id: "scale",
@@ -60,46 +80,53 @@ export const PLANS: Plan[] = [
     monthly: 6000,
     setup: "$12,500 one-time intelligence setup",
     popular: true,
-    features: [
-      { label: "2 brands" },
-      { label: "15 users" },
-      { label: "200 prepared outputs / month" },
-      { label: "Up to 3 executive voices" },
-      { label: "12 AI videos / month" },
-      { label: "All supported channels" },
-      { label: "Arabic + English" },
-      { label: "Advanced approvals & workflows" },
-      { label: "Advanced analytics & insights" },
-      { label: "Dedicated customer success" },
-      { label: "Monthly strategy session" },
-      { label: "Priority generation" },
-      { label: "Early access to selected capabilities" },
+    capabilities: [
+      ...CORE_CAPABILITIES,
+      "Advanced approvals & workflows",
+      "Advanced analytics & insights",
+      "Dedicated customer success",
+      "Monthly strategy session",
+      "Priority generation",
+      "Early access to selected capabilities",
     ],
-    cta: "Build Malaky for my company",
+    limits: [
+      { label: "Brands", value: "2" },
+      { label: "Users", value: "15" },
+      { label: "Prepared outputs", value: "200 / month" },
+      { label: "Executive voices", value: "Up to 3" },
+      { label: "Short-form video", value: "12 / month" },
+    ],
+    cta: "Request a private demo",
   },
   {
     id: "enterprise",
     name: "Malaky Enterprise",
     tagline: "A marketing operating layer for complex organizations.",
     monthly: null,
-    setup: "Implementation from $25,000",
     priceNote: "Starting at $120,000 / year",
-    features: [
-      { label: "Custom brands and business units" },
-      { label: "Custom users" },
-      { label: "Custom content capacity" },
-      { label: "Custom executive voices" },
-      { label: "Custom AI video capacity" },
-      { label: "Arabic + English + additional languages" },
-      { label: "Custom integrations", scoped: true },
-      { label: "Custom approval and governance", scoped: true },
-      { label: "Custom reporting", scoped: true },
-      { label: "Security review", scoped: true },
-      { label: "Dedicated success team", scoped: true },
+    setup: "Implementation from $25,000",
+    capabilities: [
+      ...CORE_CAPABILITIES,
+      "Additional languages",
+      "Business units and multiple brands",
     ],
-    cta: "Talk to enterprise",
+    limits: [
+      { label: "Brands", value: "Custom" },
+      { label: "Users", value: "Custom" },
+      { label: "Prepared outputs", value: "Custom" },
+      { label: "Executive voices", value: "Custom" },
+      { label: "Short-form video", value: "Custom" },
+    ],
+    scoped: [
+      "Custom integrations",
+      "Custom approval and governance",
+      "Custom reporting",
+      "Security review",
+      "Dedicated success team",
+    ],
+    cta: "Talk to Enterprise",
     footnote:
-      "Items marked with a qualifier are scoped during deployment. Nothing beyond this list is implied.",
+      "Scoped items are agreed during deployment. Nothing beyond this list is implied.",
   },
 ];
 
@@ -152,7 +179,7 @@ export const ADD_ONS = [
   { label: "Additional brand workspace", price: "$1,500", per: "/month" },
   { label: "Additional executive voice", price: "$500", per: "/month" },
   { label: "Additional 50 prepared outputs", price: "$750", per: "/month" },
-  { label: "10 additional AI videos", price: "$1,500", per: "/month" },
+  { label: "10 additional short-form videos", price: "$1,500", per: "/month" },
   { label: "Additional market / country setup", price: "$750", per: "/month" },
   { label: "Additional language", price: "$750", per: "/month" },
   { label: "Dedicated marketing strategist", price: "$2,500", per: "/month" },
@@ -172,7 +199,7 @@ export const COMPARISON: ComparisonRow[] = [
   { label: "Users", business: "5", scale: "15", enterprise: "Custom" },
   { label: "Prepared outputs / month", business: "80", scale: "200", enterprise: "Custom" },
   { label: "Executive voices", business: "1", scale: "Up to 3", enterprise: "Custom" },
-  { label: "AI video / month", business: "4", scale: "12", enterprise: "Custom" },
+  { label: "Short-form video / month", business: "4", scale: "12", enterprise: "Custom" },
   { label: "Approvals", business: "Standard", scale: "Advanced", enterprise: "Custom" },
   { label: "Analytics", business: "Core", scale: "Advanced", enterprise: "Custom" },
   { label: "Strategy sessions", business: "Quarterly", scale: "Monthly", enterprise: "Custom" },
@@ -180,11 +207,6 @@ export const COMPARISON: ComparisonRow[] = [
   { label: "Integrations", business: "Supported channels", scale: "Supported channels", enterprise: "Scoped in deployment" },
   { label: "Governance", business: "Standard approvals", scale: "Advanced workflows", enterprise: "Scoped in deployment" },
 ];
-
-export function monthlyPrice(plan: Plan, annual: boolean): number | null {
-  if (plan.monthly == null) return null;
-  return annual ? Math.round(plan.monthly * (1 - ANNUAL_DISCOUNT)) : plan.monthly;
-}
 
 export function formatUsd(n: number): string {
   return `$${n.toLocaleString("en-US")}`;

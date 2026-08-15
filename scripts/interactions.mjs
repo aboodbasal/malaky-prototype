@@ -47,12 +47,50 @@ await page.waitForTimeout(3600);
 console.log("ingest complete:", await page.getByText("Falak Logistics is set up").isVisible());
 await page.screenshot({ path: "screenshots/branddemo-after.png" });
 
-// 5. Pricing annual toggle.
+// 5. Pricing: engagement framing replaces the billing toggle.
 await page.goto("http://localhost:3000/concept-v2/pricing", { waitUntil: "networkidle" });
-console.log("monthly price:", await page.locator("article").filter({ hasText: "Malaky Business" }).locator("p").nth(2).innerText());
-await page.getByRole("button", { name: /Pay annually/ }).click();
-await page.waitForTimeout(300);
-console.log("annual price:", await page.locator("article").filter({ hasText: "Malaky Business" }).locator("p").nth(2).innerText());
+const business = page.locator("article").filter({ hasText: "Malaky Business" });
+console.log("business price:", await business.locator("p").nth(1).innerText());
+console.log("engagement line:", await business.getByText("12-month engagement").isVisible());
+console.log("annual note:", await business.getByText("Annual prepayment saves 10%").isVisible());
+console.log("no billing toggle:", (await page.getByRole("button", { name: /Pay annually|Billed monthly/ }).count()) === 0);
+console.log("capabilities lead:", await business.locator("ul li").first().innerText());
+console.log("capacity demoted:", await business.getByText("Operating capacity").isVisible());
+console.log("short-form video renamed:", (await page.getByText("AI video", { exact: false }).count()) === 0);
+console.log("enterprise cta:", await page.getByRole("link", { name: "Talk to Enterprise" }).isVisible());
+
+// 5b. CTA vocabulary is standardised across both pages.
+const ctaAudit = async (url) => {
+  await page.goto(`http://localhost:3000${url}`, { waitUntil: "networkidle" });
+  const banned = ["Request access", "Request a demo", "Build Malaky for my company"];
+  const text = await page.locator("body").innerText();
+  return banned.filter((b) => text.includes(b));
+};
+console.log("stale CTAs on home:", JSON.stringify(await ctaAudit("/concept-v2")));
+console.log("stale CTAs on pricing:", JSON.stringify(await ctaAudit("/concept-v2/pricing")));
+
+// 5c. New trust section, with honest capability labelling.
+await page.goto("http://localhost:3000/concept-v2", { waitUntil: "networkidle" });
+await page.locator("#control").scrollIntoViewIfNeeded();
+await page.waitForTimeout(900);
+console.log("trust headline:", await page.getByText("Your brand stays under your control").isVisible());
+console.log("planned labels:", await page.getByText("Planned — not built yet").count());
+console.log("demonstrated labels:", await page.getByText("Demonstrated in this concept").count());
+await page.screenshot({ path: "screenshots/trust-section.png" });
+
+// 5d. Approved lines must survive every pass.
+// Normalise typographic apostrophes so the assertions match the rendered copy.
+const bodyText = (await page.locator("body").innerText()).replace(/\u2019/g, "'");
+for (const line of [
+  "You shouldn't have to correct the same thing twice",
+  "Arabic isn't a language toggle",
+  "Different language. Different rhythm. Same brand.",
+  "Your marketing",
+]) {
+  console.log(`preserved "${line.slice(0, 34)}...":`, bodyText.includes(line));
+}
+console.log("no fake follower counts:", !/[0-9]{2,3},[0-9]{3} followers/.test(bodyText));
+console.log("no Made in Saudi Arabia:", !bodyText.includes("Made in Saudi Arabia"));
 
 // 6. Reduced motion.
 const rm = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" });

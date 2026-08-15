@@ -1,15 +1,13 @@
-"use client";
-
-import { useState } from "react";
 import {
   ADD_ONS,
+  ANNUAL_NOTE,
   COMPARISON,
+  ENGAGEMENT_LINE,
   ENGAGEMENT_TERMS,
   PILLARS,
   PLANS,
   SETUP_STEPS,
   formatUsd,
-  monthlyPrice,
 } from "@/lib/concept-v2/pricing";
 import { Button, Stop } from "../ui";
 import {
@@ -26,9 +24,11 @@ import styles from "./pricing.module.css";
 
 const PILLAR_ICONS = [MemoryIcon, TargetIcon, SparkIcon, ShieldIcon];
 
+/**
+ * Fully static — there is no billing toggle, so this renders on the server
+ * and ships no JavaScript of its own.
+ */
 export function PricingPage() {
-  const [annual, setAnnual] = useState(false);
-
   return (
     <>
       {/* --- opening ------------------------------------------------ */}
@@ -76,108 +76,90 @@ export function PricingPage() {
             Plans
           </h2>
 
-          <div className={styles.billing} role="group" aria-label="Billing period">
-            <button
-              type="button"
-              className={styles.billingBtn}
-              data-on={!annual || undefined}
-              aria-pressed={!annual}
-              onClick={() => setAnnual(false)}
-            >
-              Billed monthly
-            </button>
-            <button
-              type="button"
-              className={styles.billingBtn}
-              data-on={annual || undefined}
-              aria-pressed={annual}
-              onClick={() => setAnnual(true)}
-            >
-              Pay annually
-              <span className={styles.saveTag}>save 10%</span>
-            </button>
-          </div>
-
           <div className={styles.plans}>
-            {PLANS.map((plan) => {
-              const price = monthlyPrice(plan, annual);
-              return (
-                <article
-                  key={plan.id}
-                  className={styles.plan}
-                  data-popular={plan.popular || undefined}
-                  aria-labelledby={`${plan.id}-name`}
-                >
-                  {plan.popular && <span className={styles.popular}>Most popular</span>}
+            {PLANS.map((plan) => (
+              <article
+                key={plan.id}
+                className={styles.plan}
+                data-popular={plan.popular || undefined}
+                aria-labelledby={`${plan.id}-name`}
+              >
+                {plan.popular && <span className={styles.popular}>Most popular</span>}
 
-                  <h3 className={styles.planName} id={`${plan.id}-name`}>
-                    {plan.name}
-                  </h3>
-                  <p className={styles.planTagline}>{plan.tagline}</p>
+                <h3 className={styles.planName} id={`${plan.id}-name`}>
+                  {plan.name}
+                </h3>
+                <p className={styles.planTagline}>{plan.tagline}</p>
 
-                  <div className={styles.priceBlock}>
-                    {price != null ? (
-                      <>
-                        <p className={styles.price}>
-                          <span className={styles.priceNum}>{formatUsd(price)}</span>
-                          <span className={styles.pricePer}>/month</span>
-                        </p>
-                        <p className={styles.priceNote}>
-                          {annual ? "Billed annually — 10% saved" : "Billed monthly"}
-                        </p>
-                      </>
-                    ) : (
-                      <>
-                        <p className={styles.price}>
-                          <span className={styles.priceNum}>Custom</span>
-                        </p>
-                        <p className={styles.priceNote}>{plan.priceNote}</p>
-                      </>
-                    )}
-                    <p className={styles.setup}>{plan.setup}</p>
-                  </div>
-
-                  <ul className={styles.features}>
-                    {plan.features
-                      .filter((f) => !f.scoped)
-                      .map((f) => (
-                        <li key={f.label}>
-                          <CheckIcon size={12} className={styles.featureCheck} />
-                          <span>{f.label}</span>
-                        </li>
-                      ))}
-                  </ul>
-
-                  {/* Scoped capabilities are grouped under one qualifier rather
-                      than each claiming to be shipped. */}
-                  {plan.features.some((f) => f.scoped) && (
-                    <div className={styles.scopedGroup}>
-                      <p className={styles.scopedHead}>Available with enterprise deployment</p>
-                      <ul className={styles.scopedList}>
-                        {plan.features
-                          .filter((f) => f.scoped)
-                          .map((f) => (
-                            <li key={f.label}>{f.label}</li>
-                          ))}
-                      </ul>
-                    </div>
+                <div className={styles.priceBlock}>
+                  {plan.monthly != null ? (
+                    <>
+                      <p className={styles.price}>
+                        <span className={styles.priceNum}>{formatUsd(plan.monthly)}</span>
+                        <span className={styles.pricePer}>/month</span>
+                      </p>
+                      <p className={styles.engagement}>{ENGAGEMENT_LINE}</p>
+                      <p className={styles.annualNote}>{ANNUAL_NOTE}</p>
+                    </>
+                  ) : (
+                    <>
+                      <p className={styles.price}>
+                        <span className={styles.priceNum}>Custom</span>
+                      </p>
+                      <p className={styles.engagement}>{plan.priceNote}</p>
+                    </>
                   )}
+                  <p className={styles.setup}>{plan.setup}</p>
+                </div>
 
-                  {plan.footnote && <p className={styles.planFootnote}>{plan.footnote}</p>}
+                {/* What the business gets — this is the offer. */}
+                <ul className={styles.features}>
+                  {plan.capabilities.map((c) => (
+                    <li key={c}>
+                      <CheckIcon size={12} className={styles.featureCheck} />
+                      <span>{c}</span>
+                    </li>
+                  ))}
+                </ul>
 
-                  <div className={styles.planCta}>
-                    <Button
-                      href="#request-demo"
-                      tone={plan.popular ? "primary" : "secondary"}
-                      full
-                      arrow={plan.popular}
-                    >
-                      {plan.cta}
-                    </Button>
+                {/* Capacity is an operational detail, not the pitch. */}
+                <div className={styles.limits}>
+                  <p className={styles.limitsHead}>Operating capacity</p>
+                  <dl className={styles.limitsList}>
+                    {plan.limits.map((l) => (
+                      <div key={l.label}>
+                        <dt>{l.label}</dt>
+                        <dd>{l.value}</dd>
+                      </div>
+                    ))}
+                  </dl>
+                </div>
+
+                {plan.scoped && (
+                  <div className={styles.scopedGroup}>
+                    <p className={styles.scopedHead}>Available with enterprise deployment</p>
+                    <ul className={styles.scopedList}>
+                      {plan.scoped.map((f) => (
+                        <li key={f}>{f}</li>
+                      ))}
+                    </ul>
                   </div>
-                </article>
-              );
-            })}
+                )}
+
+                {plan.footnote && <p className={styles.planFootnote}>{plan.footnote}</p>}
+
+                <div className={styles.planCta}>
+                  <Button
+                    href="#request-demo"
+                    tone={plan.popular ? "primary" : "secondary"}
+                    full
+                    arrow={plan.popular}
+                  >
+                    {plan.cta}
+                  </Button>
+                </div>
+              </article>
+            ))}
           </div>
         </div>
       </section>
@@ -282,26 +264,23 @@ export function PricingPage() {
           <aside className={styles.rail}>
             <div className={styles.railCard}>
               <span className={styles.railIcon}>
-                <LayersIcon size={17} />
-              </span>
-              <h3 className={styles.railTitle}>Pay annually and save 10%</h3>
-              <p className={styles.railBody}>
-                Prepay for twelve months and take 10% off the subscription. Intelligence setup is
-                unchanged.
-              </p>
-              <button type="button" className={styles.railLink} onClick={() => setAnnual(true)}>
-                Show annual pricing
-              </button>
-            </div>
-
-            <div className={styles.railCard}>
-              <span className={styles.railIcon}>
                 <ClockIcon size={17} />
               </span>
               <h3 className={styles.railTitle}>Twelve-month engagements</h3>
               <p className={styles.railBody}>
-                Malaky gets better the longer it runs. Engagements are annual so the memory,
-                voice and calendar we build with you keep compounding.
+                Malaky gets better the longer it runs. Engagements are annual so the memory, voice
+                and calendar we build with you keep compounding.
+              </p>
+            </div>
+
+            <div className={styles.railCard}>
+              <span className={styles.railIcon}>
+                <LayersIcon size={17} />
+              </span>
+              <h3 className={styles.railTitle}>{ANNUAL_NOTE}</h3>
+              <p className={styles.railBody}>
+                Subscriptions are billed monthly by default. Prepaying the twelve months takes 10%
+                off the subscription; intelligence setup is unchanged.
               </p>
             </div>
 

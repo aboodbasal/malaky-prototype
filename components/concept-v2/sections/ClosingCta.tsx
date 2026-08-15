@@ -2,11 +2,11 @@ import { Button, Stop } from "../ui";
 import styles from "./closingCta.module.css";
 
 export function ClosingCta({
-  id = "request-access",
+  id = "request-demo",
   title,
   lead,
   cta,
-  href = "#request-access",
+  href = "#request-demo",
 }: {
   id?: string;
   title: string;
