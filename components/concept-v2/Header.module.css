@@ -1,0 +1,141 @@
+.header {
+  position: sticky;
+  top: 0;
+  z-index: 100;
+  transition: background-color 0.3s var(--ease-out), border-color 0.3s var(--ease-out);
+  border-bottom: 1px solid transparent;
+}
+
+.header[data-scrolled] {
+  background: rgba(8, 13, 17, 0.82);
+  backdrop-filter: blur(14px) saturate(1.2);
+  border-bottom-color: var(--c-line);
+}
+
+.bar {
+  display: flex;
+  align-items: center;
+  gap: 1.25rem;
+  height: 72px;
+}
+
+.logo {
+  display: inline-flex;
+  align-items: center;
+  flex: none;
+}
+
+.nav {
+  margin-inline: auto;
+}
+
+.navList {
+  display: flex;
+  align-items: center;
+  gap: clamp(0.9rem, 2vw, 1.9rem);
+}
+
+.navLink {
+  font-size: 0.875rem;
+  color: var(--c-text-2);
+  transition: color 0.2s var(--ease-out);
+}
+
+.navLink:hover {
+  color: var(--c-text);
+}
+
+.actions {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  flex: none;
+}
+
+/* --- mobile ------------------------------------------------------- */
+
+.burger {
+  display: none;
+  width: 40px;
+  height: 40px;
+  place-items: center;
+  border: 1px solid var(--c-line-2);
+  border-radius: var(--r-sm);
+}
+
+.burger span,
+.burger span::before,
+.burger span::after {
+  content: "";
+  display: block;
+  width: 16px;
+  height: 1.5px;
+  background: var(--c-text);
+  transition: transform 0.25s var(--ease-out), opacity 0.2s;
+}
+
+.burger span::before {
+  transform: translateY(-5px);
+}
+
+.burger span::after {
+  transform: translateY(3.5px);
+}
+
+.burger span[data-open] {
+  background: transparent;
+}
+
+.burger span[data-open]::before {
+  transform: rotate(45deg);
+}
+
+.burger span[data-open]::after {
+  transform: rotate(-45deg) translateY(0);
+}
+
+.panel {
+  display: none;
+  padding: 0.5rem var(--gutter) 1.5rem;
+  background: rgba(8, 13, 17, 0.97);
+  backdrop-filter: blur(14px);
+  border-bottom: 1px solid var(--c-line);
+}
+
+.panel ul {
+  display: grid;
+  gap: 0.25rem;
+  margin-bottom: 1rem;
+}
+
+.panel a {
+  display: block;
+  padding: 0.7rem 0;
+  font-size: 1rem;
+  color: var(--c-text-2);
+  border-bottom: 1px solid var(--c-line);
+}
+
+@media (max-width: 1080px) {
+  .nav {
+    display: none;
+  }
+
+  .burger {
+    display: grid;
+  }
+
+  .panel[data-open] {
+    display: block;
+  }
+
+  .bar {
+    justify-content: space-between;
+  }
+}
+
+@media (max-width: 520px) {
+  .cta {
+    display: none;
+  }
+}

@@ -1,0 +1,193 @@
+"use client";
+
+import { useEffect, useRef, useState } from "react";
+import { APPROVAL_PIECE, APPROVAL_STAGES } from "@/lib/concept-v2/content";
+import { usePrefersReducedMotion } from "@/hooks/useConceptHooks";
+import { PostCard } from "../posts";
+import { SectionHead, Stop } from "../ui";
+import { CheckIcon, CheckCircleIcon, CloseIcon, ClockIcon, MemoryIcon, PencilIcon } from "../icons";
+import styles from "./approval.module.css";
+
+type Outcome = "idle" | "running" | "done" | "editing" | "declined";
+
+/**
+ * The approval moment, made real. Approving advances the piece through its
+ * actual states and ends with Malaky recording the preference — calm and
+ * immediate, no celebration animation.
+ */
+export function Approval() {
+  const [outcome, setOutcome] = useState<Outcome>("idle");
+  const [stage, setStage] = useState(0);
+  const [remembered, setRemembered] = useState(false);
+  const timers = useRef<number[]>([]);
+  const reducedMotion = usePrefersReducedMotion();
+
+  const clear = () => {
+    timers.current.forEach(window.clearTimeout);
+    timers.current = [];
+  };
+
+  useEffect(() => clear, []);
+
+  const approve = () => {
+    clear();
+    setOutcome("running");
+    if (reducedMotion) {
+      setStage(2);
+      setRemembered(true);
+      setOutcome("done");
+      return;
+    }
+    timers.current.push(
+      window.setTimeout(() => setStage(1), 320),
+      window.setTimeout(() => setStage(2), 1150),
+      window.setTimeout(() => {
+        setRemembered(true);
+        setOutcome("done");
+      }, 1750),
+    );
+  };
+
+  const reset = () => {
+    clear();
+    setStage(0);
+    setRemembered(false);
+    setOutcome("idle");
+  };
+
+  const busy = outcome === "running";
+
+  return (
+    <section className={styles.section} id="why-malaky" aria-labelledby="approval-title">
+      <div className="shell">
+        <SectionHead
+          id="approval-title"
+          title={
+            <>
+              You stay in control.
+              <br />
+              Approval takes seconds
+              <Stop />
+            </>
+          }
+          lead="Nothing is published behind your back. Malaky brings finished work to a decision, and every decision teaches it something."
+        />
+
+        <div className={styles.panel}>
+          <div className={styles.postCol}>
+            <div className={styles.post}>
+              <PostCard piece={APPROVAL_PIECE} />
+            </div>
+
+            <div className={styles.actions}>
+              <button
+                type="button"
+                className={`${styles.action} ${styles.approve}`}
+                onClick={approve}
+                disabled={busy || outcome === "done"}
+              >
+                <CheckCircleIcon size={17} />
+                {outcome === "done" ? "Approved" : "Approve"}
+              </button>
+              <button
+                type="button"
+                className={styles.action}
+                onClick={() => {
+                  clear();
+                  setOutcome("editing");
+                }}
+                disabled={busy}
+              >
+                <PencilIcon size={16} />
+                Edit
+              </button>
+              <button
+                type="button"
+                className={styles.action}
+                onClick={() => {
+                  clear();
+                  setStage(0);
+                  setRemembered(false);
+                  setOutcome("declined");
+                }}
+                disabled={busy}
+              >
+                <CloseIcon size={16} />
+                Decline
+              </button>
+            </div>
+
+            {(outcome === "editing" || outcome === "declined" || outcome === "done") && (
+              <p className={styles.note}>
+                {outcome === "editing" &&
+                  "The draft opens with your brand rules attached. Whatever you change becomes a preference."}
+                {outcome === "declined" &&
+                  "Declined. Malaky asks once why, then stops preparing this kind of post."}
+                {outcome === "done" && "Nothing else to do. You'll see it go out on Monday."}
+              </p>
+            )}
+
+            {outcome !== "idle" && (
+              <button type="button" className={styles.reset} onClick={reset}>
+                Run it again
+              </button>
+            )}
+          </div>
+
+          <div className={styles.stateCol}>
+            <ol className={styles.track} aria-label="Approval status">
+              {APPROVAL_STAGES.map((label, i) => (
+                <li
+                  key={label}
+                  className={styles.step}
+                  data-state={i < stage ? "done" : i === stage ? "current" : "todo"}
+                >
+                  <span className={styles.stepMark}>
+                    {i < stage ? <CheckIcon size={12} /> : <span className={styles.stepDot} />}
+                  </span>
+                  <span className={styles.stepLabel}>{label}</span>
+                </li>
+              ))}
+            </ol>
+
+            <div className={styles.detail} data-on={stage === 2 || undefined}>
+              <span className={styles.detailIcon}>
+                <ClockIcon size={16} />
+              </span>
+              <div>
+                <p className={styles.detailTitle}>Scheduled</p>
+                <p className={styles.detailBody}>Monday, 11:00 — the slot this audience reads.</p>
+              </div>
+            </div>
+
+            <div className={styles.detail} data-on={remembered || undefined}>
+              <span className={styles.detailIcon}>
+                <MemoryIcon size={16} />
+              </span>
+              <div>
+                <p className={styles.detailTitle}>
+                  Preference remembered
+                  <CheckIcon size={12} className={styles.detailCheck} />
+                </p>
+                <p className={styles.detailBody}>
+                  Approved without edits. Malaky will keep this length and register for Falak
+                  Logistics.
+                </p>
+              </div>
+            </div>
+
+            <p className={styles.live} aria-live="polite">
+              {outcome === "idle"
+                ? "Waiting for your decision"
+                : outcome === "declined"
+                  ? "Declined"
+                  : outcome === "editing"
+                    ? "Opening the draft for editing"
+                    : `${APPROVAL_STAGES[stage]}${remembered ? " — preference remembered" : ""}`}
+            </p>
+          </div>
+        </div>
+      </div>
+    </section>
+  );
+}
