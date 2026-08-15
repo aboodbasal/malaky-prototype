@@ -12,19 +12,3 @@
   overflow: hidden;
   flex: none;
 }
-
-.wordmark {
-  display: inline-flex;
-  align-items: center;
-  line-height: 1;
-}
-
-.wordmarkAr {
-  font-family: var(--f-arabic);
-  font-weight: 600;
-  letter-spacing: 0.01em;
-  line-height: 1;
-  color: var(--c-text);
-  /* Arabic glyph descenders need a touch of room to avoid optical clipping. */
-  padding-block: 0.12em;
-}

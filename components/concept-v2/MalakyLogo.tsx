@@ -1,4 +1,3 @@
-import { Wordmark } from "./BrandMark";
 import styles from "./MalakyLogo.module.css";
 
 /**
@@ -8,20 +7,23 @@ import styles from "./MalakyLogo.module.css";
  * sizing and behaviour stay consistent and the artwork is referenced exactly
  * once.
  *
- * `LOGO_ASSET` is that single reference. It is null until the official
- * calligraphic artwork is committed to public/brand/ (see the README there).
- * While it is null the temporary lettering placeholder renders, so nothing
- * regresses; setting the path switches every placement at once.
- *
- * The artwork is never recoloured, redrawn, cropped or stretched — it is
- * sized by height with `width: auto` and `object-fit: contain`.
+ * The artwork is the supplied file, used as-is: never recoloured, redrawn,
+ * cropped or reproportioned. It is sized by height, with width derived from
+ * the file's own intrinsic dimensions so the aspect ratio cannot drift.
  */
-const LOGO_ASSET: string | null = null; // "/brand/malaky-logo-gold.png"
+const LOGO_ASSET = "/brand/malaky-logo-gold.png";
 
-/** Rendered height per placement, in px. Width always follows the artwork. */
+/**
+ * Intrinsic pixel dimensions of the supplied PNG (750 x 370, RGBA).
+ * Used only to derive width from height and to reserve layout space — the
+ * file itself is untouched.
+ */
+const INTRINSIC = { width: 750, height: 370 } as const;
+
+/** Rendered height per placement, in px. */
 const SIZES = {
-  nav: 34,
-  footer: 48,
+  nav: 46,
+  footer: 56,
 } as const;
 
 export type LogoSize = keyof typeof SIZES;
@@ -37,22 +39,20 @@ export function MalakyLogo({
   className?: string;
 }) {
   const height = SIZES[size];
+  const width = Math.round((height * INTRINSIC.width) / INTRINSIC.height);
   const classes = [styles.logo, styles[size], className].filter(Boolean).join(" ");
 
-  if (!LOGO_ASSET) {
-    // Placeholder until the official artwork lands. Not the real identity.
-    return <Wordmark size={size === "footer" ? 30 : 26} className={className} />;
-  }
-
   return (
-    /* A plain <img> rather than next/image: the intrinsic dimensions of the
-       artwork are fixed by the supplied file, and height-with-auto-width is
-       exactly what must not be overridden. */
+    /* A plain <img> rather than next/image: this is a small fixed-size brand
+       asset, and height-with-derived-width is exactly what must not be
+       overridden by an optimiser. width/height are set to reserve layout
+       space; CSS controls the painted size. */
     // eslint-disable-next-line @next/next/no-img-element
     <img
       src={LOGO_ASSET}
       alt={decorative ? "" : "Malaky"}
       aria-hidden={decorative || undefined}
+      width={width}
       height={height}
       className={classes}
       draggable={false}

@@ -92,21 +92,3 @@ export function Portrait({
     </span>
   );
 }
-
-/** Malaky wordmark — the Arabic lockup, used across the concept. */
-export function Wordmark({
-  size = 28,
-  className,
-}: {
-  size?: number;
-  className?: string;
-}) {
-  return (
-    <span className={[styles.wordmark, className].filter(Boolean).join(" ")}>
-      <span aria-hidden="true" style={{ fontSize: size }} className={styles.wordmarkAr}>
-        ملاكي
-      </span>
-      <span className="visually-hidden">Malaky</span>
-    </span>
-  );
-}

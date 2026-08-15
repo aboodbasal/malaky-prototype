@@ -12,5 +12,7 @@ await shot("/concept-v2", 1440, "header", "logo-nav-desktop");
 await shot("/concept-v2", 390, "header", "logo-nav-mobile");
 await shot("/concept-v2/pricing", 1440, "header", "logo-pricing-header");
 await shot("/concept-v2", 1440, "footer", "logo-footer");
+await shot("/concept-v2", 768, "header", "logo-nav-tablet");
+await shot("/concept-v2/pricing", 390, "header", "logo-pricing-mobile");
 await b.close();
 console.log("done");
