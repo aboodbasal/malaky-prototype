@@ -5,7 +5,7 @@ import { BrandMark } from "../BrandMark";
 import { EngagementRow, PlatformBar, PostShell, postStyles as s } from "./shared";
 
 export function LinkedInCompanyPost({ piece }: { piece: MarketingPiece }) {
-  const brand = getBrand(piece.brandId);
+  const brand = piece.brand ?? getBrand(piece.brandId);
   return (
     <PostShell>
       <PlatformBar platform="linkedin-company" label={piece.label} />

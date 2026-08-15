@@ -9,7 +9,7 @@ import { EngagementRow, PlatformBar, PostShell, postStyles as s } from "./shared
  * the data layer is written natively, not translated from the English piece.
  */
 export function ArabicSocialPost({ piece }: { piece: MarketingPiece }) {
-  const brand = getBrand(piece.brandId);
+  const brand = piece.brand ?? getBrand(piece.brandId);
   return (
     <PostShell dir="rtl">
       <PlatformBar platform="arabic-social" label={piece.label} />

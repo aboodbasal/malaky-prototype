@@ -10,7 +10,7 @@ import { PostShell, postStyles as s } from "./shared";
  * full of these costs nothing at runtime.
  */
 export function ReelPreview({ piece }: { piece: MarketingPiece }) {
-  const brand = getBrand(piece.brandId);
+  const brand = piece.brand ?? getBrand(piece.brandId);
   return (
     <PostShell>
       <div className={s.reelWrap}>

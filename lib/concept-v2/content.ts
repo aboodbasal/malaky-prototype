@@ -6,7 +6,7 @@
  * fan-out section and the brand demo without being re-declared.
  */
 
-import type { BrandId } from "./brands";
+import type { Brand, BrandId, Executive } from "./brands";
 
 export type Platform =
   | "instagram"
@@ -53,11 +53,18 @@ export type PieceStatus = "prepared" | "ready" | "approved" | "scheduled";
 export interface MarketingPiece {
   id: string;
   brandId: BrandId;
+  /**
+   * Overrides the BRANDS lookup. The brand-analysis layer uses this so a
+   * generated (non-catalogue) company renders through the same components.
+   */
+  brand?: Brand;
   platform: Platform;
   /** Chrome label, e.g. "Instagram Post". */
   label: string;
   /** Executive key from EXECUTIVES, for executive posts. */
   executiveKey?: string;
+  /** Overrides the EXECUTIVES lookup, for generated companies. */
+  executive?: Executive;
   status?: PieceStatus;
   timestamp?: string;
   dir?: "ltr" | "rtl";
@@ -506,29 +513,7 @@ export const TRUST_PILLARS: TrustPillar[] = [
   },
 ];
 
-/* ------------------------------------------------------------------ *
- * Section 7 — see Malaky with your brand (simulated)
- * ------------------------------------------------------------------ */
-
-export const INGEST_STEPS = [
-  "Logo identified",
-  "Colors recognized",
-  "Products understood",
-  "Audience identified",
-] as const;
-
-/**
- * Mock ingestion results, keyed by brand. Replace this map with a real
- * ingestion response and the section renders unchanged.
- */
-export const INGEST_RESULTS: Record<BrandId, string[]> = {
-  nura: ["hero-instagram", "hero-newsletter", "hero-reel"],
-  falak: ["fanout-linkedin-company", "fanout-newsletter", "fanout-reel"],
-  meezan: ["meezan-linkedin", "meezan-newsletter", "meezan-reel"],
-  sidra: ["hero-arabic-social", "sidra-newsletter", "sidra-reel"],
-};
-
-/** Extra pieces so every demo brand has a full ingestion result set. */
+/** Additional pieces, kept addressable through getPiece(). */
 export const EXTRA_PIECES: MarketingPiece[] = [
   {
     id: "meezan-linkedin",

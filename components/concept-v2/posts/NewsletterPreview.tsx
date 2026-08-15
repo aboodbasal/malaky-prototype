@@ -7,7 +7,7 @@ import { PlatformBar, PostShell, postStyles as s } from "./shared";
 
 /** Renders as paper rather than app chrome — an email is a different object. */
 export function NewsletterPreview({ piece }: { piece: MarketingPiece }) {
-  const brand = getBrand(piece.brandId);
+  const brand = piece.brand ?? getBrand(piece.brandId);
   return (
     <PostShell variant="paper">
       <PlatformBar platform="newsletter" label={piece.label} onLight tone="#3f7d63" />

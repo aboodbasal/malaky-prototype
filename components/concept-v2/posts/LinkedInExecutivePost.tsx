@@ -5,8 +5,8 @@ import { Portrait } from "../BrandMark";
 import { EngagementRow, PlatformBar, PostShell, postStyles as s } from "./shared";
 
 export function LinkedInExecutivePost({ piece }: { piece: MarketingPiece }) {
-  const exec = EXECUTIVES[piece.executiveKey ?? "ahmed"];
-  const brand = getBrand(exec.brandId);
+  const exec = piece.executive ?? EXECUTIVES[piece.executiveKey ?? "ahmed"];
+  const brand = piece.brand ?? getBrand(exec.brandId);
   return (
     <PostShell>
       <PlatformBar platform="linkedin-executive" label={piece.label} />

@@ -6,15 +6,21 @@ import { BookmarkIcon, CommentIcon, HeartIcon, ShareIcon } from "../icons";
 import { PlatformBar, PostShell, formatCount, postStyles as s } from "./shared";
 
 export function InstagramPost({ piece }: { piece: MarketingPiece }) {
-  const brand = getBrand(piece.brandId);
+  const brand = piece.brand ?? getBrand(piece.brandId);
+  const rtl = piece.dir === "rtl";
   return (
-    <PostShell>
+    <PostShell dir={piece.dir}>
       <PlatformBar platform="instagram" label={piece.label} />
       <div className={s.account}>
         <BrandMark brand={brand} size={26} />
         <div className={s.accountText}>
-          <span className={s.accountName}>{brand.name}</span>
-          <span className={s.accountMeta}>@{brand.handle}</span>
+          <span className={`${s.accountName} ${rtl ? s.arabic : ""}`}>
+            {rtl ? (brand.nameAr ?? brand.name) : brand.name}
+          </span>
+          {/* Latin handles and English UI strings stay LTR inside an RTL post. */}
+          <span className={s.accountMeta} dir="ltr">
+            @{brand.handle}
+          </span>
         </div>
       </div>
       {piece.media && (
@@ -34,9 +40,14 @@ export function InstagramPost({ piece }: { piece: MarketingPiece }) {
         </span>
       </div>
       {piece.engagement?.likes != null && (
-        <p className={s.igLikes}>{formatCount(piece.engagement.likes)} likes</p>
+        <p className={s.igLikes} dir="ltr">
+          {formatCount(piece.engagement.likes)} likes
+        </p>
       )}
-      <p className={s.caption} style={{ paddingBottom: "0.75rem" }}>
+      <p
+        className={`${s.caption} ${rtl ? s.arabic : ""}`}
+        style={{ paddingBottom: "0.75rem" }}
+      >
         <span className={s.captionName}>{brand.handle}</span>
         {piece.copy.body}
       </p>

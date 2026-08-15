@@ -5,7 +5,7 @@ import { Approval } from "@/components/concept-v2/sections/Approval";
 import { Memory } from "@/components/concept-v2/sections/Memory";
 import { Arabic } from "@/components/concept-v2/sections/Arabic";
 import { Trust } from "@/components/concept-v2/sections/Trust";
-import { BrandDemo } from "@/components/concept-v2/sections/BrandDemo";
+import { BrandDemo } from "@/components/concept-v2/branddemo/BrandDemo";
 import { ClosingCta } from "@/components/concept-v2/sections/ClosingCta";
 
 export default function ConceptHome() {
