@@ -22,7 +22,7 @@ const INTRINSIC = { width: 750, height: 370 } as const;
 
 /** Rendered height per placement, in px. */
 const SIZES = {
-  nav: 46,
+  nav: 52,
   footer: 56,
 } as const;
 
