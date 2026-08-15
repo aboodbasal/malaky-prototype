@@ -43,7 +43,20 @@ for (const [path, label, width] of [
       });
     }
   } else {
-    await p.screenshot({ path: `screenshots/deliver/${label}.jpg`, fullPage: true, type: "jpeg", quality: 80 });
+    // Very tall full-page captures exceed upload limits, so send sections.
+    const total = await p.evaluate(() => document.body.scrollHeight);
+    const vh = 900;
+    const sections = Math.min(6, Math.max(1, Math.ceil(total / (vh * 1.6))));
+    const stride = sections > 1 ? Math.floor((total - vh) / (sections - 1)) : 0;
+    for (let i = 0; i < sections; i++) {
+      await p.evaluate((y) => window.scrollTo(0, y), i * stride);
+      await p.waitForTimeout(700);
+      await p.screenshot({
+        path: `screenshots/deliver/${label}-${i + 1}.jpg`,
+        type: "jpeg",
+        quality: 80,
+      });
+    }
   }
   await ctx.close();
 }
