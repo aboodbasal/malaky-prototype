@@ -5,6 +5,17 @@
   perspective: 1900px;
   perspective-origin: 50% 46%;
   --orbit-scale: 1;
+  /* The one shared centre. Cards, both trails and the core glow all read from
+     here, so the ring can never drift out of register with what orbits it.
+
+     Measured over a full revolution (scripts/orbit-bounds.mjs), the cards
+     clear the right edge of the page by 8px at 1280 and 9px at 1080, and sit
+     92/67px off the top/bottom of their own viewport at 1440. So there is no
+     room to move the centre right, and moving it up trades a 25px vertical
+     imbalance for a 75px one while cutting the top gap to under 20px on
+     smaller desktops. It stays where it is. */
+  --orbit-x: 50%;
+  --orbit-y: 45%;
 }
 
 .stage {
@@ -15,8 +26,8 @@
 
 .cards {
   position: absolute;
-  left: 50%;
-  top: 45%;
+  left: var(--orbit-x);
+  top: var(--orbit-y);
   width: 0;
   height: 0;
   transform-style: preserve-3d;
@@ -46,8 +57,8 @@
 
 .ring {
   position: absolute;
-  left: 50%;
-  top: 45%;
+  left: var(--orbit-x);
+  top: var(--orbit-y);
   border-radius: 50%;
   pointer-events: none;
   transform-style: preserve-3d;
@@ -74,8 +85,8 @@
 
 .core {
   position: absolute;
-  left: 50%;
-  top: 45%;
+  left: var(--orbit-x);
+  top: var(--orbit-y);
   width: 260px;
   height: 260px;
   margin: -130px 0 0 -130px;

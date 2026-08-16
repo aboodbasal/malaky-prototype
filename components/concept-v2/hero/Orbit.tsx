@@ -30,8 +30,11 @@ const RADIUS_Z = 232;
 /** Vertical rise and fall that gives the ring its tilt. */
 const TILT_Y = 60;
 
+/** Scale at the far side of the orbit. */
 const SCALE_MIN = 0.78;
+/** Default scale at the near side. Individual cards raise this — see LAYOUT. */
 const SCALE_MAX = 1.02;
+/** Default opacity at the far side. Individual cards raise this too. */
 const OPACITY_MIN = 0.44;
 const OPACITY_MAX = 1;
 
@@ -52,23 +55,55 @@ interface OrbitSlot {
   width: number;
   y: number;
   roll: number;
+  /**
+   * Scale at the near side of the orbit. Raising it steepens this card's own
+   * near/far curve rather than making it bigger everywhere — the far side is
+   * still SCALE_MIN, so the card grows only where it is meant to be read.
+   */
+  scaleMax?: number;
+  /**
+   * Opacity at the far side. Raised for cards carrying real detail, which
+   * should recede rather than drop out of the composition entirely.
+   */
+  opacityMin?: number;
   background?: boolean;
 }
 
 /**
- * The six slots are unchanged — same phases, widths, offsets and rolls as the
- * approved composition. Only which piece occupies which slot has moved, so the
- * three real screenshots sit on the primary ring where they are legible and
- * never on the two small background slots, where 118–150px turns set text into
- * a smudge.
+ * Composition of the orbit.
+ *
+ * Three things drive the numbers here.
+ *
+ * Scale and opacity are now per card. The real-company screenshots carry far
+ * more detail than a composed card does, so they get a taller near/far curve
+ * to be worth reading at the front and a higher opacity floor so they recede
+ * rather than drop out. Dar Sidra goes the other way: it is the tallest object
+ * in the set and was overpowering everything it passed.
+ *
+ * The primaries are spaced unevenly. Even quarter-turns look tidy in the
+ * abstract but resolve, twice a revolution, into two cards at identical depth
+ * in front and two identical behind — no hierarchy at all. Offsetting them
+ * keeps a clear leader (never below 0.81 depth), a strong second (never below
+ * 0.45) and a readable third at every moment of the cycle.
+ *
+ * And the two strongest images, Shrimp Joint and Inception, sit 169° apart.
+ * Adjacent, they crowded the front together and overlapped; opposite, each
+ * gets the front to itself.
+ *
+ * The ring itself is untouched: same shared centre, radii, tilt, revolution,
+ * hover response and perspective.
  */
 const LAYOUT: Record<string, OrbitSlot> = {
-  "hero-instagram": { phase: 0, width: 186, y: -16, roll: -1.2 },
-  "hero-facebook": { phase: 0.25, width: 202, y: 34, roll: 1.4 },
-  "hero-arabic-social": { phase: 0.5, width: 178, y: -44, roll: -1 },
-  "hero-newsletter": { phase: 0.75, width: 196, y: 20, roll: 0.6 },
-  "hero-linkedin-executive": { phase: 0.125, width: 150, y: -30, roll: 0.8, background: true },
-  "hero-reel": { phase: 0.625, width: 118, y: 28, roll: -1.6, background: true },
+  // Inception DAP — dense packaging creative, needs the size to be worth it.
+  "hero-instagram": { phase: 0, width: 192, y: -14, roll: -1.2, scaleMax: 1.19, opacityMin: 0.56 },
+  // Dar Sidra — the Arabic proof point, pulled back so it stops dominating.
+  "hero-arabic-social": { phase: 0.24, width: 164, y: -34, roll: -1, scaleMax: 0.95 },
+  // Shrimp Joint — the strongest single image in the set; it leads.
+  "hero-facebook": { phase: 0.47, width: 208, y: 30, roll: 1.4, scaleMax: 1.24, opacityMin: 0.56 },
+  // Ataccama — the tallest card, so it gains reach through opacity as much as scale.
+  "hero-newsletter": { phase: 0.71, width: 200, y: 10, roll: 0.6, scaleMax: 1.18, opacityMin: 0.6 },
+  "hero-linkedin-executive": { phase: 0.12, width: 150, y: -26, roll: 0.8, background: true },
+  "hero-reel": { phase: 0.6, width: 118, y: 26, roll: -1.6, background: true },
 };
 
 const FALLBACK_SLOT: OrbitSlot = { phase: 0, width: 180, y: 0, roll: 0 };
@@ -78,6 +113,8 @@ interface CardState extends OrbitSlot {
   radiusScale: number;
   scaleMul: number;
   opacityMul: number;
+  near: number;
+  far: number;
 }
 
 export function Orbit({
@@ -104,6 +141,8 @@ export function Orbit({
         radiusScale: slot.background ? BACKGROUND_RADIUS : 1,
         scaleMul: slot.background ? BACKGROUND_SCALE : 1,
         opacityMul: slot.background ? BACKGROUND_OPACITY : 1,
+        near: slot.scaleMax ?? SCALE_MAX,
+        far: slot.opacityMin ?? OPACITY_MIN,
       });
     });
     if (!cards.length) return;
@@ -120,9 +159,8 @@ export function Orbit({
 
         // 0 at the far side, 1 nearest the viewer.
         const depth = (cos + 1) / 2;
-        const scale = (SCALE_MIN + (SCALE_MAX - SCALE_MIN) * depth) * c.scaleMul;
-        const opacity =
-          (OPACITY_MIN + (OPACITY_MAX - OPACITY_MIN) * depth) * c.opacityMul;
+        const scale = (SCALE_MIN + (c.near - SCALE_MIN) * depth) * c.scaleMul;
+        const opacity = (c.far + (OPACITY_MAX - c.far) * depth) * c.opacityMul;
 
         // Cards stay mostly square to the viewer — just enough yaw to read
         // as dimensional.
