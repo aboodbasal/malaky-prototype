@@ -1,41 +1,77 @@
 "use client";
 
-import { useEffect, useState } from "react";
-import { PROACTIVE_MOMENT } from "@/lib/concept-v2/content";
+import { useEffect, useMemo, useState } from "react";
 import {
-  daysUntil,
-  formatCountdown,
-  formatObservanceDate,
-  getObservance,
-} from "@/lib/concept-v2/calendar";
+  ANCHOR,
+  DEFAULT_ENTRY_ID,
+  STATUS,
+  WEEKDAYS,
+  buildMonth,
+  monthName,
+  resolveEntries,
+  type ResolvedEntry,
+} from "@/lib/concept-v2/operating-calendar";
+import { daysUntil, formatCountdown } from "@/lib/concept-v2/calendar";
 import { useReveal } from "@/hooks/useConceptHooks";
 import { SectionHead, Stop } from "../ui";
-import { CalendarIcon, CheckIcon } from "../icons";
+import { ArrowRight, CheckIcon } from "../icons";
 import styles from "./prompts.module.css";
 
+/** The mark in a calendar cell. Four shapes, readable without a legend. */
+function StatusGlyph({ glyph }: { glyph: "check" | "full" | "half" | "ring" }) {
+  if (glyph === "check") return <CheckIcon size={11} />;
+  return (
+    <svg width="9" height="9" viewBox="0 0 12 12" aria-hidden="true" focusable="false">
+      {glyph === "ring" && (
+        <circle cx="6" cy="6" r="4.4" fill="none" stroke="currentColor" strokeWidth="1.6" />
+      )}
+      {glyph === "half" && (
+        <>
+          <circle cx="6" cy="6" r="4.4" fill="none" stroke="currentColor" strokeWidth="1.6" />
+          <path d="M6 1.6a4.4 4.4 0 0 1 0 8.8Z" fill="currentColor" />
+        </>
+      )}
+      {glyph === "full" && <circle cx="6" cy="6" r="5" fill="currentColor" />}
+    </svg>
+  );
+}
+
 /**
- * Proactive opportunity detection, and nothing else.
+ * The operating calendar.
  *
- * One panel rather than a grid of cards — both because there is one idea to
- * carry now, and because it gives the page a different shape between the hero
- * and the six-card fan-out that follows.
+ * A month of Malaky's work, laid out as a month: finished behind the reference
+ * day, prepared or preparing ahead of it, and one thing waiting on a person.
+ * The argument is meant to land before any copy is read — Malaky knows what is
+ * coming, knows what happened, has already done the work, and the human
+ * reviews.
  *
- * The occasion is a real public holiday, so its date comes from the verified
- * calendar and the countdown is computed from that date. Nothing about a real
- * country/event pairing is hard-coded here.
+ * Real occasions carry no date here. They are resolved from the verified
+ * calendar, and a countdown beside one is computed from the real clock after
+ * mount. The grid itself is anchored so it renders identically on the server
+ * and the client — see lib/concept-v2/operating-calendar.ts.
  */
 export function Prompts() {
-  const [ref, reveal] = useReveal<HTMLDivElement>({ threshold: 0.2 });
-  const observance = getObservance(PROACTIVE_MOMENT.observanceId);
+  const [ref, reveal] = useReveal<HTMLDivElement>({ threshold: 0.15 });
+  const [selectedId, setSelectedId] = useState(DEFAULT_ENTRY_ID);
 
-  /* The date is always right and renders on the server. The countdown depends
-     on today, so it is added after mount — a server-rendered "N days away"
-     would be stale the moment the page was cached, and would mismatch on
-     hydration. */
+  const entries = useMemo(() => resolveEntries(), []);
+  const cells = useMemo(() => buildMonth(entries), [entries]);
+  const selected =
+    entries.find((e) => e.id === selectedId) ?? (entries[0] as ResolvedEntry);
+
+  /* Only a verified occasion gets a countdown, and only against the real
+     clock — so it is added after mount rather than prerendered stale. */
   const [countdown, setCountdown] = useState<string | null>(null);
   useEffect(() => {
-    setCountdown(formatCountdown(daysUntil(observance, new Date())));
-  }, [observance]);
+    setCountdown(
+      selected.observance
+        ? formatCountdown(daysUntil(selected.observance, new Date()))
+        : null,
+    );
+  }, [selected]);
+
+  const status = STATUS[selected.status];
+  const finished = status.tone === "done";
 
   return (
     <section className={styles.section} id="product" aria-labelledby="prompts-title">
@@ -51,43 +87,141 @@ export function Prompts() {
           lead="Malaky watches what's coming and starts the work before anyone asks for it."
         />
 
-        <article className={styles.panel} ref={ref} data-reveal={reveal}>
-          <div className={styles.date}>
-            <span className={styles.dateIcon}>
-              <CalendarIcon size={20} />
-            </span>
-            <p className={styles.occasion}>{observance.name}</p>
-            <p className={styles.countdown}>
-              {formatObservanceDate(observance)}
-              {countdown && (
-                <>
-                  <span aria-hidden="true"> · </span>
-                  {countdown}
-                </>
-              )}
-            </p>
-          </div>
+        <div className={styles.frame} ref={ref} data-reveal={reveal}>
+          {/* --- the month --------------------------------------------- */}
+          <div className={styles.calendar}>
+            <div className={styles.calHead}>
+              <h3 className={styles.month}>{monthName()}</h3>
+              <ul className={styles.legend}>
+                {[
+                  ["check", "Done"],
+                  ["full", "Needs you"],
+                  ["half", "In progress"],
+                  ["ring", "Noticed"],
+                ].map(([glyph, label]) => (
+                  <li key={label} data-tone={label.toLowerCase().replace(" ", "-")}>
+                    <span className={styles.legendMark}>
+                      <StatusGlyph glyph={glyph as "check"} />
+                    </span>
+                    {label}
+                  </li>
+                ))}
+              </ul>
+            </div>
 
-          <div className={styles.detail}>
-            <p className={styles.live}>
-              <span className={styles.liveDot} aria-hidden="true" />
-              {PROACTIVE_MOMENT.status}
-            </p>
-            <p className={styles.body}>{PROACTIVE_MOMENT.body}</p>
-
-            <dl className={styles.proof}>
-              {PROACTIVE_MOMENT.proof.map((row) => (
-                <div key={row.label} className={styles.proofRow}>
-                  <dt>
-                    <CheckIcon size={12} />
-                    {row.label}
-                  </dt>
-                  <dd>{row.value}</dd>
-                </div>
+            <div className={styles.weekdays} aria-hidden="true">
+              {WEEKDAYS.map((d) => (
+                <span key={d}>{d}</span>
               ))}
-            </dl>
+            </div>
+
+            <div className={styles.grid} role="list" aria-label={`${monthName()} marketing calendar`}>
+              {cells.map((cell, i) => {
+                if (cell.day == null) {
+                  return <span key={`pad-${i}`} className={styles.pad} aria-hidden="true" />;
+                }
+
+                const entry = cell.entry;
+                const meta = entry ? STATUS[entry.status] : null;
+
+                return (
+                  <div
+                    key={cell.day}
+                    role="listitem"
+                    className={styles.cell}
+                    data-when={cell.when}
+                    data-has-event={entry ? true : undefined}
+                  >
+                    {/* The mark sits beside the number rather than beside the
+                        name: a seventh of the grid is too narrow to give up
+                        16px of a two-word label to it. */}
+                    <span className={styles.dayRow}>
+                      <span className={styles.dayNum}>{cell.day}</span>
+                      {meta && (
+                        <span className={styles.cellMark} data-tone={meta.tone} aria-hidden="true">
+                          <StatusGlyph glyph={meta.glyph} />
+                        </span>
+                      )}
+                    </span>
+
+                    {entry && meta && (
+                      <button
+                        type="button"
+                        className={styles.event}
+                        data-tone={meta.tone}
+                        data-selected={entry.id === selectedId || undefined}
+                        aria-pressed={entry.id === selectedId}
+                        onClick={() => setSelectedId(entry.id)}
+                      >
+                        <span className={styles.eventName}>{entry.short}</span>
+                        <span className="visually-hidden">
+                          {" "}
+                          — {meta.label},{" "}
+                          {entry.kind === "observance"
+                            ? "public holiday"
+                            : "company event"}
+                        </span>
+                      </button>
+                    )}
+                  </div>
+                );
+              })}
+            </div>
           </div>
-        </article>
+
+          {/* --- the selected event ------------------------------------ */}
+          <div className={styles.detail} aria-live="polite">
+            <p className={styles.detailKind}>
+              {selected.kind === "observance" ? "Public holiday" : "Company event"}
+            </p>
+            <h3 className={styles.detailTitle}>{selected.title}</h3>
+
+            <div className={styles.detailMeta}>
+              <span className={styles.statusPill} data-tone={status.tone}>
+                <span className={styles.statusMark}>
+                  <StatusGlyph glyph={status.glyph} />
+                </span>
+                {status.label}
+              </span>
+              {countdown && <span className={styles.countdown}>{countdown}</span>}
+            </div>
+
+            <p className={styles.workHead}>{finished ? "Completed" : "Prepared"}</p>
+            <ul className={styles.work}>
+              {selected.work.map((item) => (
+                <li key={item.channel} data-done={item.done || undefined}>
+                  <span className={styles.workMark}>
+                    {item.done ? <CheckIcon size={11} /> : <StatusGlyph glyph="ring" />}
+                  </span>
+                  <span className={styles.workChannel}>{item.channel}</span>
+                  <span className={styles.workState}>{item.state}</span>
+                </li>
+              ))}
+            </ul>
+
+            {selected.awaiting && (
+              <div className={styles.awaiting}>
+                <p className={styles.awaitingHead}>Awaiting</p>
+                <p className={styles.awaitingBody}>{selected.awaiting}</p>
+              </div>
+            )}
+
+            {/* Part of the depicted product surface, like the chrome inside
+                the post cards elsewhere on this page — not a control on this
+                website, so it is not focusable and leads nowhere. */}
+            {!finished && (
+              <span className={styles.review} aria-hidden="true">
+                Review campaign
+                <ArrowRight size={14} />
+              </span>
+            )}
+          </div>
+        </div>
+
+        <p className={styles.frameNote}>
+          A month of {monthName()} in a Malaky deployment. Public holidays come from
+          verified calendar data; the business events are demo company context.
+        </p>
       </div>
     </section>
   );

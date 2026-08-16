@@ -221,30 +221,12 @@ export const ACTIVITY_TIMELINE: ActivityEntry[] = [
 ];
 
 /* ------------------------------------------------------------------ *
- * Section 2 — proactive opportunity detection
+ * Section 2 — the operating calendar
  *
- * One idea, not three. Persistent memory and the executive voice used to be
- * claimed here and then proved further down the page; they now live only
- * where they are demonstrated. What is left is the thing nothing else on the
- * page shows: Malaky acting on a date before anyone asks.
+ * Lives in ./operating-calendar, because it is a month of work rather than a
+ * piece of copy: real occasions resolved from the verified ./calendar, demo
+ * business events, and the status of each.
  * ------------------------------------------------------------------ */
-
-export const PROACTIVE_MOMENT = {
-  /**
-   * A real public occasion, so the date is not written here — it comes from
-   * ./calendar, where it is recorded against an official source, and the
-   * countdown beside it is computed from that date rather than typed in.
-   */
-  observanceId: "sa-national-day",
-  status: "Campaign prepared",
-  body:
-    "Malaky saw the date coming, matched it to your calendar and prepared the campaign before anyone asked for it.",
-  proof: [
-    { label: "Channels", value: "6 prepared" },
-    { label: "Arabic", value: "Written natively" },
-    { label: "Awaiting", value: "Your approval" },
-  ],
-};
 
 /* ------------------------------------------------------------------ *
  * Section 3 — one event becomes everything
