@@ -230,8 +230,12 @@ export const ACTIVITY_TIMELINE: ActivityEntry[] = [
  * ------------------------------------------------------------------ */
 
 export const PROACTIVE_MOMENT = {
-  occasion: "Saudi National Day",
-  countdown: "12 days away",
+  /**
+   * A real public occasion, so the date is not written here — it comes from
+   * ./calendar, where it is recorded against an official source, and the
+   * countdown beside it is computed from that date rather than typed in.
+   */
+  observanceId: "sa-national-day",
   status: "Campaign prepared",
   body:
     "Malaky saw the date coming, matched it to your calendar and prepared the campaign before anyone asked for it.",
