@@ -1,32 +1,31 @@
 import {
-  ADD_ONS,
+  ADDITIONAL_SCOPE,
+  SCOPED_ITEMS,
+  SCOPED_NOTE,
   ANNUAL_NOTE,
+  CAPACITY_DETAIL,
+  CAPACITY_NOTE,
   COMPARISON,
-  ENGAGEMENT_LINE,
-  ENGAGEMENT_TERMS,
-  PILLARS,
   PLANS,
+  PLATFORM,
+  PLATFORM_PLANNED,
+  PRICE_FROM_LINE,
+  SETUP_CLOSE,
   SETUP_STEPS,
   formatUsd,
 } from "@/lib/concept-v2/pricing";
 import { Button, Stop } from "../ui";
-import {
-  CheckIcon,
-  ClockIcon,
-  GlobeIcon,
-  LayersIcon,
-  MemoryIcon,
-  ShieldIcon,
-  SparkIcon,
-  TargetIcon,
-} from "../icons";
+import { CheckIcon } from "../icons";
 import styles from "./pricing.module.css";
 
-const PILLAR_ICONS = [MemoryIcon, TargetIcon, SparkIcon, ShieldIcon];
-
 /**
- * Fully static — there is no billing toggle, so this renders on the server
- * and ships no JavaScript of its own.
+ * Fully static — no billing toggle, no interactive state, so this renders on
+ * the server and ships no JavaScript of its own. The one interactive element
+ * is a native <details>, which needs none.
+ *
+ * The order is the argument: what the platform is, then how much of the
+ * organisation each deployment covers, then what configuring it involves,
+ * then only the differences, then the conversation.
  */
 export function PricingPage() {
   return (
@@ -42,30 +41,49 @@ export function PricingPage() {
             <Stop />
           </h1>
           <p className={styles.lead}>
-            Malaky learns your business, plans around what&rsquo;s coming, prepares the work, and
-            brings your team the decisions that matter.
+            Every deployment is configured around your brand, team, markets and approval
+            process.
           </p>
+          <p className={styles.priceFrom}>{PRICE_FROM_LINE}</p>
+        </div>
+      </section>
 
-          <ul className={styles.pillars}>
-            {PILLARS.map((p, i) => {
-              const Icon = PILLAR_ICONS[i];
-              return (
-                <li key={p.id} className={styles.pillar}>
-                  <span className={styles.pillarIcon}>
-                    <Icon size={20} />
-                  </span>
-                  <h2 className={styles.pillarTitle}>{p.title}</h2>
-                  <p className={styles.pillarBody}>{p.body}</p>
+      {/* --- the platform, stated once ------------------------------ */}
+      <section className={styles.platformSection} aria-labelledby="platform-title">
+        <div className="shell">
+          <div className={styles.platformGrid}>
+            <div>
+              <h2 className={styles.sectionTitle} id="platform-title">
+                Every Malaky deployment includes
+                <Stop />
+              </h2>
+
+              {/* Named rather than omitted — both were previously implied by
+                  plan features that read as shipped. */}
+              <div className={styles.planned}>
+                <p className={styles.plannedHead}>Described here, still to be built</p>
+                <ul className={styles.plannedList}>
+                  {PLATFORM_PLANNED.map((c) => (
+                    <li key={c.title}>
+                      <span>{c.title}</span> — {c.body}
+                    </li>
+                  ))}
+                </ul>
+              </div>
+            </div>
+
+            <ul className={styles.platform}>
+              {PLATFORM.map((c) => (
+                <li key={c.title} className={styles.capability}>
+                  <CheckIcon size={13} className={styles.capabilityCheck} />
+                  <div>
+                    <p className={styles.capabilityTitle}>{c.title}</p>
+                    <p className={styles.capabilityBody}>{c.body}</p>
+                  </div>
                 </li>
-              );
-            })}
-          </ul>
-
-          <ul className={styles.terms}>
-            {ENGAGEMENT_TERMS.map((t) => (
-              <li key={t}>{t}</li>
-            ))}
-          </ul>
+              ))}
+            </ul>
+          </div>
         </div>
       </section>
 
@@ -73,7 +91,7 @@ export function PricingPage() {
       <section className={styles.plansSection} aria-labelledby="plans-title">
         <div className="shell">
           <h2 className="visually-hidden" id="plans-title">
-            Plans
+            Deployments
           </h2>
 
           <div className={styles.plans}>
@@ -81,11 +99,9 @@ export function PricingPage() {
               <article
                 key={plan.id}
                 className={styles.plan}
-                data-popular={plan.popular || undefined}
+                data-scoped={plan.monthly == null || undefined}
                 aria-labelledby={`${plan.id}-name`}
               >
-                {plan.popular && <span className={styles.popular}>Most popular</span>}
-
                 <h3 className={styles.planName} id={`${plan.id}-name`}>
                   {plan.name}
                 </h3>
@@ -93,73 +109,85 @@ export function PricingPage() {
 
                 <div className={styles.priceBlock}>
                   {plan.monthly != null ? (
-                    <>
-                      <p className={styles.price}>
-                        <span className={styles.priceNum}>{formatUsd(plan.monthly)}</span>
-                        <span className={styles.pricePer}>/month</span>
-                      </p>
-                      <p className={styles.engagement}>{ENGAGEMENT_LINE}</p>
-                      <p className={styles.annualNote}>{ANNUAL_NOTE}</p>
-                    </>
+                    <p className={styles.price}>
+                      <span className={styles.priceNum}>{formatUsd(plan.monthly)}</span>
+                      <span className={styles.pricePer}>/month</span>
+                    </p>
                   ) : (
-                    <>
-                      <p className={styles.price}>
-                        <span className={styles.priceNum}>Custom</span>
-                      </p>
-                      <p className={styles.engagement}>{plan.priceNote}</p>
-                    </>
+                    <p className={styles.price}>
+                      <span className={styles.priceNum}>{plan.priceNote}</span>
+                    </p>
                   )}
-                  <p className={styles.setup}>{plan.setup}</p>
-                </div>
 
-                {/* What the business gets — this is the offer. */}
-                <ul className={styles.features}>
-                  {plan.capabilities.map((c) => (
-                    <li key={c}>
-                      <CheckIcon size={12} className={styles.featureCheck} />
-                      <span>{c}</span>
-                    </li>
-                  ))}
-                </ul>
-
-                {/* Capacity is an operational detail, not the pitch. */}
-                <div className={styles.limits}>
-                  <p className={styles.limitsHead}>Operating capacity</p>
-                  <dl className={styles.limitsList}>
-                    {plan.limits.map((l) => (
-                      <div key={l.label}>
-                        <dt>{l.label}</dt>
-                        <dd>{l.value}</dd>
+                  <dl className={styles.priceMeta}>
+                    <div>
+                      <dt>{plan.setupLabel}</dt>
+                      <dd>{plan.setupValue}</dd>
+                    </div>
+                    {plan.term && (
+                      <div>
+                        <dt>Term</dt>
+                        <dd>{plan.term}</dd>
                       </div>
-                    ))}
+                    )}
                   </dl>
                 </div>
 
-                {plan.scoped && (
-                  <div className={styles.scopedGroup}>
-                    <p className={styles.scopedHead}>Available with enterprise deployment</p>
-                    <ul className={styles.scopedList}>
-                      {plan.scoped.map((f) => (
-                        <li key={f}>{f}</li>
-                      ))}
-                    </ul>
-                  </div>
-                )}
+                {/* The offer: how much of the marketing operation this covers. */}
+                <dl className={styles.coverage}>
+                  {plan.coverage.map((row) => (
+                    <div key={row.label} className={styles.coverageRow}>
+                      <dt>{row.label}</dt>
+                      <dd>{row.value}</dd>
+                    </div>
+                  ))}
+                </dl>
+
+                <p className={styles.capacity}>{plan.capacity}</p>
 
                 {plan.footnote && <p className={styles.planFootnote}>{plan.footnote}</p>}
 
                 <div className={styles.planCta}>
-                  <Button
-                    href="#request-demo"
-                    tone={plan.popular ? "primary" : "secondary"}
-                    full
-                    arrow={plan.popular}
-                  >
-                    {plan.cta}
+                  <Button href="#request-demo" tone="secondary" full>
+                    Request a private demo
                   </Button>
                 </div>
               </article>
             ))}
+          </div>
+
+          {/* Terms, not features. Closed by default and native, so it needs no
+              JavaScript and stays keyboard-operable. */}
+          <div className={styles.belowPlans}>
+            <details className={styles.capacityDetails}>
+              <summary>Operating capacity in detail</summary>
+              <div className={styles.capacityBody}>
+                <table className={styles.capacityTable}>
+                  <thead>
+                    <tr>
+                      <th scope="col">Ceiling</th>
+                      <th scope="col">Business</th>
+                      <th scope="col">Scale</th>
+                      <th scope="col">Enterprise</th>
+                    </tr>
+                  </thead>
+                  <tbody>
+                    {CAPACITY_DETAIL.map((row) => (
+                      <tr key={row.label}>
+                        <th scope="row">{row.label}</th>
+                        <td>{row.business}</td>
+                        <td>{row.scale}</td>
+                        <td>{row.enterprise}</td>
+                      </tr>
+                    ))}
+                  </tbody>
+                </table>
+                <p className={styles.capacityNote}>{CAPACITY_NOTE}</p>
+              </div>
+            </details>
+
+            {/* Said once on the page, not inside three cards. */}
+            <p className={styles.annual}>{ANNUAL_NOTE}</p>
           </div>
         </div>
       </section>
@@ -169,13 +197,13 @@ export function PricingPage() {
         <div className={`shell ${styles.setupInner}`}>
           <div className={styles.setupHead}>
             <h2 className={styles.setupTitle} id="setup-title">
-              Every Malaky relationship begins with intelligence setup
+              Your Malaky deployment starts with Intelligence Setup
               <Stop />
             </h2>
             <p className={styles.setupLead}>
-              Before Malaky starts operating, our team configures it around your company — your
-              business, your voice, your audience and your goals — and builds your first 30-day
-              marketing plan.
+              Malaky is configured, not activated. Before it operates, our team builds your
+              company into it — the brand, the voices, the facts your team has approved, the
+              calendar and the way work gets signed off.
             </p>
           </div>
 
@@ -187,113 +215,61 @@ export function PricingPage() {
               </li>
             ))}
           </ol>
+
+          <p className={styles.setupClose}>{SETUP_CLOSE}</p>
         </div>
       </section>
 
-      {/* --- add-ons ------------------------------------------------ */}
-      <section className={styles.addOnSection} aria-labelledby="addons-title">
-        <div className="shell">
-          <h2 className={styles.minorTitle} id="addons-title">
-            Add-ons
-          </h2>
-          <ul className={styles.addOns}>
-            {ADD_ONS.map((a) => (
-              <li key={a.label} className={styles.addOn}>
-                <span className={styles.addOnLabel}>{a.label}</span>
-                <span className={styles.addOnPrice}>
-                  {a.price}
-                  <span className={styles.addOnPer}>{a.per}</span>
-                </span>
-              </li>
-            ))}
-          </ul>
-        </div>
-      </section>
-
-      {/* --- comparison --------------------------------------------- */}
+      {/* --- what changes between plans ----------------------------- */}
       <section className={styles.compareSection} aria-labelledby="compare-title">
-        <div className={`shell ${styles.compareGrid}`}>
-          <div>
-            <h2 className={styles.minorTitle} id="compare-title">
-              Compare plans
-            </h2>
+        <div className="shell">
+          <h2 className={styles.sectionTitle} id="compare-title">
+            What changes between deployments
+            <Stop />
+          </h2>
 
-            {/* Desktop: a table. Mobile: the same data as stacked cards. */}
-            <div className={styles.tableWrap}>
-              <table className={styles.table}>
-                <thead>
-                  <tr>
-                    <th scope="col">Capability</th>
-                    <th scope="col">Business</th>
-                    <th scope="col">
-                      Scale <span className={styles.thTag}>most popular</span>
+          {/* One table at every width. Narrow screens scroll it sideways —
+              stacking it per plan would reprint the coverage already in the
+              cards above, which is the duplication this page is removing. */}
+          <div className={styles.tableWrap} tabIndex={0} role="region" aria-labelledby="compare-title">
+            <table className={styles.table}>
+              <thead>
+                <tr>
+                  <th scope="col">Coverage</th>
+                  {PLANS.map((p) => (
+                    <th key={p.id} scope="col">
+                      {p.name.replace("Malaky ", "")}
                     </th>
-                    <th scope="col">Enterprise</th>
-                  </tr>
-                </thead>
-                <tbody>
-                  {COMPARISON.map((row) => (
-                    <tr key={row.label}>
-                      <th scope="row">{row.label}</th>
-                      <td>{row.business}</td>
-                      <td>{row.scale}</td>
-                      <td>{row.enterprise}</td>
-                    </tr>
                   ))}
-                </tbody>
-              </table>
-            </div>
-
-            <ul className={styles.compareCards}>
-              {PLANS.map((plan, pi) => (
-                <li key={plan.id} className={styles.compareCard}>
-                  <h3>{plan.name}</h3>
-                  <dl>
-                    {COMPARISON.map((row) => (
-                      <div key={row.label}>
-                        <dt>{row.label}</dt>
-                        <dd>{[row.business, row.scale, row.enterprise][pi]}</dd>
-                      </div>
-                    ))}
-                  </dl>
-                </li>
-              ))}
-            </ul>
+                </tr>
+              </thead>
+              <tbody>
+                {COMPARISON.map((row) => (
+                  <tr key={row.label}>
+                    <th scope="row">{row.label}</th>
+                    <td>{row.business}</td>
+                    <td>{row.scale}</td>
+                    <td>{row.enterprise}</td>
+                  </tr>
+                ))}
+              </tbody>
+            </table>
           </div>
 
-          <aside className={styles.rail}>
-            <div className={styles.railCard}>
-              <span className={styles.railIcon}>
-                <ClockIcon size={17} />
-              </span>
-              <h3 className={styles.railTitle}>Twelve-month engagements</h3>
-              <p className={styles.railBody}>
-                Malaky gets better the longer it runs. Engagements are annual so the memory, voice
-                and calendar we build with you keep compounding.
-              </p>
+          {/* Scope lives here rather than inside the Enterprise card, where it
+              stretched the row and left the other two cards half empty. */}
+          <div className={styles.additional}>
+            <p className={styles.additionalHead}>Additional scope</p>
+            <div>
+              <p className={styles.additionalBody}>{ADDITIONAL_SCOPE}</p>
+              <ul className={styles.scopedList}>
+                {SCOPED_ITEMS.map((item) => (
+                  <li key={item}>{item}</li>
+                ))}
+              </ul>
+              <p className={styles.additionalNote}>{SCOPED_NOTE}</p>
             </div>
-
-            <div className={styles.railCard}>
-              <span className={styles.railIcon}>
-                <LayersIcon size={17} />
-              </span>
-              <h3 className={styles.railTitle}>{ANNUAL_NOTE}</h3>
-              <p className={styles.railBody}>
-                Subscriptions are billed monthly by default. Prepaying the twelve months takes 10%
-                off the subscription; intelligence setup is unchanged.
-              </p>
-            </div>
-
-            <div className={styles.railCard}>
-              <span className={styles.railIcon}>
-                <GlobeIcon size={17} />
-              </span>
-              <h3 className={styles.railTitle}>Arabic and English, included</h3>
-              <p className={styles.railBody}>
-                Both languages are part of every plan — not an add-on and not a translation layer.
-              </p>
-            </div>
-          </aside>
+          </div>
         </div>
       </section>
     </>

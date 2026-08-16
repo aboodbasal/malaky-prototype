@@ -12,12 +12,15 @@ export default function Pricing() {
   return (
     <>
       <PricingPage />
+      {/* Deliberately not the homepage's closing words — a visitor who reads
+          both should not hit the same wall twice. */}
       <ClosingCta
         id="request-demo"
-        title="Let's build Malaky around your business"
-        lead="We'll learn how your company operates, show you what Malaky would prepare, and recommend the right deployment for your team."
+        title="Let's design your Malaky deployment"
+        lead="We'll look at your brands, markets, team and approval process and recommend the right operating scope."
         cta="Request a private demo"
         href="#request-demo"
+        secondary={{ label: "Back to Malaky", href: "/concept-v2" }}
       />
     </>
   );

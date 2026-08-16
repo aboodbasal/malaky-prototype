@@ -1,19 +1,115 @@
 /**
  * Pricing data for /concept-v2/pricing.
  *
- * Nothing here is wired to billing. Two deliberate shapes:
+ * Nothing here is wired to billing.
  *
- * 1. `capabilities` lead. What Malaky does for the business is the offer;
- *    `limits` are operational ceilings and sit below the fold of the card.
- * 2. Anything that would depend on a deployment lives in `scoped` and is
- *    rendered under an explicit qualifier rather than claimed as shipped.
+ * The page is built on one rule: the platform is stated once, and the plans
+ * describe how much of a marketing organisation each one covers. What used to
+ * be here — the same seven capabilities printed inside all three cards, an
+ * eleven-row table repeating the cards, and a monthly output count large
+ * enough to divide into the price — invited the buyer to work out a cost per
+ * post. At $42K–$120K a year that is the wrong unit entirely, so plans now
+ * differ by brands, voices, markets, approval depth, planning scope, operating
+ * cadence, support and implementation. Capacity still exists for commercial
+ * protection; it sits in a disclosure below the cards, never in the pitch.
+ *
+ * Second rule: nothing is presented as shipped unless this concept actually
+ * exercises it. Capability entries carry an explicit state, and anything that
+ * depends on a deployment lives under "available where scoped" rather than
+ * being implied.
  */
 
 /** Every engagement is annual; monthly billing is the default rhythm. */
-export const ENGAGEMENT_LINE = "12-month engagement · billed monthly";
-export const ANNUAL_NOTE = "Annual prepayment saves 10%";
+export const ENGAGEMENT_LINE = "12-month engagement";
 
-export interface PlanLimit {
+/** Stated once on the page, near the plans. Never inside a card. */
+export const ANNUAL_NOTE = "Annual prepayment available. Save 10%.";
+
+export const PRICE_FROM_LINE = "Private deployments start at $3,500 / month.";
+
+/* ------------------------------------------------------------------ *
+ * The platform — stated once, above the plans
+ * ------------------------------------------------------------------ */
+
+/**
+ * `state` is the same honesty rule the homepage uses. "included" means this
+ * concept exercises the behaviour somewhere you can go and try. "planned"
+ * means it is described and still to be built, and it is labelled as such
+ * rather than quietly listed beside the rest.
+ */
+export interface PlatformCapability {
+  title: string;
+  body: string;
+  state: "included" | "planned";
+}
+
+export const PLATFORM: PlatformCapability[] = [
+  {
+    title: "Persistent brand memory",
+    body: "Your brand, products, audience and voice are held between campaigns rather than re-explained.",
+    state: "included",
+  },
+  {
+    title: "Proactive campaign planning",
+    body: "Malaky works from your calendar and prepares the work before anyone asks for it.",
+    state: "included",
+  },
+  {
+    title: "Company + executive marketing",
+    body: "The company's voice and your executives' own voices, written separately.",
+    state: "included",
+  },
+  {
+    title: "Arabic + English",
+    body: "Each language composed natively. Not a translation layer, and not an add-on.",
+    state: "included",
+  },
+  {
+    title: "Cross-channel adaptation",
+    body: "One business moment becomes work written for each channel, not one post reformatted.",
+    state: "included",
+  },
+  {
+    title: "Human approval",
+    body: "Nothing publishes until the required approval is given.",
+    state: "included",
+  },
+  {
+    title: "Business and calendar context",
+    body: "Malaky operates from the facts and dates your team has approved.",
+    state: "included",
+  },
+  {
+    title: "Continuous learning",
+    body: "Every edit, approval and decline becomes a rule the next draft already follows.",
+    state: "included",
+  },
+];
+
+/**
+ * Named here rather than omitted. Both were previously implied by plan
+ * features — "advanced approvals & workflows", "governance" — which read as
+ * shipped. They are not.
+ */
+export const PLATFORM_PLANNED: PlatformCapability[] = [
+  {
+    title: "Roles & workflows",
+    body: "Different people prepare, review and approve, with permissions per role.",
+    state: "planned",
+  },
+  {
+    title: "Source visibility",
+    body: "Where a factual claim came from, shown before approval.",
+    state: "planned",
+  },
+];
+
+/* ------------------------------------------------------------------ *
+ * Plans
+ * ------------------------------------------------------------------ */
+
+/** One row of a plan's coverage. This is the offer — how much of the operation. */
+export interface CoverageRow {
   label: string;
   value: string;
 }
@@ -22,170 +118,130 @@ export interface Plan {
   id: "business" | "scale" | "enterprise";
   name: string;
   tagline: string;
-  /** Monthly list price, or null for custom pricing. */
+  /** Monthly list price, or null for a scoped deployment. */
   monthly: number | null;
-  /** Extra price context for the custom tier. */
+  /** Price context for the scoped tier. */
   priceNote?: string;
-  /** One-time intelligence setup. */
-  setup: string;
-  popular?: boolean;
-  /** What the business gets. Leads the card. */
-  capabilities: string[];
-  /** Operational ceilings. Deliberately secondary. */
-  limits: PlanLimit[];
-  /** Scoped during deployment — never presented as shipped. */
-  scoped?: string[];
-  cta: string;
+  setupLabel: string;
+  setupValue: string;
+  term?: string;
+  /** What the deployment covers. Differs meaningfully between plans. */
+  coverage: CoverageRow[];
+  /**
+   * Capacity, in a sentence rather than a number. Exact ceilings live in
+   * CAPACITY_DETAIL, below the cards.
+   */
+  capacity: string;
   footnote?: string;
 }
-
-/** The seven things every deployment includes, in the same order throughout. */
-const CORE_CAPABILITIES = [
-  "Persistent brand memory",
-  "Proactive campaign planning",
-  "Arabic + English",
-  "Company + executive marketing",
-  "Cross-channel adaptation",
-  "Human approval",
-  "All supported channels",
-];
 
 export const PLANS: Plan[] = [
   {
     id: "business",
     name: "Malaky Business",
-    tagline: "Your marketing operation, without building the department.",
+    tagline: "For one business that wants Malaky running its day-to-day marketing operation.",
     monthly: 3500,
-    setup: "$7,500 one-time intelligence setup",
-    capabilities: [
-      ...CORE_CAPABILITIES,
-      "Standard approvals",
-      "Core analytics",
-      "Priority support",
-      "Quarterly strategy review",
+    setupLabel: "One-time intelligence setup",
+    setupValue: "$7,500",
+    term: ENGAGEMENT_LINE,
+    coverage: [
+      { label: "Brands", value: "1 primary brand" },
+      { label: "Executive voices", value: "Up to 2" },
+      { label: "Markets", value: "One primary operating market" },
+      { label: "Channels", value: "Core supported channels" },
+      { label: "Approvals", value: "Standard approval workflow" },
+      { label: "Campaign planning", value: "Proactive calendar for one brand" },
+      { label: "Operating review", value: "Monthly" },
+      { label: "Support", value: "Standard" },
     ],
-    limits: [
-      { label: "Brands", value: "1" },
-      { label: "Users", value: "5" },
-      { label: "Prepared outputs", value: "80 / month" },
-      { label: "Executive voices", value: "1" },
-      { label: "Short-form video", value: "4 / month" },
-    ],
-    cta: "Request a private demo",
+    capacity: "Built for an active single-brand marketing calendar.",
   },
   {
     id: "scale",
     name: "Malaky Scale",
-    tagline: "For companies running marketing across more people, channels and campaigns.",
+    tagline: "For growing marketing teams operating across more people, markets and campaigns.",
     monthly: 6000,
-    setup: "$12,500 one-time intelligence setup",
-    popular: true,
-    capabilities: [
-      ...CORE_CAPABILITIES,
-      "Advanced approvals & workflows",
-      "Advanced analytics & insights",
-      "Dedicated customer success",
-      "Monthly strategy session",
-      "Priority generation",
-      "Early access to selected capabilities",
+    setupLabel: "One-time intelligence setup",
+    setupValue: "$12,500",
+    term: ENGAGEMENT_LINE,
+    coverage: [
+      { label: "Brands", value: "Up to 2 brands or business units" },
+      { label: "Executive voices", value: "Up to 5" },
+      { label: "Markets", value: "Multi-market campaign planning" },
+      { label: "Channels", value: "Broader supported coverage" },
+      { label: "Approvals", value: "Multi-step approval paths" },
+      { label: "Campaign planning", value: "Several concurrent initiatives" },
+      { label: "Operating review", value: "Monthly strategy session" },
+      { label: "Support", value: "Priority" },
     ],
-    limits: [
-      { label: "Brands", value: "2" },
-      { label: "Users", value: "15" },
-      { label: "Prepared outputs", value: "200 / month" },
-      { label: "Executive voices", value: "Up to 3" },
-      { label: "Short-form video", value: "12 / month" },
-    ],
-    cta: "Request a private demo",
+    capacity: "Expanded capacity for multi-market and multi-team operations.",
   },
   {
     id: "enterprise",
     name: "Malaky Enterprise",
-    tagline: "A marketing operating layer for complex organizations.",
+    tagline: "For enterprise marketing organisations that require a tailored deployment.",
     monthly: null,
-    priceNote: "Starting at $120,000 / year",
-    setup: "Implementation from $25,000",
-    capabilities: [
-      ...CORE_CAPABILITIES,
-      "Additional languages",
-      "Business units and multiple brands",
+    priceNote: "Starting from $120,000 / year",
+    setupLabel: "Implementation",
+    setupValue: "Starting from $25,000",
+    term: "Custom scope",
+    coverage: [
+      { label: "Brands", value: "Multiple brands and business units" },
+      { label: "Executive voices", value: "Extended voice library" },
+      { label: "Markets", value: "Regional and multi-market operating context" },
+      { label: "Channels", value: "Defined in deployment" },
+      { label: "Approvals", value: "Tailored approval architecture" },
+      { label: "Campaign planning", value: "Defined in deployment" },
+      { label: "Operating review", value: "Dedicated operating cadence" },
+      { label: "Support", value: "Defined in your proposal" },
     ],
-    limits: [
-      { label: "Brands", value: "Custom" },
-      { label: "Users", value: "Custom" },
-      { label: "Prepared outputs", value: "Custom" },
-      { label: "Executive voices", value: "Custom" },
-      { label: "Short-form video", value: "Custom" },
-    ],
-    scoped: [
-      "Custom integrations",
-      "Custom approval and governance",
-      "Custom reporting",
-      "Security review",
-      "Dedicated success team",
-    ],
-    cta: "Talk to Enterprise",
+    capacity: "Capacity defined around deployment scope.",
     footnote:
-      "Scoped items are agreed during deployment. Nothing beyond this list is implied.",
+      "Integrations, governance, reporting and security review are scoped in your proposal — see Additional scope below.",
   },
 ];
 
-/** The four things Malaky does, shown above the plans. */
-export const PILLARS = [
-  {
-    id: "learns",
-    title: "Learns your business",
-    body: "Persistent memory of your brand, audience, products and goals.",
-  },
-  {
-    id: "plans",
-    title: "Plans proactively",
-    body: "Knows what's coming and prepares the work before you ask.",
-  },
-  {
-    id: "creates",
-    title: "Creates and adapts",
-    body: "On-brand content in Arabic and English, shaped per channel.",
-  },
-  {
-    id: "approved",
-    title: "Human approved",
-    body: "Every piece goes to a person before it goes anywhere else.",
-  },
+/**
+ * The commercial ceilings, kept for protection and moved out of the pitch.
+ * Shown inside a closed disclosure under the plan grid.
+ */
+export const CAPACITY_DETAIL: { label: string; business: string; scale: string; enterprise: string }[] = [
+  { label: "Prepared outputs", business: "80 / month", scale: "200 / month", enterprise: "Scoped" },
+  { label: "Short-form video", business: "4 / month", scale: "12 / month", enterprise: "Scoped" },
+  { label: "Team members", business: "5", scale: "15", enterprise: "Scoped" },
 ];
 
-export const ENGAGEMENT_TERMS = [
-  "White-glove implementation",
-  "Arabic + English",
-  "Human approval",
-  "12-month engagements",
-];
+export const CAPACITY_NOTE =
+  "Operating ceilings, not the offer. They exist so a deployment stays within what the team behind it can run well, and they are reviewed with you at each operating review.";
 
-/** What happens before Malaky starts operating. */
+/* ------------------------------------------------------------------ *
+ * Intelligence setup
+ * ------------------------------------------------------------------ */
+
+/** What happens before Malaky starts operating. No duration is promised. */
 export const SETUP_STEPS = [
   "Brand ingestion",
-  "Products and services",
-  "Audience setup",
-  "Content history",
-  "English voice",
+  "Products & services",
+  "Audience and market context",
+  "Company voice",
   "Arabic voice",
-  "Executive voice",
-  "Marketing calendar",
-  "Approval configuration",
-  "Initial campaign setup",
+  "Executive voices",
+  "Approved business facts",
+  "Campaign calendar",
+  "Approval workflow",
+  "Initial operating rules",
 ];
 
-export const ADD_ONS = [
-  { label: "Additional brand workspace", price: "$1,500", per: "/month" },
-  { label: "Additional executive voice", price: "$500", per: "/month" },
-  { label: "Additional 50 prepared outputs", price: "$750", per: "/month" },
-  { label: "10 additional short-form videos", price: "$1,500", per: "/month" },
-  { label: "Additional market / country setup", price: "$750", per: "/month" },
-  { label: "Additional language", price: "$750", per: "/month" },
-  { label: "Dedicated marketing strategist", price: "$2,500", per: "/month" },
-  { label: "Weekly strategy session", price: "$1,500", per: "/month" },
-  { label: "Custom integration", price: "From $5,000", per: "setup" },
-];
+export const SETUP_CLOSE =
+  "Malaky starts with your company's context instead of a blank prompt.";
+
+/* ------------------------------------------------------------------ *
+ * What changes between plans
+ *
+ * Only the differences. Anything included in every deployment belongs in
+ * PLATFORM and is deliberately absent here — the table answers "why Scale
+ * instead of Business", not "does this plan have AI".
+ * ------------------------------------------------------------------ */
 
 export interface ComparisonRow {
   label: string;
@@ -195,18 +251,82 @@ export interface ComparisonRow {
 }
 
 export const COMPARISON: ComparisonRow[] = [
-  { label: "Brands", business: "1", scale: "2", enterprise: "Custom" },
-  { label: "Users", business: "5", scale: "15", enterprise: "Custom" },
-  { label: "Prepared outputs / month", business: "80", scale: "200", enterprise: "Custom" },
-  { label: "Executive voices", business: "1", scale: "Up to 3", enterprise: "Custom" },
-  { label: "Short-form video / month", business: "4", scale: "12", enterprise: "Custom" },
-  { label: "Approvals", business: "Standard", scale: "Advanced", enterprise: "Custom" },
-  { label: "Analytics", business: "Core", scale: "Advanced", enterprise: "Custom" },
-  { label: "Strategy sessions", business: "Quarterly", scale: "Monthly", enterprise: "Custom" },
-  { label: "Support", business: "Priority", scale: "Dedicated success", enterprise: "Dedicated team" },
-  { label: "Integrations", business: "Supported channels", scale: "Supported channels", enterprise: "Scoped in deployment" },
-  { label: "Governance", business: "Standard approvals", scale: "Advanced workflows", enterprise: "Scoped in deployment" },
+  {
+    label: "Brands / business units",
+    business: "1",
+    scale: "Up to 2",
+    enterprise: "Multiple",
+  },
+  {
+    label: "Executive voices",
+    business: "Up to 2",
+    scale: "Up to 5",
+    enterprise: "Extended library",
+  },
+  {
+    label: "Market coverage",
+    business: "One primary market",
+    scale: "Multi-market",
+    enterprise: "Regional / multi-market",
+  },
+  {
+    label: "Approval complexity",
+    business: "Standard workflow",
+    scale: "Multi-step paths",
+    enterprise: "Tailored architecture",
+  },
+  {
+    label: "Campaign planning scope",
+    business: "One brand calendar",
+    scale: "Several concurrent initiatives",
+    enterprise: "Defined in deployment",
+  },
+  {
+    label: "Operating review cadence",
+    business: "Monthly",
+    scale: "Monthly strategy session",
+    enterprise: "Dedicated cadence",
+  },
+  {
+    label: "Support level",
+    business: "Standard",
+    scale: "Priority",
+    enterprise: "Defined in proposal",
+  },
+  {
+    label: "Implementation scope",
+    business: "Intelligence setup",
+    scale: "Intelligence setup",
+    enterprise: "Custom implementation",
+  },
 ];
+
+/* ------------------------------------------------------------------ *
+ * Additional scope
+ *
+ * Replaces a nine-item monthly add-on menu. At this price point additions are
+ * a conversation, not a shopping list.
+ * ------------------------------------------------------------------ */
+
+export const ADDITIONAL_SCOPE =
+  "Additional brands, markets, executive voices, channels, integrations and specialised creative requirements can be scoped into your deployment.";
+
+/**
+ * Named so a buyer knows what is available to ask for, and grouped under
+ * "where scoped" so none of it reads as shipped. Nothing here is claimed as a
+ * feature of any plan.
+ */
+export const SCOPED_ITEMS = [
+  "Custom integrations",
+  "Governance and approval architecture",
+  "Custom reporting",
+  "Security review",
+  "Dedicated success team",
+  "Enterprise onboarding",
+];
+
+export const SCOPED_NOTE =
+  "Scoped items are agreed during deployment. Nothing beyond the agreed scope is implied.";
 
 export function formatUsd(n: number): string {
   return `$${n.toLocaleString("en-US")}`;

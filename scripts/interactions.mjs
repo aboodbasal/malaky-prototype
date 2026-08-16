@@ -50,12 +50,24 @@ await page.goto("http://localhost:3000/concept-v2/pricing", { waitUntil: "networ
 const business = page.locator("article").filter({ hasText: "Malaky Business" });
 console.log("business price:", await business.locator("p").nth(1).innerText());
 console.log("engagement line:", await business.getByText("12-month engagement").isVisible());
-console.log("annual note:", await business.getByText("Annual prepayment saves 10%").isVisible());
 console.log("no billing toggle:", (await page.getByRole("button", { name: /Pay annually|Billed monthly/ }).count()) === 0);
-console.log("capabilities lead:", await business.locator("ul li").first().innerText());
-console.log("capacity demoted:", await business.getByText("Operating capacity").isVisible());
+
+// Pass 6: the platform is stated once, above the cards, and the cards carry
+// coverage instead of a feature checklist.
+const pricingText = (await page.locator("main").innerText()).replace(/\s+/g, " ");
+console.log("platform stated once:",
+  (pricingText.match(/Persistent brand memory/g) || []).length === 1);
+console.log("annual note stated once:", (pricingText.match(/Save 10%/g) || []).length === 1);
+console.log("annual note outside the cards:",
+  (await business.getByText("Save 10%").count()) === 0);
+console.log("card leads with coverage:", await business.locator("dl dt").first().innerText());
+console.log("no output count in the pitch:",
+  !/\b80\b/.test(pricingText.split("Operating capacity in detail")[0]));
+console.log("capacity behind a disclosure:",
+  (await page.locator("details summary").innerText()).includes("Operating capacity"));
+console.log("no most-popular badge:", !/most popular/i.test(pricingText));
 console.log("short-form video renamed:", (await page.getByText("AI video", { exact: false }).count()) === 0);
-console.log("enterprise cta:", await page.getByRole("link", { name: "Talk to Enterprise" }).isVisible());
+console.log("one CTA label on pricing:", (await page.getByRole("link", { name: "Talk to Enterprise" }).count()) === 0);
 
 // 5b. CTA vocabulary is standardised across both pages.
 const ctaAudit = async (url) => {
