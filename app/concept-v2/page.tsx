@@ -30,7 +30,7 @@ export default function ConceptHome() {
       <BrandDemo />
       <ClosingCta
         id="request-demo"
-        href="#request-demo"
+        href="/concept-v2/request-demo"
         title="Let's build Malaky around your business"
         lead="See how Malaky would be configured around your business, brand and marketing operation."
         cta="Request a private demo"

@@ -165,3 +165,11 @@
     max-width: 18ch;
   }
 }
+
+/* A submitting button stays legible and keeps its size — it just stops
+   inviting a second press. */
+.btn:disabled {
+  opacity: 0.62;
+  cursor: default;
+  pointer-events: none;
+}

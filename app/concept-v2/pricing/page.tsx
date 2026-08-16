@@ -19,7 +19,7 @@ export default function Pricing() {
         title="Let's design your Malaky deployment"
         lead="We'll look at your brands, markets, team and approval process and recommend the right operating scope."
         cta="Request a private demo"
-        href="#request-demo"
+        href="/concept-v2/request-demo"
         secondary={{ label: "Back to Malaky", href: "/concept-v2" }}
       />
     </>

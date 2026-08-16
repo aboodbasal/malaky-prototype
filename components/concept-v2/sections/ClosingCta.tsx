@@ -6,7 +6,7 @@ export function ClosingCta({
   title,
   lead,
   cta,
-  href = "#request-demo",
+  href = "/concept-v2/request-demo",
   secondary,
 }: {
   id?: string;

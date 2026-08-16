@@ -35,7 +35,7 @@ export function Hero() {
             <Button href="#brand-demo" tone="primary" size="lg" arrow>
               See Malaky with your brand
             </Button>
-            <Button href="#request-demo" tone="secondary" size="lg">
+            <Button href="/concept-v2/request-demo" tone="secondary" size="lg">
               Request a private demo
             </Button>
           </div>

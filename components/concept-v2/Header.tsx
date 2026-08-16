@@ -1,6 +1,7 @@
 "use client";
 
 import Link from "next/link";
+import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
 import { MalakyLogo } from "./MalakyLogo";
 import { Button } from "./ui";
@@ -22,9 +23,15 @@ const NAV = [
   { label: "Pricing", href: "/concept-v2/pricing" },
 ];
 
+/** Where the primary CTA goes, everywhere it appears. */
+export const DEMO_HREF = "/concept-v2/request-demo";
+
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
+  /* The request page has one job. Section links and a CTA pointing at the
+     page you are already on would only compete with the form. */
+  const simple = usePathname() === DEMO_HREF;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -40,36 +47,49 @@ export function Header() {
           <MalakyLogo size="nav" />
         </Link>
 
-        <nav className={styles.nav} aria-label="Primary">
-          <ul className={styles.navList}>
-            {NAV.map((item) => (
-              <li key={item.label}>
-                <Link href={item.href} className={styles.navLink}>
-                  {item.label}
-                </Link>
-              </li>
-            ))}
-          </ul>
-        </nav>
+        {simple ? (
+          <Link href="/concept-v2" className={styles.back}>
+            Back to Malaky
+          </Link>
+        ) : (
+          <>
+            <nav className={styles.nav} aria-label="Primary">
+              <ul className={styles.navList}>
+                {NAV.map((item) => (
+                  <li key={item.label}>
+                    <Link href={item.href} className={styles.navLink}>
+                      {item.label}
+                    </Link>
+                  </li>
+                ))}
+              </ul>
+            </nav>
 
-        <div className={styles.actions}>
-          <Button href="/concept-v2#request-demo" tone="primary" arrow className={styles.cta}>
-            Request a private demo
-          </Button>
-          <button
-            type="button"
-            className={styles.burger}
-            aria-expanded={open}
-            aria-controls="mobile-nav"
-            aria-label={open ? "Close menu" : "Open menu"}
-            onClick={() => setOpen((v) => !v)}
-          >
-            <span data-open={open || undefined} />
-          </button>
-        </div>
+            <div className={styles.actions}>
+              <Button href={DEMO_HREF} tone="primary" arrow className={styles.cta}>
+                Request a private demo
+              </Button>
+              <button
+                type="button"
+                className={styles.burger}
+                aria-expanded={open}
+                aria-controls="mobile-nav"
+                aria-label={open ? "Close menu" : "Open menu"}
+                onClick={() => setOpen((v) => !v)}
+              >
+                <span data-open={open || undefined} />
+              </button>
+            </div>
+          </>
+        )}
       </div>
 
-      <div className={styles.panel} id="mobile-nav" data-open={open || undefined} hidden={!open}>
+      <div
+        className={styles.panel}
+        id="mobile-nav"
+        data-open={(!simple && open) || undefined}
+        hidden={simple || !open}
+      >
         <ul>
           {NAV.map((item) => (
             <li key={item.label}>
@@ -79,7 +99,7 @@ export function Header() {
             </li>
           ))}
         </ul>
-        <Button href="/concept-v2#request-demo" tone="primary" full arrow>
+        <Button href={DEMO_HREF} tone="primary" full arrow>
           Request a private demo
         </Button>
       </div>

@@ -187,7 +187,7 @@ export function BrandDemo() {
                 priorities.
               </p>
             </div>
-            <Button href="#request-demo" tone="primary" size="lg" arrow>
+            <Button href="/concept-v2/request-demo" tone="primary" size="lg" arrow>
               Request a private demo
             </Button>
           </div>

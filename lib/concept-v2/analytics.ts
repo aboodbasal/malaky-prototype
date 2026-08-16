@@ -14,7 +14,14 @@ export type ConceptEvent =
   | "brand_demo_analysis_completed"
   | "brand_demo_channel_viewed"
   | "brand_demo_approved"
-  | "brand_demo_reset";
+  | "brand_demo_reset"
+  /* The private-demo request funnel. */
+  | "demo_request_view"
+  | "demo_request_started"
+  | "demo_request_interest_selected"
+  | "demo_request_submitted"
+  | "demo_request_success"
+  | "demo_request_error";
 
 export interface TrackedEvent {
   name: ConceptEvent;

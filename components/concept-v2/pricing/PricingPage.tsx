@@ -148,7 +148,7 @@ export function PricingPage() {
                 {plan.footnote && <p className={styles.planFootnote}>{plan.footnote}</p>}
 
                 <div className={styles.planCta}>
-                  <Button href="#request-demo" tone="secondary" full>
+                  <Button href="/concept-v2/request-demo" tone="secondary" full>
                     Request a private demo
                   </Button>
                 </div>
