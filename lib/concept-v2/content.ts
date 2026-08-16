@@ -18,7 +18,7 @@ export type Platform =
   | "newsletter"
   | "reel"
   /**
-   * The piece *is* a published screenshot. Nothing draws chrome for it — the
+   * The piece *is* a finished screenshot. Nothing draws chrome for it — the
    * chrome is in the image. See ./real-posts and <RealPostCard />.
    */
   | "real-screenshot";
@@ -111,11 +111,11 @@ export interface DrawnPiece extends MarketingPiece {
 /**
  * Four pieces carry the orbit and two ride the dimmer inner path.
  *
- * Three of the four primaries are real marketing published by real companies —
- * they enter as `real-screenshot` pieces and render as the finished screenshot,
- * with no chrome drawn around them. The remaining primary and both supporting
- * cards stay demo brands, so the Arabic composition and the video format are
- * still represented.
+ * Three of the four primaries are brand-approved concept examples for real
+ * companies — they enter as `real-screenshot` pieces and render as the
+ * finished screenshot, with no chrome drawn around them. The remaining primary
+ * and both supporting cards stay demo brands, so the Arabic composition and
+ * the video format are still represented.
  */
 export const HERO_PIECES: MarketingPiece[] = [
   {
@@ -221,57 +221,26 @@ export const ACTIVITY_TIMELINE: ActivityEntry[] = [
 ];
 
 /* ------------------------------------------------------------------ *
- * Section 2 — intelligence states
+ * Section 2 — proactive opportunity detection
+ *
+ * One idea, not three. Persistent memory and the executive voice used to be
+ * claimed here and then proved further down the page; they now live only
+ * where they are demonstrated. What is left is the thing nothing else on the
+ * page shows: Malaky acting on a date before anyone asks.
  * ------------------------------------------------------------------ */
 
-export interface IntelligenceState {
-  id: string;
-  title: string;
-  body: string;
-  /** The third state is live — Malaky acted before being asked. */
-  active?: boolean;
-  meta?: string;
-  /** Small proof rows shown inside the card. */
-  proof?: { label: string; value: string }[];
-}
-
-export const INTELLIGENCE_STATES: IntelligenceState[] = [
-  {
-    id: "brand-remembered",
-    title: "Brand remembered",
-    body:
-      "Your brand, voice, products and audience — held in memory, not re-explained at the start of every task.",
-    proof: [
-      { label: "Voice", value: "Direct, unhurried" },
-      { label: "Products", value: "34 in catalogue" },
-      { label: "Audience", value: "3 segments" },
-    ],
-  },
-  {
-    id: "founder-voice",
-    title: "Founder voice learned",
-    body:
-      "Malaky writes like the executive, not merely like the company. Their cadence, their examples, their restraint.",
-    proof: [
-      { label: "Voice model", value: "Huda Nasser" },
-      { label: "Source", value: "24 approved posts" },
-      { label: "Signature", value: "Specifics over adjectives" },
-    ],
-  },
-  {
-    id: "national-day",
-    title: "Saudi National Day in 12 days",
-    body:
-      "Malaky saw the date coming, matched it to your calendar and prepared the campaign before anyone asked for it.",
-    meta: "Campaign prepared",
-    active: true,
-    proof: [
-      { label: "Channels", value: "6 prepared" },
-      { label: "Arabic", value: "Written natively" },
-      { label: "Awaiting", value: "Your approval" },
-    ],
-  },
-];
+export const PROACTIVE_MOMENT = {
+  occasion: "Saudi National Day",
+  countdown: "12 days away",
+  status: "Campaign prepared",
+  body:
+    "Malaky saw the date coming, matched it to your calendar and prepared the campaign before anyone asked for it.",
+  proof: [
+    { label: "Channels", value: "6 prepared" },
+    { label: "Arabic", value: "Written natively" },
+    { label: "Awaiting", value: "Your approval" },
+  ],
+};
 
 /* ------------------------------------------------------------------ *
  * Section 3 — one event becomes everything
@@ -286,8 +255,14 @@ export const SOURCE_EVENT = {
 };
 
 /**
- * The same event, adapted per channel. Deliberately not one piece of copy
- * repeated six times — each channel has its own job, length and register.
+ * The same event, adapted per channel.
+ *
+ * Four channels, not six. The argument is that one moment becomes genuinely
+ * different pieces of work, and four make it better than six do: each is wide
+ * enough to actually read, and the set no longer repeats a composition to fill
+ * a grid. Every one differs in copy, length, register and shape — a square
+ * image with one line, a wide image with the operational detail, a text-only
+ * post in a person's voice, and a right-to-left campaign composed in Arabic.
  */
 export const EVENT_FANOUT: DrawnPiece[] = [
   {
@@ -318,9 +293,12 @@ export const EVENT_FANOUT: DrawnPiece[] = [
         "Our new regional delivery service launches Monday. Two-day standard transit, tracked end to end, with committed arrival windows for contracted volume.",
     },
     media: {
-      scene: "falak-port",
-      alt: "Stacked shipping containers and crane gantries at sunset",
+      scene: "falak-ship",
+      alt: "A container ship at berth during blue hour",
       aspect: "16:9",
+      // A wide crop off the vessel's centre, so the two image cards in this
+      // row never show the same framing of the same scene.
+      focal: { x: 0.62, y: 0.58 },
     },
     engagement: { likes: 41, comments: 6, reposts: 2 },
   },
@@ -331,9 +309,10 @@ export const EVENT_FANOUT: DrawnPiece[] = [
     label: "CEO LinkedIn",
     executiveKey: "ahmed",
     timestamp: "Prepared",
+    // No image: an executive post carries a voice, not a campaign visual.
     copy: {
       body:
-        "We used to quote five days and hope. Rebuilding the network took three years and a lot of unglamorous work. From Monday we quote two, and we mean it.",
+        "We used to quote five days and hope. Rebuilding the network took three years of unglamorous work. From Monday we quote two.",
     },
     engagement: { likes: 58, comments: 9 },
   },
@@ -349,46 +328,11 @@ export const EVENT_FANOUT: DrawnPiece[] = [
       cta: "تعرّف على الخدمة",
     },
     media: {
-      scene: "falak-ship",
-      alt: "A container ship at berth during blue hour",
+      scene: "falak-port",
+      alt: "Stacked shipping containers and crane gantries at sunset",
       aspect: "1:1",
     },
     engagement: { likes: 52, comments: 4 },
-  },
-  {
-    id: "fanout-newsletter",
-    brandId: "falak",
-    platform: "newsletter",
-    label: "Newsletter",
-    copy: {
-      headline: "A shorter route for your shipments",
-      subhead: "What changes for your account on Monday",
-      body:
-        "From the 14th, your regional lanes move to a two-day standard. Nothing changes in how you book — your existing rates and pickup windows carry over.",
-      cta: "See your new lanes",
-    },
-    media: {
-      scene: "falak-ship",
-      alt: "A container ship at berth during blue hour",
-      aspect: "3:2",
-    },
-  },
-  {
-    id: "fanout-reel",
-    brandId: "falak",
-    platform: "reel",
-    label: "Reel / Video",
-    duration: "0:18",
-    copy: {
-      headline: "The next two days",
-      body: "Depot to door, in the time it used to take to leave the city.",
-    },
-    media: {
-      scene: "falak-port",
-      alt: "Container terminal at dusk, composed vertically",
-      aspect: "4:5",
-    },
-    engagement: { views: "1,240" },
   },
 ];
 

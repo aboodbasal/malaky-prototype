@@ -247,3 +247,73 @@
     width: 100%;
   }
 }
+
+/* --- control guarantees (merged in from the old Trust section) ------ */
+
+/* A record, not an argument. The interactive panel above is the proof; this
+   strip only states which four guarantees exist and which are still planned,
+   so it is deliberately quieter than anything above it. */
+.pillars {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 1px;
+  margin-top: clamp(2rem, 3.5vw, 3rem);
+  border-top: 1px solid var(--c-line);
+}
+
+.pillar {
+  padding: 1.1rem 1.25rem 0 0;
+}
+
+.pillarTitle {
+  font-size: var(--t-body);
+  font-weight: 600;
+  color: var(--c-text-2);
+}
+
+.pillarState {
+  margin-top: 0.3rem;
+  font-size: var(--t-micro);
+  font-weight: 600;
+  letter-spacing: 0.12em;
+  text-transform: uppercase;
+  color: var(--c-accent-hi);
+}
+
+.pillar[data-planned] .pillarTitle {
+  color: var(--c-text-3);
+}
+
+.pillar[data-planned] .pillarState {
+  color: var(--c-text-4);
+}
+
+.disclosure {
+  margin-top: 1.4rem;
+  font-size: var(--t-small);
+  line-height: 1.6;
+  color: var(--c-text-4);
+  max-width: 72ch;
+}
+
+@media (max-width: 860px) {
+  .pillars {
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 0 1rem;
+  }
+}
+
+@media (max-width: 480px) {
+  .pillars {
+    grid-template-columns: 1fr;
+  }
+
+  .pillar {
+    padding-block: 0.9rem 0;
+    border-top: 1px solid var(--c-line);
+  }
+
+  .pillar:first-child {
+    border-top: none;
+  }
+}

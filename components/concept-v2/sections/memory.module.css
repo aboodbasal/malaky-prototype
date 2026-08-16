@@ -18,15 +18,20 @@
 
 /* --- drafts -------------------------------------------------------- */
 
+/* The resting state is readable, not empty.
+   The sequence below is emphasis — it lifts each step as the argument reaches
+   it — but a visitor who scrolls straight past sees the whole flow rather
+   than a headline over a blank panel. Nothing here is required to understand
+   the section. */
 .draft,
 .learned,
 .future {
-  opacity: 0;
-  transform: translateY(12px);
+  opacity: 0.55;
+  transform: translateY(10px);
   transition:
-    opacity 0.6s var(--ease-out),
-    transform 0.6s var(--ease-out),
-    border-color 0.6s var(--ease-out);
+    opacity 0.55s var(--ease-out),
+    transform 0.55s var(--ease-out),
+    border-color 0.55s var(--ease-out);
 }
 
 .draft[data-on],
@@ -89,8 +94,8 @@
   background: var(--c-surface-2);
   color: var(--c-text-3);
   justify-self: center;
-  opacity: 0;
-  transform: scale(0.8);
+  opacity: 0.4;
+  transform: scale(0.86);
   transition:
     opacity 0.45s var(--ease-out),
     transform 0.45s var(--ease-out);
@@ -166,8 +171,10 @@
   animation-delay: calc(0.25s + var(--i) * 0.14s);
 }
 
+/* Same rule: at rest the learned rules are legible, just not yet emphasised. */
 .learned:not([data-on]) .rules li {
   animation: none;
+  opacity: 1;
 }
 
 @keyframes slide {

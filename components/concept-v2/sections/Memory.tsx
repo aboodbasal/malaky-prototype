@@ -9,7 +9,10 @@ import { SectionHead, Stop } from "../ui";
 import { ArrowRight, CheckIcon, MemoryIcon, PencilIcon } from "../icons";
 import styles from "./memory.module.css";
 
-const STEP_DELAYS = [0, 620, 1240, 1860];
+/* Tightened from the original 0/620/1240/1860. The flow is legible from the
+   moment it enters the viewport, so these only pace the emphasis — and a fast
+   scroller should still see it resolve. */
+const STEP_DELAYS = [0, 400, 800, 1200];
 
 /**
  * Proof of learning rather than a claim of it: the edit happens, the rule is
@@ -19,7 +22,7 @@ export function Memory() {
   const brand = getBrand(MEMORY_EXAMPLE.brandId);
   const [ref, reveal] = useReveal<HTMLDivElement>({ threshold: 0.2 });
   const reducedMotion = usePrefersReducedMotion();
-  // Fully visible until the observer arms, so the sequence never hides
+  // Fully emphasised until the observer arms, so the sequence never withholds
   // content from a visitor whose JavaScript hasn't run.
   const [step, setStep] = useState(4);
   const [run, setRun] = useState(0);

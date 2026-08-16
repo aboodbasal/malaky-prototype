@@ -2,7 +2,7 @@ import { getRealPost, type RealPost, type RealPostId } from "@/lib/concept-v2/re
 import styles from "./RealPost.module.css";
 
 /**
- * A finished, real-company marketing screenshot, rendered as itself.
+ * A brand-approved concept example for a real company, rendered as itself.
  *
  * The one rule this component exists to hold: nothing is drawn around the
  * image. These screenshots already contain their own platform chrome, caption,

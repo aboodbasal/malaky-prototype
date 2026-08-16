@@ -50,7 +50,9 @@ export const DomainForm = forwardRef<
           placeholder="yourcompany.com"
           value={value}
           aria-invalid={error ? true : undefined}
-          aria-describedby={error ? "company-url-error" : "company-url-note"}
+          /* The section-level concept-preview notice is what this field needs
+             described; it says more, and says it before anything runs. */
+          aria-describedby={error ? "company-url-error" : "demo-notice"}
           onChange={(e) => {
             setValue(e.target.value);
             if (error) setError(null);
@@ -65,12 +67,8 @@ export const DomainForm = forwardRef<
         {error}
       </p>
 
-      <p className={styles.note} id="company-url-note">
-        Preview only — nothing is published or connected.
-      </p>
-
       <p className={styles.tryList}>
-        <span>Try</span>
+        <span>Try a worked example</span>
         {DEMO_DOMAINS.map((d) => (
           <button
             key={d}

@@ -7,12 +7,18 @@ export function ClosingCta({
   lead,
   cta,
   href = "#request-demo",
+  secondary,
 }: {
   id?: string;
   title: string;
   lead: string;
   cta: string;
   href?: string;
+  /**
+   * A second, lower-commitment path. Optional — a page that has only one
+   * sensible next step should not manufacture a second one.
+   */
+  secondary?: { label: string; href: string };
 }) {
   return (
     <section className={styles.section} id={id} aria-labelledby={`${id}-title`}>
@@ -23,9 +29,16 @@ export function ClosingCta({
           <Stop />
         </h2>
         <p className={styles.lead}>{lead}</p>
-        <Button href={href} tone="primary" size="lg" arrow>
-          {cta}
-        </Button>
+        <div className={styles.actions}>
+          <Button href={href} tone="primary" size="lg" arrow>
+            {cta}
+          </Button>
+          {secondary && (
+            <Button href={secondary.href} tone="secondary" size="lg">
+              {secondary.label}
+            </Button>
+          )}
+        </div>
       </div>
     </section>
   );

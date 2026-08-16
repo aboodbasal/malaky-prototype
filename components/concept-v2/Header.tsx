@@ -6,13 +6,20 @@ import { MalakyLogo } from "./MalakyLogo";
 import { Button } from "./ui";
 import styles from "./Header.module.css";
 
+/**
+ * Every entry resolves to something that exists.
+ *
+ * "About" pointed at a section that was never built, and "Why Malaky" pointed
+ * at the approval section, which is about control rather than why. Both are
+ * gone. "Real brands" replaces them because the proof is worth reaching
+ * directly and the anchor is accurate.
+ */
 const NAV = [
   { label: "Product", href: "/concept-v2#product" },
   { label: "How it works", href: "/concept-v2#how-it-works" },
-  { label: "Why Malaky", href: "/concept-v2#why-malaky" },
+  { label: "Real brands", href: "/concept-v2#real-brands" },
   { label: "Arabic", href: "/concept-v2#arabic" },
   { label: "Pricing", href: "/concept-v2/pricing" },
-  { label: "About", href: "/concept-v2#about" },
 ];
 
 export function Header() {

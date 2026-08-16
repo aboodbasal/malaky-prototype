@@ -5,6 +5,11 @@ import styles from "./Footer.module.css";
 /**
  * Deliberately minimal — only links that correspond to something real in the
  * concept. No careers, press, status or certification claims.
+ *
+ * About, Privacy and Terms used to sit here pointing at anchors that do not
+ * exist. A link to a page we have not built is worse than no link, so they are
+ * removed rather than stubbed; the Legal column returns when there is
+ * something behind it.
  */
 const COLUMNS = [
   {
@@ -12,23 +17,14 @@ const COLUMNS = [
     links: [
       { label: "Overview", href: "/concept-v2#product" },
       { label: "How it works", href: "/concept-v2#how-it-works" },
+      { label: "Real brands", href: "/concept-v2#real-brands" },
       { label: "Arabic", href: "/concept-v2#arabic" },
       { label: "Pricing", href: "/concept-v2/pricing" },
     ],
   },
   {
     title: "Company",
-    links: [
-      { label: "About", href: "/concept-v2#about" },
-      { label: "Contact", href: "/concept-v2#request-demo" },
-    ],
-  },
-  {
-    title: "Legal",
-    links: [
-      { label: "Privacy", href: "/concept-v2#privacy" },
-      { label: "Terms", href: "/concept-v2#terms" },
-    ],
+    links: [{ label: "Contact", href: "/concept-v2#request-demo" }],
   },
 ];
 

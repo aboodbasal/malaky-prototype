@@ -277,6 +277,16 @@ export function TargetIcon(props: IconProps) {
   );
 }
 
+export function InfoIcon(props: IconProps) {
+  return (
+    <Icon {...props}>
+      <circle cx="12" cy="12" r="8.6" />
+      <path d="M12 11.2v5" />
+      <path d="M12 7.9v.1" strokeWidth={2.2} />
+    </Icon>
+  );
+}
+
 export function ChevronDown(props: IconProps) {
   return (
     <Icon strokeWidth={1.8} {...props}>

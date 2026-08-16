@@ -15,9 +15,9 @@ await p.waitForTimeout(900);
 await p.locator("#arabic").screenshot({ path: "screenshots/audit/sidra-arabic-panels.png" });
 
 // Approval card close-up
-await p.locator("#why-malaky").scrollIntoViewIfNeeded();
+await p.locator("#control").scrollIntoViewIfNeeded();
 await p.waitForTimeout(700);
-await p.locator("#why-malaky article").first().screenshot({ path: "screenshots/audit/falak-approval-card.png" });
+await p.locator("#control article").first().screenshot({ path: "screenshots/audit/falak-approval-card.png" });
 
 // Brand demo: each brand, each visual channel
 const run = async (domain, tag, channels) => {

@@ -7,9 +7,26 @@
  * consumes only that shape — no component reads BRANDS directly or hardcodes
  * a company.
  *
+ * Because nothing is read, the result carries a `mode`, and that mode governs
+ * what the UI is allowed to say:
+ *
+ *   "authored"     — one of the four demo companies. Every value was written
+ *                    by hand for a fictional business, so the section may
+ *                    present it as something Malaky worked out.
+ *   "illustrative" — any other domain, including a visitor's own. Nothing was
+ *                    read, so nothing may be presented as discovered. No
+ *                    country, market, product, customer segment, executive
+ *                    identity or business event is asserted; every value is
+ *                    labelled as an example, and the opportunity is an
+ *                    illustration rather than a detection.
+ *
+ * The distinction is enforced here rather than in the components: the labels
+ * travel with the data, so a presentation layer cannot accidentally state an
+ * example as a fact.
+ *
  * To connect real ingestion later, replace the body of `analyzeBrand` with a
- * call that returns the same shape (see `analyzeBrandAsync`). The UI does not
- * need to change.
+ * call that returns the same shape (see `analyzeBrandAsync`) and return
+ * mode: "authored" for anything genuinely read from a source.
  *
  * The result is deliberately plain data — serialisable, so a future
  * /preview/<slug> route could rehydrate a saved analysis. Sharing is not
@@ -28,9 +45,27 @@ import {
  * Shape
  * ------------------------------------------------------------------ */
 
+/**
+ * Whether the values in a result were authored for a demo company or are
+ * standing in for a real analysis that has not happened.
+ */
+export type AnalysisMode = "authored" | "illustrative";
+
 export interface Opportunity {
+  /**
+   * Carried with the data so the two cases can never be confused:
+   * "Opportunity detected" for an authored scenario, "Illustrative
+   * opportunity" when nothing was read.
+   */
+  label: string;
   title: string;
   detail: string;
+}
+
+/** One row of the intelligence table, already labelled for its mode. */
+export interface AnalysisFact {
+  label: string;
+  value: string;
 }
 
 /** Channels this section can present. Drives the selector, in this order. */
@@ -48,6 +83,7 @@ export interface AnalysisOutput {
 }
 
 export interface BrandAnalysis {
+  mode: AnalysisMode;
   company: {
     name: string;
     domain: string;
@@ -57,16 +93,17 @@ export interface BrandAnalysis {
      */
     logo: Brand;
   };
+  /**
+   * Sits under the company name. In illustrative mode this must not be a
+   * factual claim — no industry, no country.
+   */
+  subtitle: string;
   /** Hex values, most dominant first. */
   palette: string[];
-  industry: string;
-  /** Where the company operates from, shown beside the industry. */
-  location: string;
-  products: string[];
-  audiences: string[];
-  markets: string[];
-  tone: string[];
-  opportunities: Opportunity[];
+  paletteLabel: string;
+  /** The intelligence table, in order. Labels already reflect the mode. */
+  facts: AnalysisFact[];
+  opportunity: Opportunity;
   outputs: AnalysisOutput[];
 }
 
@@ -123,7 +160,8 @@ interface Profile {
   audiences: string[];
   markets: string[];
   tone: string[];
-  opportunity: Opportunity;
+  /** The label is applied by `analyzeBrand`, which knows the mode. */
+  opportunity: Omit<Opportunity, "label">;
   executive: Executive;
   /**
    * Purpose-built creative per channel. Empty today — every channel falls
@@ -309,25 +347,27 @@ const KNOWN_DOMAINS: Record<string, BrandId> = {
 export const DEMO_DOMAINS = Object.keys(KNOWN_DOMAINS);
 
 /* ------------------------------------------------------------------ *
- * Generated companies — any other domain still works
+ * Illustrative preview — every other domain
+ *
+ * Nothing below describes a real company, because nothing has been read.
+ * These are neutral visual identities and example copy: no industry, no
+ * country, no market, no product, no customer segment, no executive name and
+ * no business event. The only value derived from the visitor's input is the
+ * company's display name, which comes from the domain they typed.
  * ------------------------------------------------------------------ */
 
-const SECTORS: Array<{
-  industry: string;
-  products: string[];
-  audiences: string[];
-  tone: string[];
-  fallbackScene: MediaScene;
+/**
+ * A palette and mark so the preview looks like a designed artifact rather
+ * than a wireframe. Chosen by a stable hash of the domain so the same input
+ * always looks the same — it is a placeholder identity, never a claim about
+ * the company's real branding, and it is labelled as such.
+ */
+const EXAMPLE_IDENTITIES: Array<{
   mark: Brand["mark"];
   palette: Brand["palette"];
-  opportunity: (name: string, market: string) => Opportunity;
+  scene: MediaScene;
 }> = [
   {
-    industry: "Trading & distribution",
-    products: ["Wholesale supply", "Regional distribution"],
-    audiences: ["Procurement and operations teams"],
-    tone: ["Professional", "Clear", "Direct"],
-    fallbackScene: "falak-ship",
     mark: "wing",
     palette: {
       primary: "#1b3350",
@@ -336,17 +376,9 @@ const SECTORS: Array<{
       ink: "#101f33",
       paper: "#ffffff",
     },
-    opportunity: (name, market) => ({
-      title: "New supply lane",
-      detail: `${name} is opening regular distribution into ${market} next month.`,
-    }),
+    scene: "falak-ship",
   },
   {
-    industry: "Professional services",
-    products: ["Advisory retainers", "Operating reviews"],
-    audiences: ["Founders and finance leads"],
-    tone: ["Credible", "Precise", "Measured"],
-    fallbackScene: "meezan-office",
     mark: "scales",
     palette: {
       primary: "#164a4a",
@@ -355,17 +387,9 @@ const SECTORS: Array<{
       ink: "#0b1c1c",
       paper: "#e8e2d6",
     },
-    opportunity: (name, market) => ({
-      title: "Practice expansion",
-      detail: `${name} is taking on ${market} clients for the first time this quarter.`,
-    }),
+    scene: "meezan-office",
   },
   {
-    industry: "Retail & lifestyle",
-    products: ["Seasonal collections", "Made-to-order pieces"],
-    audiences: ["Considered buyers", "Repeat customers"],
-    tone: ["Warm", "Considered", "Plain-spoken"],
-    fallbackScene: "nura-room",
     mark: "arch",
     palette: {
       primary: "#a9927d",
@@ -374,17 +398,9 @@ const SECTORS: Array<{
       ink: "#33291f",
       paper: "#efe6da",
     },
-    opportunity: (name, market) => ({
-      title: "Season launch",
-      detail: `${name} is launching its next season, starting with ${market}.`,
-    }),
+    scene: "nura-room",
   },
   {
-    industry: "Hospitality",
-    products: ["Rooms and stays", "Seasonal dining"],
-    audiences: ["Weekend travellers", "Private groups"],
-    tone: ["Warm", "Unhurried", "Hospitable"],
-    fallbackScene: "sidra-colonnade",
     mark: "canopy",
     palette: {
       primary: "#3e4a32",
@@ -393,45 +409,34 @@ const SECTORS: Array<{
       ink: "#25291d",
       paper: "#eae0ce",
     },
-    opportunity: (name, market) => ({
-      title: "Season opening",
-      detail: `${name} reopens for the season, with ${market} bookings first.`,
-    }),
-  },
-  {
-    industry: "Industrial & logistics",
-    products: ["Fleet operations", "Contract haulage"],
-    audiences: ["Operations and supply chain leads"],
-    tone: ["Direct", "Operational", "Factual"],
-    fallbackScene: "falak-port",
-    mark: "wing",
-    palette: {
-      primary: "#12233d",
-      secondary: "#f26722",
-      accent: "#5b7ba6",
-      ink: "#0a1526",
-      paper: "#ffffff",
-    },
-    opportunity: (name, market) => ({
-      title: "Coverage expansion",
-      detail: `${name} is extending contracted coverage to ${market} from next month.`,
-    }),
+    scene: "sidra-colonnade",
   },
 ];
 
-const MARKET_SETS = [
-  ["Riyadh", "Jeddah"],
-  ["Riyadh", "Dammam"],
-  ["Jeddah", "Makkah"],
-  ["Riyadh", "GCC"],
-];
-
-const EXEC_NAMES = [
-  { name: "Sara Al Mutairi", initials: "SM" },
-  { name: "Omar Haddad", initials: "OH" },
-  { name: "Nadia Rahman", initials: "NR" },
-  { name: "Yousef Khalil", initials: "YK" },
-];
+/**
+ * The example copy set.
+ *
+ * Each channel demonstrates the shape Malaky writes to — what leads, how long
+ * it runs, what register it uses — without asserting anything about the
+ * visitor's business. No dates, no cities, no products, no numbers.
+ */
+const EXAMPLE_COPY: Profile["copy"] = {
+  company:
+    "The shape of a company post: what changes for the customer first, the operational detail second, one clear next step at the end. Written to the length your team has approved before.",
+  instagram: {
+    overline: "Example",
+    caption: "One line, one image, one reason to care. The detail lives on the channels built for it.",
+  },
+  executive:
+    "The same news in a leader's register: first person, one concrete detail, no announcement language. Malaky learns this voice from posts your executive has already approved.",
+  newsletter: {
+    subject: "The shape of a Malaky newsletter",
+    preheader: "An example of the structure, not a real send",
+    body:
+      "What changed, what it means for this reader specifically, and what they need to do — in that order, at the length your audience already reads.",
+    cta: "Example call to action",
+  },
+};
 
 /** "acme-trading.com" → "Acme Trading" */
 function companyNameFromDomain(domain: string): string {
@@ -557,20 +562,23 @@ export function analyzeBrand(domain: string): BrandAnalysis {
     const profile = PROFILES[knownId];
     const brand = BRANDS[knownId];
     return {
+      mode: "authored",
       company: { name: brand.name, domain, logo: brand },
+      subtitle: `${profile.industry} · ${profile.location}`,
       palette: [
         brand.palette.primary,
         brand.palette.secondary,
         brand.palette.accent,
         brand.palette.paper,
       ],
-      industry: profile.industry,
-      location: profile.location,
-      products: profile.products,
-      audiences: profile.audiences,
-      markets: profile.markets,
-      tone: profile.tone,
-      opportunities: [profile.opportunity],
+      paletteLabel: "Brand colors",
+      facts: [
+        { label: "Audience", value: profile.audiences.join(" · ") },
+        { label: "Markets", value: profile.markets.join(" · ") },
+        { label: "Brand voice", value: profile.tone.join(" · ") },
+        { label: "Products / services", value: profile.products.join(" · ") },
+      ],
+      opportunity: { ...profile.opportunity, label: "Opportunity detected" },
       outputs: buildOutputs({
         brand,
         executive: profile.executive,
@@ -581,67 +589,62 @@ export function analyzeBrand(domain: string): BrandAnalysis {
     };
   }
 
-  // Unknown domain — generate a stable fictional company from it.
+  /* Unknown domain. Nothing has been read, so nothing is claimed: the display
+     name comes from what the visitor typed and every other value below is an
+     example, labelled as one. */
   const seed = hash(domain);
-  const sector = pick(SECTORS, seed);
-  const markets = pick(MARKET_SETS, seed, 1);
-  const execSeed = pick(EXEC_NAMES, seed, 2);
+  const identity = pick(EXAMPLE_IDENTITIES, seed);
   const name = companyNameFromDomain(domain) || "Your Company";
-  const [homeMarket, nextMarket] = markets;
-  const product = sector.products[0];
 
   const brand: Brand = {
     id: "falak", // structural placeholder; identity below is what renders
     name,
-    category: sector.industry,
-    shortCategory: sector.industry.split(" ")[0],
-    feel: sector.tone.join(", "),
-    palette: sector.palette,
+    category: "Example preview",
+    shortCategory: "Example preview",
+    feel: "Example",
+    palette: identity.palette,
     handle: domain.split(".")[0],
     website: domain,
-    mark: sector.mark,
+    mark: identity.mark,
   };
 
+  /* A silhouette and a role, never a person. The avatar is generic artwork
+     already; `initials` is only the SVG title. */
   const executive: Executive = {
-    name: execSeed.name,
-    role: `Chief Executive Officer, ${name}`,
+    name: "Your executive",
+    role: "Example executive voice",
     brandId: "falak",
-    initials: execSeed.initials,
+    initials: "Example executive",
   };
 
   return {
+    mode: "illustrative",
     company: { name, domain, logo: brand },
+    subtitle: "Example profile — this website has not been read",
     palette: [
-      sector.palette.primary,
-      sector.palette.secondary,
-      sector.palette.accent,
-      sector.palette.paper,
+      identity.palette.primary,
+      identity.palette.secondary,
+      identity.palette.accent,
+      identity.palette.paper,
     ],
-    industry: sector.industry,
-    location: "Saudi Arabia",
-    products: sector.products,
-    audiences: sector.audiences,
-    markets,
-    tone: sector.tone,
-    opportunities: [sector.opportunity(name, nextMarket)],
+    paletteLabel: "Example palette",
+    facts: [
+      { label: "Example audience", value: "The people this company already sells to" },
+      { label: "Example channel mix", value: "LinkedIn · Instagram · Executive · Newsletter" },
+      { label: "Example voice", value: "Set from your own approved writing" },
+      { label: "Example campaign focus", value: "Whatever is next on your calendar" },
+    ],
+    opportunity: {
+      label: "Illustrative opportunity",
+      title: "The moment Malaky would prepare for",
+      detail:
+        "In a real deployment this is a date on your calendar, a product milestone or a market event Malaky is already tracking. Here it stands in for one.",
+    },
     outputs: buildOutputs({
       brand,
       executive,
-      fallbackScene: sector.fallbackScene,
-      copy: {
-        company: `From next month, ${product.toLowerCase()} from ${name} covers ${nextMarket} as well as ${homeMarket}. Same team, same commitments, wider coverage.`,
-        instagram: {
-          overline: `${nextMarket}, from next month`,
-          caption: `${product} — now closer to you.`,
-        },
-        executive: `We said no to ${nextMarket} twice. The third time the numbers worked and the operation was ready to carry it. That is the whole story, and it took longer than anyone wanted.`,
-        newsletter: {
-          subject: `What changes for you next month`,
-          preheader: `${nextMarket} joins your coverage`,
-          body: `From next month your account covers ${nextMarket} alongside ${homeMarket}. Nothing changes in how you order — the same terms carry over.`,
-          cta: "See what's covered",
-        },
-      },
+      fallbackScene: identity.scene,
+      copy: EXAMPLE_COPY,
     }),
   };
 }

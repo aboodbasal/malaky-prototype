@@ -92,7 +92,7 @@
 /* --- caption ------------------------------------------------------ */
 
 .meta {
-  padding-top: 1.05rem;
+  padding-top: 0.95rem;
 }
 
 .company {
@@ -111,13 +111,6 @@
   letter-spacing: 0.11em;
   text-transform: uppercase;
   color: var(--c-accent-hi);
-}
-
-.summary {
-  margin-top: 0.55rem;
-  font-size: var(--t-small);
-  line-height: 1.55;
-  color: var(--c-text-3);
 }
 
 .note {

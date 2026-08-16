@@ -135,7 +135,21 @@
 }
 
 @media (max-width: 520px) {
-  .cta {
+  /* The primary CTA stays on screen rather than moving into the menu. An
+     executive opening this from a message should never have to find the
+     hamburger to convert. Compact, not hidden — and not a sticky buy-bar. */
+  .actions {
+    gap: 0.45rem;
+  }
+
+  .actions .cta {
+    font-size: 0.75rem;
+    padding: 0.55rem 0.7rem;
+    white-space: nowrap;
+  }
+
+  /* The arrow is the first thing to go when space is tight. */
+  .actions .cta svg {
     display: none;
   }
 }

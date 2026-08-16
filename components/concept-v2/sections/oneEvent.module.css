@@ -71,10 +71,13 @@
   background: linear-gradient(var(--c-accent-line), var(--c-line-2));
 }
 
+/* Four channels on one row. They sit side by side rather than wrapping, so
+   the four expressions of one event are read together instead of as two
+   stacked rows of three. */
 .grid {
   display: grid;
-  grid-template-columns: repeat(3, minmax(0, 1fr));
-  gap: clamp(1.25rem, 2.4vw, 2rem) clamp(1rem, 1.8vw, 1.6rem);
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.4vw, 2rem) clamp(0.9rem, 1.5vw, 1.4rem);
 }
 
 .col {
@@ -115,9 +118,8 @@
   opacity: 0.65;
 }
 
-.col:nth-child(n + 4) .tick {
-  display: none;
-}
+/* The connector runs along the top row only; with four columns that is
+   every column, so nothing is hidden at full width. */
 
 .channel {
   display: inline-flex;

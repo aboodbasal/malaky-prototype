@@ -9,7 +9,8 @@ import {
 } from "@/lib/concept-v2/analysis";
 import { track } from "@/lib/concept-v2/analytics";
 import { usePrefersReducedMotion } from "@/hooks/useConceptHooks";
-import { Stop } from "../ui";
+import { Button, Stop } from "../ui";
+import { InfoIcon } from "../icons";
 import { AnalysisSequence } from "./AnalysisSequence";
 import { DomainForm } from "./DomainForm";
 import { IntelligenceSummary } from "./IntelligenceSummary";
@@ -104,19 +105,28 @@ export function BrandDemo() {
     track("brand_demo_channel_viewed", { domain, channel: next });
   };
 
+  /* An illustrative run must not describe itself as a reading of the
+     visitor's business — including in the heading and the line under it,
+     which is where a claim is easiest to make by accident. */
+  const illustrative = analysis?.mode === "illustrative";
+
   const heading =
     phase === "idle"
       ? "See Malaky with your brand"
       : phase === "analyzing"
         ? "Understanding your business"
-        : "Here's what Malaky would prepare today";
+        : illustrative
+          ? "Here's the shape of what Malaky prepares"
+          : "Here's what Malaky would prepare today";
 
   const lead =
     phase === "idle"
       ? "Enter your company website. Malaky will show you what it would prepare."
       : phase === "analyzing"
-        ? "Reading the business before writing anything."
-        : "Built from what Malaky learned about your business.";
+        ? "Working through the business before writing anything."
+        : illustrative
+          ? "An example of the output and the thinking behind it — not an analysis of your website."
+          : "Built from what Malaky learned about your business.";
 
   return (
     <section className={styles.section} id="brand-demo" aria-labelledby="demo-title">
@@ -126,7 +136,19 @@ export function BrandDemo() {
             {heading}
             <Stop />
           </h2>
-          <p className={styles.lead}>{lead}</p>
+          <div className={styles.leadCol}>
+            <p className={styles.lead}>{lead}</p>
+            {/* Stated before anything runs, and kept on screen throughout, so
+                no part of this section can be mistaken for a live reading of
+                the visitor's website. */}
+            <p className={styles.notice} id="demo-notice">
+              <InfoIcon size={13} className={styles.noticeIcon} />
+              <span>
+                <b>Concept preview</b> — Malaky is not reading this website yet. This shows
+                how a real company analysis will work.
+              </span>
+            </p>
+          </div>
         </div>
 
         {phase === "idle" && <DomainForm ref={inputRef} onSubmit={start} />}
@@ -149,6 +171,25 @@ export function BrandDemo() {
               Try another company
             </button>
             <p className={styles.note}>Preview only — nothing is published or connected.</p>
+          </div>
+        )}
+
+        {/* The honest end of an illustrative run: the example has shown the
+            shape, and the only way to get the real thing is a conversation. */}
+        {phase === "ready" && analysis?.mode === "illustrative" && (
+          <div className={styles.convert}>
+            <div>
+              <p className={styles.convertTitle}>
+                Want Malaky to actually learn your company?
+              </p>
+              <p className={styles.convertBody}>
+                We&rsquo;ll configure your real brand, business context and marketing
+                priorities.
+              </p>
+            </div>
+            <Button href="#request-demo" tone="primary" size="lg" arrow>
+              Request a private demo
+            </Button>
           </div>
         )}
       </div>

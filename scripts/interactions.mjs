@@ -28,7 +28,7 @@ console.log("hovered card forward:", await page.evaluate(() => {
 }));
 
 // 2. Approval flow.
-await page.locator("#why-malaky").scrollIntoViewIfNeeded();
+await page.locator("#control").scrollIntoViewIfNeeded();
 await page.getByRole("button", { name: "Approve", exact: true }).click();
 await page.waitForTimeout(2400);
 console.log("approval reached scheduled:", await page.locator('li[data-state="current"]').last().innerText());
@@ -67,13 +67,15 @@ const ctaAudit = async (url) => {
 console.log("stale CTAs on home:", JSON.stringify(await ctaAudit("/concept-v2")));
 console.log("stale CTAs on pricing:", JSON.stringify(await ctaAudit("/concept-v2/pricing")));
 
-// 5c. New trust section, with honest capability labelling.
+// 5c. Control guarantees, merged into approval, with honest labelling.
 await page.goto("http://localhost:3000/concept-v2", { waitUntil: "networkidle" });
 await page.locator("#control").scrollIntoViewIfNeeded();
 await page.waitForTimeout(900);
-console.log("trust headline:", await page.getByText("Your brand stays under your control").isVisible());
-console.log("planned labels:", await page.getByText("Planned — not built yet").count());
-console.log("demonstrated labels:", await page.getByText("Demonstrated in this concept").count());
+console.log("control headline:", await page.getByText("You stay in control").first().isVisible());
+// Scoped to the guarantees list — #control also holds the approval track's <li>s.
+const pillars = page.locator('#control ul[aria-label="What stays under your control"] li');
+console.log("planned labels:", await pillars.filter({ hasText: "Planned" }).count());
+console.log("demonstrated labels:", await pillars.filter({ hasText: "Demonstrated" }).count());
 await page.screenshot({ path: "screenshots/trust-section.png" });
 
 // 5d. Approved lines must survive every pass.

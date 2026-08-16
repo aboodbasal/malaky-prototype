@@ -9,13 +9,14 @@ import { ArrowRight } from "../icons";
 import styles from "./realBrands.module.css";
 
 /**
- * Real marketing from real companies, at a size where it can actually be read.
+ * Real companies, at a size where the work can actually be read.
  *
  * Everything else on this page is demo content, so this section is the one
- * place the work is not ours to compose — each item is a published screenshot
- * shown whole, at its own aspect ratio, with no chrome drawn around it. The
- * caption underneath carries the company, channel and industry so the rail
- * reads as range rather than as a logo wall.
+ * place the work is not ours to compose — each item is a brand-approved
+ * concept example shown whole, at its own aspect ratio, with no chrome drawn
+ * around it. The caption underneath is two lines and no more: the company,
+ * then sector and channel. It states the range Malaky covers rather than
+ * reviewing the creative.
  *
  * The rail is a native horizontal scroller: it works with a trackpad, a
  * touch drag, the arrow keys and the buttons, and needs no JavaScript to be
@@ -96,7 +97,7 @@ export function RealBrands() {
           onScroll={syncEdge}
           tabIndex={0}
           role="group"
-          aria-label="Marketing published by real companies"
+          aria-label="Concept examples across five real companies"
         >
           {GALLERY_POSTS.map((post, i) => (
             <li
@@ -119,11 +120,10 @@ export function RealBrands() {
               <div className={styles.meta}>
                 <p className={styles.company}>{post.company}</p>
                 <p className={styles.channel}>
-                  {post.platform}
-                  <span aria-hidden="true"> · </span>
                   {post.industry}
+                  <span aria-hidden="true"> · </span>
+                  {post.platform}
                 </p>
-                <p className={styles.summary}>{post.summary}</p>
               </div>
             </li>
           ))}
@@ -132,8 +132,8 @@ export function RealBrands() {
 
       <div className="shell">
         <p className={styles.note}>
-          Published marketing from Alpha Pro MENA, Inception DAP, Baker Tilly Saudi Arabia,
-          Shrimp Joint and Ataccama.
+          Brand-approved concept examples featuring Alpha Pro MENA, Inception DAP, Baker
+          Tilly Saudi Arabia, Shrimp Joint and Ataccama.
         </p>
       </div>
     </section>

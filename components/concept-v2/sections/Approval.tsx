@@ -1,7 +1,7 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { APPROVAL_PIECE, APPROVAL_STAGES } from "@/lib/concept-v2/content";
+import { APPROVAL_PIECE, APPROVAL_STAGES, TRUST_PILLARS } from "@/lib/concept-v2/content";
 import { usePrefersReducedMotion } from "@/hooks/useConceptHooks";
 import { PostCard } from "../posts";
 import { SectionHead, Stop } from "../ui";
@@ -14,6 +14,12 @@ type Outcome = "idle" | "running" | "done" | "editing" | "declined";
  * The approval moment, made real. Approving advances the piece through its
  * actual states and ends with Malaky recording the preference — calm and
  * immediate, no celebration animation.
+ *
+ * The control guarantees used to live in their own section further down,
+ * restating in a list what this interaction had already proved. They now sit
+ * underneath it as a quiet strip: the demonstration is the argument, and the
+ * strip only records which of the four are demonstrated and which are still
+ * planned.
  */
 export function Approval() {
   const [outcome, setOutcome] = useState<Outcome>("idle");
@@ -58,7 +64,7 @@ export function Approval() {
   const busy = outcome === "running";
 
   return (
-    <section className={styles.section} id="why-malaky" aria-labelledby="approval-title">
+    <section className={styles.section} id="control" aria-labelledby="approval-title">
       <div className="shell">
         <SectionHead
           id="approval-title"
@@ -187,6 +193,26 @@ export function Approval() {
             </p>
           </div>
         </div>
+
+        <ul className={styles.pillars} aria-label="What stays under your control">
+          {TRUST_PILLARS.map((pillar) => (
+            <li
+              key={pillar.id}
+              className={styles.pillar}
+              data-planned={pillar.state === "planned" || undefined}
+            >
+              <p className={styles.pillarTitle}>{pillar.title}</p>
+              <p className={styles.pillarState}>
+                {pillar.state === "planned" ? "Planned" : "Demonstrated"}
+              </p>
+            </li>
+          ))}
+        </ul>
+
+        <p className={styles.disclosure}>
+          &ldquo;Demonstrated&rdquo; means you can exercise the behaviour on this page.
+          &ldquo;Planned&rdquo; means it is described here and still to be built.
+        </p>
       </div>
     </section>
   );

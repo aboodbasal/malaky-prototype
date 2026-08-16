@@ -33,7 +33,8 @@ for (const [input, expect] of [
   await go();
   await page.fill("#company-url", input);
   await page.getByRole("button", { name: /Show me/ }).click();
-  await page.waitForSelector("text=Here's what Malaky would prepare today", { timeout: 15000 });
+  // Authored companies and illustrative previews land on different headings.
+  await page.waitForSelector("text=/Here's (what Malaky would prepare today|the shape of what Malaky prepares)/", { timeout: 15000 });
   const name = await page.locator("#brand-demo h2 ~ *").first().innerText().catch(() => "");
   const shown = await page.locator("#brand-demo").innerText();
   ok(`${input.padEnd(38)} -> ${expect}`, shown.includes(expect));
@@ -114,7 +115,9 @@ const norm = full.replace(/’/g, "'");
 ok("hero headline intact", norm.includes("Your marketing"));
 ok("memory line intact", norm.includes("You shouldn't have to correct the same thing twice"));
 ok("arabic line intact", norm.includes("Arabic isn't a language toggle"));
-ok("trust section intact", norm.includes("Your brand stays under your control"));
+// The standalone trust section is gone; its guarantees are inside approval.
+ok("control guarantees intact", norm.includes("You stay in control"));
+ok("planned capabilities still labelled", norm.includes("Roles & workflows") && norm.includes("Source visibility"));
 
 // --- reduced motion -----------------------------------------------------
 const rmCtx = await browser.newContext({ viewport: { width: 1440, height: 900 }, reducedMotion: "reduce" });

@@ -47,7 +47,7 @@ export function OneEvent() {
               <Stop />
             </>
           }
-          lead="Malaky turns one business moment into the right message for every channel — not the same sentence pasted six times."
+          lead="Malaky turns one business moment into the right message for every channel — not the same sentence reformatted four times."
         >
           <article className={styles.event}>
             <div className={styles.eventTop}>
