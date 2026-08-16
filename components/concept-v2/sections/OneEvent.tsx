@@ -1,6 +1,6 @@
 "use client";
 
-import { EVENT_FANOUT, SOURCE_EVENT } from "@/lib/concept-v2/content";
+import { EVENT_FANOUT, SOURCE_EVENT, type DrawnPlatform } from "@/lib/concept-v2/content";
 import { getBrand } from "@/lib/concept-v2/brands";
 import { useReveal } from "@/hooks/useConceptHooks";
 import { BrandMark } from "../BrandMark";
@@ -16,7 +16,9 @@ import {
 } from "../icons";
 import styles from "./oneEvent.module.css";
 
-const CHANNEL_ICON = {
+/* Every fan-out output is a piece this concept draws itself, so the map is
+   over DrawnPlatform — a real screenshot has no channel icon to add. */
+const CHANNEL_ICON: Record<DrawnPlatform, typeof InstagramIcon> = {
   instagram: InstagramIcon,
   "linkedin-company": LinkedInIcon,
   "linkedin-executive": LinkedInIcon,

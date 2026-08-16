@@ -5,6 +5,7 @@ import { Approval } from "@/components/concept-v2/sections/Approval";
 import { Memory } from "@/components/concept-v2/sections/Memory";
 import { Arabic } from "@/components/concept-v2/sections/Arabic";
 import { Trust } from "@/components/concept-v2/sections/Trust";
+import { RealBrands } from "@/components/concept-v2/sections/RealBrands";
 import { BrandDemo } from "@/components/concept-v2/branddemo/BrandDemo";
 import { ClosingCta } from "@/components/concept-v2/sections/ClosingCta";
 
@@ -18,6 +19,8 @@ export default function ConceptHome() {
       <Memory />
       <Arabic />
       <Trust />
+      {/* Real brands first, then the visitor's own — proof, then invitation. */}
+      <RealBrands />
       <BrandDemo />
       <ClosingCta
         id="request-demo"

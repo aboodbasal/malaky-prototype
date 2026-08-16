@@ -8,6 +8,7 @@
 
 import type { Brand, BrandId, Executive } from "./brands";
 import type { MediaScene, PieceMedia } from "./media";
+import type { RealPostId } from "./real-posts";
 
 export type Platform =
   | "instagram"
@@ -15,7 +16,19 @@ export type Platform =
   | "linkedin-executive"
   | "arabic-social"
   | "newsletter"
-  | "reel";
+  | "reel"
+  /**
+   * The piece *is* a published screenshot. Nothing draws chrome for it — the
+   * chrome is in the image. See ./real-posts and <RealPostCard />.
+   */
+  | "real-screenshot";
+
+/**
+ * The platforms this concept draws chrome for. A real screenshot is excluded
+ * by construction, so anything that renders a platform bar, an account row or
+ * an engagement strip cannot be pointed at one.
+ */
+export type DrawnPlatform = Exclude<Platform, "real-screenshot">;
 
 /* Media types live in ./media — a creative belongs to a channel, and framing
    travels with the asset. Re-exported so existing imports keep working. */
@@ -39,7 +52,8 @@ export type PieceStatus = "prepared" | "ready" | "approved" | "scheduled";
 
 export interface MarketingPiece {
   id: string;
-  brandId: BrandId;
+  /** Omitted only by real-screenshot pieces, which are not demo brands. */
+  brandId?: BrandId;
   /**
    * Overrides the BRANDS lookup. The brand-analysis layer uses this so a
    * generated (non-catalogue) company renders through the same components.
@@ -72,45 +86,54 @@ export interface MarketingPiece {
   engagement?: Engagement;
   /** Reel duration, e.g. "0:18". */
   duration?: string;
+  /**
+   * Set only on `platform: "real-screenshot"` pieces. Points at the published
+   * screenshot in ./real-posts, which supplies its own chrome, caption and
+   * engagement — so `copy`, `media` and `engagement` are not rendered for
+   * these pieces and exist here only to describe the piece.
+   */
+  realPostId?: RealPostId;
+}
+
+/**
+ * A piece whose chrome this concept draws. Narrower than MarketingPiece by
+ * exactly one case, so a surface that reasons per channel — icons, labels,
+ * platform bars — can be sure a real screenshot never arrives there.
+ */
+export interface DrawnPiece extends MarketingPiece {
+  platform: DrawnPlatform;
 }
 
 /* ------------------------------------------------------------------ *
  * Hero — six finished pieces across the demo ecosystem
  * ------------------------------------------------------------------ */
 
+/**
+ * Four pieces carry the orbit and two ride the dimmer inner path.
+ *
+ * Three of the four primaries are real marketing published by real companies —
+ * they enter as `real-screenshot` pieces and render as the finished screenshot,
+ * with no chrome drawn around them. The remaining primary and both supporting
+ * cards stay demo brands, so the Arabic composition and the video format are
+ * still represented.
+ */
 export const HERO_PIECES: MarketingPiece[] = [
   {
     id: "hero-instagram",
-    brandId: "nura",
-    platform: "instagram",
+    platform: "real-screenshot",
+    realPostId: "inception-branding",
     label: "Instagram Post",
-    status: "prepared",
-    timestamp: "Prepared 05:47",
-    copy: {
-      body: "Timeless comfort, crafted for the room you actually live in.",
-      cta: "New collection",
-    },
-    media: {
-      scene: "nura-room",
-      alt: "A softly lit living room in cream and taupe with a low linen sofa",
-      aspect: "1:1",
-      overline: "New collection",
-    },
-    engagement: { likes: 96, comments: 7 },
-  },
-  {
-    id: "hero-linkedin-executive",
-    brandId: "falak",
-    platform: "linkedin-executive",
-    label: "Executive LinkedIn",
-    executiveKey: "ahmed",
-    status: "ready",
-    timestamp: "4h",
     copy: {
       body:
-        "Three years ago, five days was a normal regional delivery quote. From Monday, we quote two. The network our team rebuilt is what made that ordinary.",
+        "We create end-to-end branding & production solutions that connect, inspire, and drive results.",
     },
-    engagement: { likes: 58, comments: 9 },
+  },
+  {
+    id: "hero-facebook",
+    platform: "real-screenshot",
+    realPostId: "shrimp-joint-crispy-fish",
+    label: "Facebook Post",
+    copy: { body: "Crispy. Hot. Loaded. Our crispy fish sandwich is here." },
   },
   {
     id: "hero-arabic-social",
@@ -134,41 +157,27 @@ export const HERO_PIECES: MarketingPiece[] = [
   },
   {
     id: "hero-newsletter",
-    brandId: "nura",
-    platform: "newsletter",
+    platform: "real-screenshot",
+    realPostId: "ataccama-newsletter",
     label: "Newsletter",
-    status: "prepared",
-    timestamp: "Sends Thursday, 09:00",
     copy: {
-      headline: "This week at Nura Living",
-      subhead: "The new collection, and the thinking behind it",
-      body:
-        "A curated update on our new arrivals and what's coming next — written for people who furnish slowly and keep things for a long time.",
-      cta: "Read this week's edition",
-    },
-    media: {
-      scene: "nura-still",
-      alt: "A still life of ceramic vessels in warm taupe and cream",
-      aspect: "3:2",
+      headline: "Smarter Data. Stronger Decisions.",
+      body: "Make data quality, governance, and trust your competitive edge.",
     },
   },
   {
-    id: "hero-linkedin-company",
+    id: "hero-linkedin-executive",
     brandId: "falak",
-    platform: "linkedin-company",
-    label: "LinkedIn Company Post",
+    platform: "linkedin-executive",
+    label: "Executive LinkedIn",
+    executiveKey: "ahmed",
     status: "ready",
-    timestamp: "2h",
+    timestamp: "4h",
     copy: {
       body:
-        "Our new regional delivery service launches Monday. Built for speed. Designed for businesses that plan around arrival times.",
+        "Three years ago, five days was a normal regional delivery quote. From Monday, we quote two. The network our team rebuilt is what made that ordinary.",
     },
-    media: {
-      scene: "falak-port",
-      alt: "Stacked shipping containers and crane gantries at dusk",
-      aspect: "16:9",
-    },
-    engagement: { likes: 41, comments: 6, reposts: 2 },
+    engagement: { likes: 58, comments: 9 },
   },
   {
     id: "hero-reel",
@@ -280,7 +289,7 @@ export const SOURCE_EVENT = {
  * The same event, adapted per channel. Deliberately not one piece of copy
  * repeated six times — each channel has its own job, length and register.
  */
-export const EVENT_FANOUT: MarketingPiece[] = [
+export const EVENT_FANOUT: DrawnPiece[] = [
   {
     id: "fanout-instagram",
     brandId: "falak",

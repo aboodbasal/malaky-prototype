@@ -55,12 +55,19 @@ interface OrbitSlot {
   background?: boolean;
 }
 
+/**
+ * The six slots are unchanged — same phases, widths, offsets and rolls as the
+ * approved composition. Only which piece occupies which slot has moved, so the
+ * three real screenshots sit on the primary ring where they are legible and
+ * never on the two small background slots, where 118–150px turns set text into
+ * a smudge.
+ */
 const LAYOUT: Record<string, OrbitSlot> = {
   "hero-instagram": { phase: 0, width: 186, y: -16, roll: -1.2 },
-  "hero-linkedin-executive": { phase: 0.25, width: 202, y: 34, roll: 1.4 },
+  "hero-facebook": { phase: 0.25, width: 202, y: 34, roll: 1.4 },
   "hero-arabic-social": { phase: 0.5, width: 178, y: -44, roll: -1 },
   "hero-newsletter": { phase: 0.75, width: 196, y: 20, roll: 0.6 },
-  "hero-linkedin-company": { phase: 0.125, width: 150, y: -30, roll: 0.8, background: true },
+  "hero-linkedin-executive": { phase: 0.125, width: 150, y: -30, roll: 0.8, background: true },
   "hero-reel": { phase: 0.625, width: 118, y: 28, roll: -1.6, background: true },
 };
 

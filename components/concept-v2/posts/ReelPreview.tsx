@@ -1,17 +1,16 @@
-import { getBrand } from "@/lib/concept-v2/brands";
 import { isVideo } from "@/lib/concept-v2/media";
 import type { MarketingPiece } from "@/lib/concept-v2/content";
 import { BrandMedia } from "../BrandMedia";
 import { BrandMark } from "../BrandMark";
 import { PlayIcon } from "../icons";
-import { PostShell, postStyles as s } from "./shared";
+import { PostShell, pieceBrand, postStyles as s } from "./shared";
 
 /**
  * Static poster frame with a play affordance — nothing autoplays, so a page
  * full of these costs nothing at runtime.
  */
 export function ReelPreview({ piece }: { piece: MarketingPiece }) {
-  const brand = piece.brand ?? getBrand(piece.brandId);
+  const brand = pieceBrand(piece);
   // Once a real video is attached its own duration wins; the piece-level
   // value is the placeholder until then.
   const duration =

@@ -1,4 +1,5 @@
 import type { MarketingPiece } from "@/lib/concept-v2/content";
+import { RealPostCard } from "../RealPost";
 import { ArabicSocialPost } from "./ArabicSocialPost";
 import { InstagramPost } from "./InstagramPost";
 import { LinkedInCompanyPost } from "./LinkedInCompanyPost";
@@ -19,9 +20,14 @@ export {
  * Renders whichever component a piece's platform calls for. Every surface on
  * the concept — orbit, mobile stack, fan-out, brand demo — goes through here,
  * so a piece looks identical wherever it appears.
+ *
+ * A real screenshot is the one case that draws no chrome: it already has its
+ * own, so it short-circuits straight to the image.
  */
 export function PostCard({ piece }: { piece: MarketingPiece }) {
   switch (piece.platform) {
+    case "real-screenshot":
+      return <RealPostCard id={piece.realPostId} eager />;
     case "instagram":
       return <InstagramPost piece={piece} />;
     case "linkedin-company":

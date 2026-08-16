@@ -9,3 +9,6 @@ npm-debug.log*
 !.env.example
 next-env.d.ts
 /screenshots
+
+# TypeScript incremental build cache
+*.tsbuildinfo

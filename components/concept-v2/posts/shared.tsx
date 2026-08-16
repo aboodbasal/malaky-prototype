@@ -1,5 +1,6 @@
 import type { ReactNode } from "react";
-import type { Platform } from "@/lib/concept-v2/content";
+import { getBrand, type Brand, type BrandId } from "@/lib/concept-v2/brands";
+import type { DrawnPlatform, MarketingPiece } from "@/lib/concept-v2/content";
 import {
   ArabicIcon,
   CommentIcon,
@@ -24,8 +25,25 @@ export function formatCount(n: number): string {
   return String(n);
 }
 
+/**
+ * The brand a post component draws.
+ *
+ * An explicit `brand` wins, so a generated (non-catalogue) company renders
+ * through the same components. Every piece that reaches a post component has
+ * one or the other — real screenshots carry their own branding inside the
+ * image and never get here.
+ */
+export function pieceBrand(piece: MarketingPiece, brandId?: BrandId): Brand {
+  const id = brandId ?? piece.brandId;
+  const brand = piece.brand ?? (id ? getBrand(id) : undefined);
+  if (!brand) {
+    throw new Error(`Marketing piece "${piece.id}" has no brand to draw.`);
+  }
+  return brand;
+}
+
 const PLATFORM_META: Record<
-  Platform,
+  DrawnPlatform,
   { label: string; icon: ReactNode; tone: string }
 > = {
   instagram: { label: "Instagram", icon: <InstagramIcon size={13} />, tone: "#e1568f" },
@@ -43,7 +61,7 @@ export function PlatformBar({
   tone,
   onLight,
 }: {
-  platform: Platform;
+  platform: DrawnPlatform;
   label?: string;
   tone?: string;
   onLight?: boolean;

@@ -1,11 +1,10 @@
-import { getBrand } from "@/lib/concept-v2/brands";
 import type { MarketingPiece } from "@/lib/concept-v2/content";
 import { BrandMedia } from "../BrandMedia";
 import { BrandMark } from "../BrandMark";
-import { EngagementRow, PlatformBar, PostShell, postStyles as s } from "./shared";
+import { EngagementRow, PlatformBar, PostShell, pieceBrand, postStyles as s } from "./shared";
 
 export function LinkedInCompanyPost({ piece }: { piece: MarketingPiece }) {
-  const brand = piece.brand ?? getBrand(piece.brandId);
+  const brand = pieceBrand(piece);
   return (
     <PostShell>
       <PlatformBar platform="linkedin-company" label={piece.label} />

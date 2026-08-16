@@ -1,13 +1,12 @@
-import { getBrand } from "@/lib/concept-v2/brands";
 import type { MarketingPiece } from "@/lib/concept-v2/content";
 import { BrandMedia } from "../BrandMedia";
 import { BrandMark } from "../BrandMark";
 import { ArrowRight } from "../icons";
-import { PlatformBar, PostShell, postStyles as s } from "./shared";
+import { PlatformBar, PostShell, pieceBrand, postStyles as s } from "./shared";
 
 /** Renders as paper rather than app chrome — an email is a different object. */
 export function NewsletterPreview({ piece }: { piece: MarketingPiece }) {
-  const brand = piece.brand ?? getBrand(piece.brandId);
+  const brand = pieceBrand(piece);
   return (
     <PostShell variant="paper">
       <PlatformBar platform="newsletter" label={piece.label} onLight tone="#3f7d63" />

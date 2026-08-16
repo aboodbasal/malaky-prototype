@@ -1,15 +1,14 @@
-import { getBrand } from "@/lib/concept-v2/brands";
 import type { MarketingPiece } from "@/lib/concept-v2/content";
 import { BrandMedia } from "../BrandMedia";
 import { BrandMark } from "../BrandMark";
-import { EngagementRow, PlatformBar, PostShell, postStyles as s } from "./shared";
+import { EngagementRow, PlatformBar, PostShell, pieceBrand, postStyles as s } from "./shared";
 
 /**
  * Arabic social. Composed right-to-left with Arabic typography — the copy in
  * the data layer is written natively, not translated from the English piece.
  */
 export function ArabicSocialPost({ piece }: { piece: MarketingPiece }) {
-  const brand = piece.brand ?? getBrand(piece.brandId);
+  const brand = pieceBrand(piece);
   return (
     <PostShell dir="rtl">
       <PlatformBar platform="arabic-social" label={piece.label} />
