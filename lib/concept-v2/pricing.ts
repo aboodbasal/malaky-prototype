@@ -172,7 +172,7 @@ export const PLANS: Plan[] = [
     coverage: [
       { label: "Brands", value: "1 primary brand" },
       { label: "Marketing voice", value: "Company voice" },
-      { label: "Executive voices", value: "Up to 2" },
+      { label: "Executive voices", value: "1 executive voice" },
       { label: "Languages", value: "Arabic + English" },
       { label: "Campaign planning", value: "Proactive marketing calendar" },
       { label: "Channels", value: "Core supported channels" },
@@ -197,7 +197,7 @@ export const PLANS: Plan[] = [
     coverage: [
       { label: "Brands", value: "Up to 2 brands or business units" },
       { label: "Marketing voice", value: "Company voice" },
-      { label: "Executive voices", value: "Up to 5" },
+      { label: "Executive voices", value: "Up to 3" },
       { label: "Languages", value: "Arabic + English" },
       { label: "Campaign planning", value: "Multi-market planning" },
       { label: "Channels", value: "Broader channel coverage" },
@@ -224,7 +224,7 @@ export const PLANS: Plan[] = [
     coverage: [
       { label: "Deployment scope", value: "Custom" },
       { label: "Brands", value: "Larger brand coverage" },
-      { label: "Executive voices", value: "Extended voice library" },
+      { label: "Executive voices", value: "Defined by scope" },
       { label: "Operating model", value: "Tailored to your organisation" },
       { label: "Implementation", value: "Where scoped" },
       { label: "Integrations", value: "Where scoped" },
@@ -344,9 +344,9 @@ export const COMPARISON: ComparisonRow[] = [
   },
   {
     label: "Executive voices",
-    business: "Up to 2",
-    scale: "Up to 5",
-    enterprise: "Extended library",
+    business: "1",
+    scale: "Up to 3",
+    enterprise: "Defined by scope",
   },
   {
     label: "Market coverage",

@@ -75,6 +75,11 @@ console.log("combined totals shown:",
   pricingText.includes("$898") && pricingText.includes("$1,198"));
 console.log("managed is qualified:",
   /assisted operating service, not a dedicated full-time/.test(pricingText));
+console.log("executive voice limits:",
+  JSON.stringify(await Promise.all(["business", "scale", "enterprise"].map((id) =>
+    page.locator(`article:has(#${id}-name) div:has(> dt:text-is("Executive voices")) dd`).innerText()))));
+console.log("superseded voice limits absent:",
+  !/Up to 5|Extended (voice )?library/.test(pricingText));
 console.log("managed makes no staffing claim:",
   !/(dedicated account manager|24\/7|unlimited)/i.test(pricingText));
 console.log("no most-popular badge:", !/most popular/i.test(pricingText));
