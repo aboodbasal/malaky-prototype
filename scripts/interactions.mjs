@@ -45,11 +45,13 @@ console.log("future draft shown:", await page.getByText("From the 14th, same-day
 await page.locator("#brand-demo").scrollIntoViewIfNeeded();
 console.log("brand demo input present:", await page.locator("#company-url").isVisible());
 
-// 5. Pricing: engagement framing replaces the billing toggle.
+// 5. Pricing: Middle East launch pricing, with no billing toggle.
 await page.goto("http://localhost:3000/concept-v2/pricing", { waitUntil: "networkidle" });
 const business = page.locator("article").filter({ hasText: "Malaky Business" });
 console.log("business price:", await business.locator("p").nth(1).innerText());
-console.log("engagement line:", await business.getByText("12-month engagement").isVisible());
+console.log("setup included, not priced:",
+  (await business.getByText("Included during launch").count()) === 1);
+console.log("no term on the public card:", (await business.getByText("Term").count()) === 0);
 console.log("no billing toggle:", (await page.getByRole("button", { name: /Pay annually|Billed monthly/ }).count()) === 0);
 
 // Pass 6: the platform is stated once, above the cards, and the cards carry
@@ -61,10 +63,20 @@ console.log("annual note stated once:", (pricingText.match(/Save 10%/g) || []).l
 console.log("annual note outside the cards:",
   (await business.getByText("Save 10%").count()) === 0);
 console.log("card leads with coverage:", await business.locator("dl dt").first().innerText());
-console.log("no output count in the pitch:",
-  !/\b80\b/.test(pricingText.split("Operating capacity in detail")[0]));
 console.log("capacity behind a disclosure:",
   (await page.locator("details summary").innerText()).includes("Operating capacity"));
+
+// Middle East launch: retired figures must not reappear anywhere public.
+const retired = ["$3,500", "$6,000", "$120,000", "$7,500", "$12,500", "$25,000", "12-month engagement"];
+console.log("retired pricing absent:", JSON.stringify(retired.filter((r) => pricingText.includes(r))));
+console.log("launch prices present:",
+  ["$599", "$899", "Custom", "$299"].every((p) => pricingText.includes(p)));
+console.log("combined totals shown:",
+  pricingText.includes("$898") && pricingText.includes("$1,198"));
+console.log("managed is qualified:",
+  /assisted operating service, not a dedicated full-time/.test(pricingText));
+console.log("managed makes no staffing claim:",
+  !/(dedicated account manager|24\/7|unlimited)/i.test(pricingText));
 console.log("no most-popular badge:", !/most popular/i.test(pricingText));
 console.log("short-form video renamed:", (await page.getByText("AI video", { exact: false }).count()) === 0);
 console.log("one CTA label on pricing:", (await page.getByRole("link", { name: "Talk to Enterprise" }).count()) === 0);

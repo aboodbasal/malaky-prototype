@@ -1,18 +1,20 @@
 import {
   ADDITIONAL_SCOPE,
-  SCOPED_ITEMS,
-  SCOPED_NOTE,
   ANNUAL_NOTE,
-  CAPACITY_DETAIL,
   CAPACITY_NOTE,
   COMPARISON,
+  MANAGED,
   PLANS,
   PLATFORM,
   PLATFORM_PLANNED,
   PRICE_FROM_LINE,
+  SCOPED_ITEMS,
+  SCOPED_NOTE,
   SETUP_CLOSE,
+  SETUP_PRICE_LINE,
   SETUP_STEPS,
   formatUsd,
+  managedCombinations,
 } from "@/lib/concept-v2/pricing";
 import { Button, Stop } from "../ui";
 import { CheckIcon } from "../icons";
@@ -24,10 +26,13 @@ import styles from "./pricing.module.css";
  * is a native <details>, which needs none.
  *
  * The order is the argument: what the platform is, then how much of the
- * organisation each deployment covers, then what configuring it involves,
- * then only the differences, then the conversation.
+ * organisation each deployment covers, then who operates it with you, then
+ * what configuring it involves, then only the differences, then the
+ * conversation.
  */
 export function PricingPage() {
+  const combinations = managedCombinations();
+
   return (
     <>
       {/* --- opening ------------------------------------------------ */}
@@ -37,12 +42,12 @@ export function PricingPage() {
           <h1 className={styles.title}>
             Malaky is not another tool.
             <br />
-            <span className={styles.titleGold}>It&rsquo;s your marketing operation</span>
+            <span className={styles.titleAccent}>It&rsquo;s your marketing operation</span>
             <Stop />
           </h1>
           <p className={styles.lead}>
-            Every deployment is configured around your brand, team, markets and approval
-            process.
+            Choose how much of your marketing operation you want Malaky to run — and add
+            a human operator if you want it managed with you.
           </p>
           <p className={styles.priceFrom}>{PRICE_FROM_LINE}</p>
         </div>
@@ -121,8 +126,12 @@ export function PricingPage() {
 
                   <dl className={styles.priceMeta}>
                     <div>
-                      <dt>{plan.setupLabel}</dt>
-                      <dd>{plan.setupValue}</dd>
+                      <dt>{plan.setup.label}</dt>
+                      <dd>
+                        {plan.setup.fee != null
+                          ? formatUsd(plan.setup.fee)
+                          : plan.setup.includedLabel}
+                      </dd>
                     </div>
                     {plan.term && (
                       <div>
@@ -131,6 +140,14 @@ export function PricingPage() {
                       </div>
                     )}
                   </dl>
+
+                  {/* One line, and it points at the section that explains the
+                      layer rather than doing arithmetic inside the card. */}
+                  {plan.managedAvailable && (
+                    <p className={styles.managedAdd}>
+                      <a href="#managed">{MANAGED.addLine}</a>
+                    </p>
+                  )}
                 </div>
 
                 {/* The offer: how much of the marketing operation this covers. */}
@@ -160,34 +177,75 @@ export function PricingPage() {
               JavaScript and stays keyboard-operable. */}
           <div className={styles.belowPlans}>
             <details className={styles.capacityDetails}>
-              <summary>Operating capacity in detail</summary>
+              <summary>Operating capacity</summary>
               <div className={styles.capacityBody}>
-                <table className={styles.capacityTable}>
-                  <thead>
-                    <tr>
-                      <th scope="col">Ceiling</th>
-                      <th scope="col">Business</th>
-                      <th scope="col">Scale</th>
-                      <th scope="col">Enterprise</th>
-                    </tr>
-                  </thead>
-                  <tbody>
-                    {CAPACITY_DETAIL.map((row) => (
-                      <tr key={row.label}>
-                        <th scope="row">{row.label}</th>
-                        <td>{row.business}</td>
-                        <td>{row.scale}</td>
-                        <td>{row.enterprise}</td>
-                      </tr>
-                    ))}
-                  </tbody>
-                </table>
                 <p className={styles.capacityNote}>{CAPACITY_NOTE}</p>
               </div>
             </details>
 
             {/* Said once on the page, not inside three cards. */}
             <p className={styles.annual}>{ANNUAL_NOTE}</p>
+          </div>
+        </div>
+      </section>
+
+      {/* --- Malaky Managed ----------------------------------------- */}
+      <section className={styles.managedSection} id="managed" aria-labelledby="managed-title">
+        <div className="shell">
+          <div className={styles.managed}>
+            <div className={styles.managedMain}>
+              <p className={styles.managedEyebrow}>{MANAGED.eyebrow}</p>
+              <h2 className={styles.managedTitle} id="managed-title">
+                {MANAGED.name}
+                <span className={styles.managedPrice}>
+                  +{formatUsd(MANAGED.monthly)} <span>/month</span>
+                </span>
+              </h2>
+
+              <p className={styles.managedQuestion}>
+                {MANAGED.question} {MANAGED.positioning}
+              </p>
+
+              {/* The idea, before the mechanics. */}
+              <p className={styles.managedCouplet}>
+                {MANAGED.couplet[0]}
+                <br />
+                <span>{MANAGED.couplet[1]}</span>
+              </p>
+
+              <p className={styles.managedBody}>{MANAGED.description}</p>
+            </div>
+
+            <div className={styles.managedSide}>
+              <p className={styles.managedListHead}>What your operator does</p>
+              <ul className={styles.managedList}>
+                {MANAGED.responsibilities.map((item) => (
+                  <li key={item}>
+                    <CheckIcon size={12} className={styles.managedCheck} />
+                    {item}
+                  </li>
+                ))}
+              </ul>
+
+              {/* Arithmetic, stated plainly. No selection, no cart, no total
+                  that changes — the page is not a checkout. */}
+              <div className={styles.combined}>
+                {combinations.map((c) => (
+                  <p key={c.planName} className={styles.combinedRow}>
+                    <span className={styles.combinedPlan}>{c.planName}</span>
+                    <span className={styles.combinedSum}>
+                      {formatUsd(c.planMonthly)} + {formatUsd(MANAGED.monthly)}
+                    </span>
+                    <span className={styles.combinedTotal}>
+                      {formatUsd(c.total)}
+                      <span>/month</span>
+                    </span>
+                  </p>
+                ))}
+              </div>
+
+              <p className={styles.managedNote}>{MANAGED.clarification}</p>
+            </div>
           </div>
         </div>
       </section>
@@ -200,11 +258,14 @@ export function PricingPage() {
               Your Malaky deployment starts with Intelligence Setup
               <Stop />
             </h2>
-            <p className={styles.setupLead}>
-              Malaky is configured, not activated. Before it operates, our team builds your
-              company into it — the brand, the voices, the facts your team has approved, the
-              calendar and the way work gets signed off.
-            </p>
+            <div>
+              <p className={styles.setupLead}>
+                Malaky is configured, not activated. Before it operates, our team builds your
+                company into it — the brand, the voices, the facts your team has approved, the
+                calendar and the way work gets signed off.
+              </p>
+              <p className={styles.setupPrice}>{SETUP_PRICE_LINE}</p>
+            </div>
           </div>
 
           <ol className={styles.setupSteps}>

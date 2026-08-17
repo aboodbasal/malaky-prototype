@@ -17,7 +17,7 @@
   pointer-events: none;
   background: radial-gradient(
     closest-side,
-    rgba(227, 192, 132, 0.12),
+    rgba(255, 78, 45, 0.13),
     rgba(255, 78, 45, 0.05) 55%,
     transparent 78%
   );
@@ -40,8 +40,9 @@
   max-width: 28ch;
 }
 
-.titleGold {
-  color: var(--c-gold);
+/* The homepage's emphasis colour, on the homepage's cream headline. */
+.titleAccent {
+  color: var(--c-accent);
 }
 
 .lead {
@@ -52,17 +53,12 @@
   color: var(--c-text-2);
 }
 
-/* The first number on the page, and it reads as a floor rather than a tier. */
+/* The first number on the page: a floor, said quietly. It used to be a gold
+   pill, which made pricing look like a different product to the homepage. */
 .priceFrom {
-  margin-top: 1.5rem;
-  padding: 0.55rem 1.1rem;
-  border-radius: 999px;
-  border: 1px solid var(--c-gold-line);
-  background: var(--c-gold-wash);
+  margin-top: 1.4rem;
   font-size: var(--t-small);
-  font-weight: var(--w-strong);
-  letter-spacing: 0.01em;
-  color: var(--c-gold-hi);
+  color: var(--c-text-3);
 }
 
 /* --- section heads -------------------------------------------------- */
@@ -110,9 +106,9 @@
   width: 19px;
   height: 19px;
   border-radius: 50%;
-  background: var(--c-gold-wash);
-  border: 1px solid var(--c-gold-line);
-  color: var(--c-gold);
+  background: var(--c-accent-wash);
+  border: 1px solid var(--c-accent-line);
+  color: var(--c-accent-hi);
 }
 
 .capabilityTitle {
@@ -192,10 +188,8 @@
 /* No "most popular". The scoped tier is distinguished because it is
    genuinely a different kind of engagement, not because it sells better. */
 .plan[data-scoped] {
-  border-color: var(--c-gold-line);
-  background:
-    radial-gradient(120% 60% at 50% 0%, rgba(227, 192, 132, 0.09), transparent 62%),
-    linear-gradient(180deg, var(--c-surface-3), var(--c-surface-1));
+  border-color: var(--c-line-2);
+  background: linear-gradient(180deg, var(--c-surface-3), var(--c-surface-1));
 }
 
 .planName {
@@ -232,7 +226,7 @@
   font-size: clamp(1.75rem, 2.9vw, 2.625rem);
   line-height: 1.08;
   letter-spacing: var(--track-display-sm);
-  color: var(--c-gold);
+  color: var(--c-text);
 }
 
 .plan[data-scoped] .priceNum {
@@ -266,6 +260,30 @@
   margin: 0;
   text-align: end;
   color: var(--c-text-2);
+}
+
+/* One line inside the card, pointing at the section that explains the layer.
+   The arithmetic lives there; a card is not a cart. */
+.managedAdd {
+  margin-top: 0.9rem;
+  font-size: var(--t-small);
+}
+
+.managedAdd a {
+  color: var(--c-accent-hi);
+  text-decoration: none;
+  border-bottom: 1px solid var(--c-accent-line);
+  padding-bottom: 1px;
+}
+
+.managedAdd a:hover {
+  border-bottom-color: var(--c-accent-hi);
+}
+
+.managedAdd a:focus-visible {
+  outline: 2px solid var(--c-accent-line);
+  outline-offset: 3px;
+  border-radius: 2px;
 }
 
 /* --- coverage: the offer -------------------------------------------- */
@@ -330,8 +348,7 @@
   width: 4px;
   height: 4px;
   border-radius: 50%;
-  background: var(--c-gold);
-  opacity: 0.7;
+  background: var(--c-text-4);
 }
 
 .planFootnote {
@@ -378,7 +395,7 @@
 .capacityDetails summary::before {
   content: "+";
   margin-inline-end: 0.5rem;
-  color: var(--c-gold);
+  color: var(--c-text-3);
 }
 
 .capacityDetails[open] summary::before {
@@ -386,7 +403,7 @@
 }
 
 .capacityDetails summary:focus-visible {
-  outline: 2px solid var(--c-gold-line);
+  outline: 2px solid var(--c-accent-line);
   outline-offset: 2px;
   border-radius: var(--r-md);
 }
@@ -437,6 +454,165 @@
   color: var(--c-text-4);
 }
 
+/* --- Malaky Managed ---------------------------------------------------- */
+
+.managedSection {
+  padding-block: clamp(2.5rem, 3.6vw, 3.5rem);
+  border-top: 1px solid var(--c-line);
+}
+
+/* One panel, not a fourth pricing card — it is a layer on top of two of the
+   plans above, and it should not read as a choice beside them. */
+.managed {
+  display: grid;
+  grid-template-columns: minmax(0, 1.05fr) minmax(0, 1fr);
+  gap: clamp(1.5rem, 3vw, 3rem);
+  padding: clamp(1.5rem, 2.4vw, 2.25rem);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--c-line-2);
+  background:
+    radial-gradient(110% 70% at 0% 0%, rgba(255, 78, 45, 0.05), transparent 60%),
+    linear-gradient(180deg, var(--c-surface-2), var(--c-surface-1));
+}
+
+.managedEyebrow {
+  font-size: var(--t-micro);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--c-text-4);
+}
+
+.managedTitle {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  margin-top: 0.6rem;
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
+  font-size: clamp(1.5rem, 2.2vw, 2rem);
+  line-height: 1.14;
+  letter-spacing: var(--track-display-sm);
+  color: var(--c-text);
+}
+
+.managedPrice {
+  font-size: clamp(1.125rem, 1.5vw, 1.375rem);
+  color: var(--c-accent-hi);
+}
+
+.managedPrice span {
+  font-family: var(--f-sans);
+  font-size: var(--t-small);
+  color: var(--c-text-3);
+}
+
+.managedQuestion {
+  margin-top: 0.9rem;
+  font-size: var(--t-lead);
+  line-height: 1.6;
+  color: var(--c-text-2);
+}
+
+/* The idea, before the mechanics. */
+.managedCouplet {
+  margin-top: 1.1rem;
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
+  font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+  line-height: 1.4;
+  letter-spacing: var(--track-display-sm);
+  color: var(--c-text);
+}
+
+.managedCouplet span {
+  color: var(--c-text-3);
+}
+
+.managedBody {
+  margin-top: 1.1rem;
+  font-size: var(--t-body);
+  line-height: 1.65;
+  color: var(--c-text-3);
+  max-width: 60ch;
+}
+
+.managedListHead {
+  font-size: var(--t-micro);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--c-text-4);
+}
+
+.managedList {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 0.85rem;
+}
+
+.managedList li {
+  display: grid;
+  grid-template-columns: 16px minmax(0, 1fr);
+  gap: 0.55rem;
+  align-items: start;
+  font-size: 0.8125rem;
+  line-height: 1.5;
+  color: var(--c-text-2);
+}
+
+.managedCheck {
+  margin-top: 0.2rem;
+  color: var(--c-accent-hi);
+}
+
+/* Arithmetic, not a checkout: three static rows, nothing selectable. */
+.combined {
+  display: grid;
+  gap: 0.4rem;
+  margin-top: 1.4rem;
+  padding-top: 1.1rem;
+  border-top: 1px solid var(--c-line);
+}
+
+.combinedRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto auto;
+  align-items: baseline;
+  gap: 0.75rem;
+  font-size: var(--t-small);
+}
+
+.combinedPlan {
+  color: var(--c-text-2);
+}
+
+.combinedSum {
+  color: var(--c-text-4);
+  font-variant-numeric: tabular-nums;
+}
+
+.combinedTotal {
+  min-width: 7.5ch;
+  text-align: end;
+  font-size: var(--t-body);
+  color: var(--c-text);
+  font-variant-numeric: tabular-nums;
+}
+
+.combinedTotal span {
+  font-size: var(--t-small);
+  color: var(--c-text-4);
+}
+
+.managedNote {
+  margin-top: 1.1rem;
+  font-size: var(--t-small);
+  line-height: 1.55;
+  color: var(--c-text-4);
+}
+
 /* --- intelligence setup ---------------------------------------------- */
 
 .setupSection {
@@ -475,6 +651,14 @@
   padding-top: 0.3rem;
 }
 
+/* The launch position on setup pricing, under the paragraph that explains
+   what setup is. */
+.setupPrice {
+  margin-top: 0.85rem;
+  font-size: var(--t-small);
+  color: var(--c-text-3);
+}
+
 .setupSteps {
   display: grid;
   grid-template-columns: repeat(5, minmax(0, 1fr));
@@ -497,7 +681,7 @@
   font-size: var(--t-micro);
   font-weight: var(--w-strong);
   letter-spacing: 0.12em;
-  color: var(--c-gold);
+  color: var(--c-accent-hi);
 }
 
 .setupClose {
@@ -506,7 +690,7 @@
   font-size: clamp(1.25rem, 2vw, 1.625rem);
   line-height: 1.3;
   letter-spacing: var(--track-display-sm);
-  color: var(--c-gold-hi);
+  color: var(--c-text);
   max-width: 42ch;
 }
 
@@ -530,7 +714,7 @@
 }
 
 .tableWrap:focus-visible {
-  outline: 2px solid var(--c-gold-line);
+  outline: 2px solid var(--c-accent-line);
   outline-offset: 3px;
 }
 
@@ -643,6 +827,13 @@
 
   .setupSteps {
     grid-template-columns: repeat(3, minmax(0, 1fr));
+  }
+}
+
+@media (max-width: 960px) {
+  .managed {
+    grid-template-columns: 1fr;
+    gap: 1.75rem;
   }
 }
 
