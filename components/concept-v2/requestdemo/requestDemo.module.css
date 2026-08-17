@@ -60,7 +60,9 @@
 /* --- layout -------------------------------------------------------- */
 
 .body {
-  padding-bottom: clamp(3rem, 6vw, 5.5rem);
+  /* Denser than the hero: the reader is filling this in, not being
+     introduced to anything. */
+  padding-bottom: var(--section-y-dense);
 }
 
 .grid {

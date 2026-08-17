@@ -1,14 +1,14 @@
 .footer {
   border-top: 1px solid var(--c-line);
   background: var(--c-void);
-  padding-top: clamp(3rem, 5vw, 4.5rem);
+  padding-top: var(--section-y-dense);
 }
 
 .grid {
   display: grid;
   grid-template-columns: minmax(0, 1.6fr) repeat(3, minmax(0, 1fr));
   gap: clamp(2rem, 4vw, 3rem);
-  padding-bottom: clamp(2.5rem, 4vw, 3.5rem);
+  padding-bottom: var(--section-y-dense);
 }
 
 /* 2rem of hairline, at a third of the wordmark's weight. */

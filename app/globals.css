@@ -81,7 +81,14 @@
   /* --- Rhythm ----------------------------------------------------- */
   --shell: 1240px;
   --gutter: clamp(1.25rem, 4vw, 3rem);
-  --section-y: clamp(5rem, 9vw, 9rem);
+  /* The hero is the approved reference, and this is its own bottom padding:
+     86px at 1440, 56px at 390. Sections were carrying 130/80, half again as
+     much air as the section everyone likes. */
+  --section-y: clamp(3.5rem, 6vw, 6.5rem);
+  /* Functional pages — pricing, forms — run about two thirds of the hero's
+     rhythm. Dense because the reader is comparing and filling in, not
+     being introduced to anything. */
+  --section-y-dense: clamp(2.5rem, 4vw, 4.25rem);
 
   /* --- Radii & shadow -------------------------------------------- */
   --r-sm: 8px;

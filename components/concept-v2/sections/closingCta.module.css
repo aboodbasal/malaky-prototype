@@ -1,7 +1,9 @@
 .section {
   border-top: 1px solid var(--c-line);
   background: var(--c-void);
-  padding-block: clamp(4rem, 8vw, 7rem);
+  /* A closing statement earns slightly more room than a mid-page section,
+     but it is the section rhythm plus a fraction, not a separate value. */
+  padding-block: calc(var(--section-y) * 1.15);
 }
 
 .inner {

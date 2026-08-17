@@ -9,8 +9,10 @@
 .page {
   --measure-body: 35rem;
   --measure-head: 40rem;
-  padding-top: clamp(2.5rem, 4vw, 4rem);
-  padding-bottom: clamp(3rem, 5vw, 5rem);
+  padding-top: var(--section-y-dense);
+  /* One section's rhythm of air before the footer, so a long document does
+     not end abruptly. */
+  padding-bottom: var(--section-y);
 }
 
 .head {

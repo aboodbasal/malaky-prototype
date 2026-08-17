@@ -76,7 +76,7 @@
 /* --- the platform, stated once -------------------------------------- */
 
 .platformSection {
-  padding-block: clamp(2.25rem, 3.2vw, 3.25rem);
+  padding-block: var(--section-y-dense);
   border-top: 1px solid var(--c-line);
 }
 
@@ -162,7 +162,7 @@
 /* --- plans ---------------------------------------------------------- */
 
 .plansSection {
-  padding-block: clamp(2.25rem, 3.2vw, 3.25rem);
+  padding-block: var(--section-y-dense);
   border-top: 1px solid var(--c-line);
 }
 
@@ -457,7 +457,7 @@
 /* --- Malaky Managed ---------------------------------------------------- */
 
 .managedSection {
-  padding-block: clamp(2.5rem, 3.6vw, 3.5rem);
+  padding-block: var(--section-y-dense);
   border-top: 1px solid var(--c-line);
 }
 
@@ -616,7 +616,7 @@
 /* --- intelligence setup ---------------------------------------------- */
 
 .setupSection {
-  padding-block: clamp(3rem, 5vw, 4.5rem);
+  padding-block: var(--section-y-dense);
   border-top: 1px solid var(--c-line);
   background: var(--c-void);
 }
@@ -697,7 +697,7 @@
 /* --- what changes between deployments --------------------------------- */
 
 .compareSection {
-  padding-block: clamp(3rem, 5vw, 4.5rem);
+  padding-block: var(--section-y-dense);
   border-top: 1px solid var(--c-line);
 }
 
