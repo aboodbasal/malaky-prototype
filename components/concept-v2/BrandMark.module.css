@@ -9,11 +9,11 @@
 /* For artwork supplied with its own light background. The plate is the
    container's job — the file is never altered to suit our page. Small inset
    so the mark is not flush to the corner radius. */
+/* The inset is set inline from the box's own size — a percentage here would
+   resolve against the containing block's width, which on a wide row balloons
+   the plate and squeezes the artwork to nothing. */
 .plate {
   background: #fff;
-  /* Proportional, not fixed: 3px of inset is nothing at 64px and half the
-     artwork at 24px. */
-  padding: 5%;
   box-shadow: 0 0 0 1px rgba(255, 255, 255, 0.08);
 }
 

@@ -166,3 +166,40 @@
     aspect-ratio: 16 / 9 !important;
   }
 }
+
+
+/* --- the customer, at the head of each panel ----------------------- */
+
+.brandLockup {
+  display: flex;
+  align-items: center;
+  gap: 0.7rem;
+  min-width: 0;
+}
+
+.brandText {
+  display: grid;
+  gap: 0.1rem;
+  min-width: 0;
+}
+
+.brandName {
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
+  font-size: 1.0625rem;
+  line-height: 1.2;
+  letter-spacing: var(--track-display-sm);
+  color: var(--c-text);
+}
+
+.brandContext {
+  font-size: var(--t-small);
+  color: var(--c-text-3);
+}
+
+/* The language label moves out of the header and under it, so the customer
+   leads and the language is the supporting fact. */
+.panel > .label,
+.panel > .labelAr {
+  padding: 0.75rem clamp(1rem, 1.6vw, 1.35rem) 0;
+}

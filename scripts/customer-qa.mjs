@@ -83,18 +83,23 @@ ok("only one named executive, and only where sourced",
  * The illustrative layer points at real customers
  * ------------------------------------------------------------------ */
 
-ok("One Event uses Ataccama", SOURCE_EVENT.customerId === "ataccama");
+ok("One Event uses Alpha Pro MENA", SOURCE_EVENT.customerId === "alpha-pro");
 ok("and its source event is sourced", (SOURCE_EVENT.source ?? "").length > 30);
-ok("and it is the announced product moment",
-   /Data Observability/i.test(SOURCE_EVENT.title), SOURCE_EVENT.title);
-ok("every fan-out output is Ataccama's",
-   EVENT_FANOUT.every((p) => p.customerId === "ataccama"));
+ok("and it is a moment the customer really published",
+   /AI assessment/i.test(SOURCE_EVENT.title), SOURCE_EVENT.title);
+ok("every fan-out output is Alpha Pro's",
+   EVENT_FANOUT.every((p) => p.customerId === "alpha-pro"));
 ok("the fan-out covers four distinct channels",
    new Set(EVENT_FANOUT.map((p) => p.platform)).size === 4);
-ok("no fan-out card names an executive Ataccama has not assigned",
+ok("no fan-out card names an executive Alpha Pro has not assigned",
    EVENT_FANOUT.filter((p) => p.platform === "linkedin-executive").every((p) => !p.executiveId));
 
 ok("Approval uses Baker Tilly Saudi Arabia", APPROVAL_PIECE.customerId === "baker-tilly-sa");
+/* The review item is the customer's own published creative, so the section
+   must say so — this is the one card on the page that is not ours. */
+ok("and reviews their own published creative",
+   APPROVAL_PIECE.platform === "real-screenshot" && !!APPROVAL_PIECE.realPostId,
+   APPROVAL_PIECE.realPostId ?? "none");
 ok("Memory uses Inception DAP", MEMORY_EXAMPLE.customerId === "inception-dap");
 ok("and says the correction is illustrative", /Illustrative/i.test(MEMORY_EXAMPLE.note));
 ok("Arabic uses Shrimp Joint", BILINGUAL_CAMPAIGN.customerId === "shrimp-joint");
@@ -139,7 +144,7 @@ for (const ghost of [
 ok("no fictional Arabic brand names either", !/فلك|سِدرة/.test(body));
 
 /* The customers who should be visible, are. */
-for (const name of ["Ataccama", "Baker Tilly Saudi Arabia", "Inception DAP", "Shrimp Joint"]) {
+for (const name of ["Alpha Pro MENA", "Baker Tilly Saudi Arabia", "Inception DAP", "Shrimp Joint"]) {
   ok(`${name} appears on the homepage`, body.includes(name));
 }
 
@@ -154,6 +159,29 @@ ok("the fan-out discloses that its cards are ours",
 ok("engagement figures are disclaimed rather than presented as performance",
    /not performance/i.test(body));
 ok("the memory correction is disclosed as illustrative", /Illustrative/i.test(body));
+ok("the approval creative is attributed to its owner",
+   /own published post, used here to demonstrate the review step/i.test(body));
+
+/* Brand presence: a mark a reader cannot see is not brand presence. */
+const marks = await page.locator('span[class*="mark"] img').evaluateAll((els) =>
+  els.map((e) => {
+    const r = e.getBoundingClientRect();
+    return { w: Math.round(r.width), h: Math.round(r.height) };
+  }).filter((m) => m.w > 0),
+);
+ok("every rendered logo has real area", marks.every((m) => m.w >= 8 && m.h >= 8),
+   marks.map((m) => `${m.w}x${m.h}`).join(" "));
+for (const [sel, label] of [
+  ["section:has(#memory-title)", "Memory"],
+  ["#arabic", "Arabic"],
+  ["#control", "Approval"],
+]) {
+  const biggest = await page.locator(`${sel} span[class*=mark] img`).evaluateAll((els) =>
+    Math.max(0, ...els.map((e) => e.getBoundingClientRect().height)),
+  );
+  ok(`${label}: the customer's mark is legible, not a speck`, biggest >= 24,
+     `${Math.round(biggest)}px tall`);
+}
 ok("both Arabic campaigns are disclosed as prepared",
    /Both campaigns prepared by Malaky/i.test(body));
 

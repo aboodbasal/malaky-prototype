@@ -58,10 +58,14 @@ export function CustomerLogo({
     const boxWidth = wide ? Math.round(size * Math.min(ratio, MAX_RATIO)) : size;
     const light = logo.background === "light";
 
+    /* Proportional to the box, computed here rather than in CSS: a percentage
+       padding would resolve against the row's width, not the mark's. */
+    const inset = light ? Math.max(2, Math.round(size * 0.09)) : 0;
+
     return (
       <span
         className={`${styles.mark} ${light ? styles.plate : ""}`}
-        style={{ width: boxWidth, height: size }}
+        style={{ width: boxWidth, height: size, padding: inset || undefined }}
       >
         {/* contain, always: the artwork keeps its own proportions. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}

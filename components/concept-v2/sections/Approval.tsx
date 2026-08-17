@@ -1,10 +1,17 @@
 "use client";
 
 import { useEffect, useRef, useState } from "react";
-import { APPROVAL_PIECE, APPROVAL_STAGES, TRUST_PILLARS } from "@/lib/concept-v2/content";
+import {
+  APPROVAL_NOTE,
+  APPROVAL_PIECE,
+  APPROVAL_STAGES,
+  TRUST_PILLARS,
+} from "@/lib/concept-v2/content";
 import { getCustomer } from "@/lib/concept-v2/customers";
 import { usePrefersReducedMotion } from "@/hooks/useConceptHooks";
 import { PostCard } from "../posts";
+import { RealPostCard } from "../RealPost";
+import { CustomerLogo } from "../CustomerLogo";
 import { SectionHead, Stop } from "../ui";
 import { CheckIcon, CheckCircleIcon, CloseIcon, ClockIcon, MemoryIcon, PencilIcon } from "../icons";
 import styles from "./approval.module.css";
@@ -85,9 +92,26 @@ export function Approval() {
 
         <div className={styles.panel}>
           <div className={styles.postCol}>
+            {/* The review item is the customer's own finished creative, shown
+                whole at its own aspect ratio with no chrome drawn around it.
+                The header names who it belongs to and what state it is in —
+                which is what a reviewer needs before deciding. */}
             <div className={styles.post}>
-              <PostCard piece={APPROVAL_PIECE} />
+              <div className={styles.reviewHead}>
+                <CustomerLogo customer={customer} size={30} />
+                <span className={styles.reviewMeta}>
+                  <span className={styles.reviewChannel}>{APPROVAL_PIECE.label}</span>
+                  <span className={styles.reviewState}>{APPROVAL_PIECE.timestamp}</span>
+                </span>
+              </div>
+              {APPROVAL_PIECE.realPostId ? (
+                <RealPostCard id={APPROVAL_PIECE.realPostId} sizes="(max-width: 900px) 92vw, 420px" />
+              ) : (
+                <PostCard piece={APPROVAL_PIECE} />
+              )}
             </div>
+
+            <p className={styles.provenance}>{APPROVAL_NOTE}</p>
 
             <div className={styles.actions}>
               <button

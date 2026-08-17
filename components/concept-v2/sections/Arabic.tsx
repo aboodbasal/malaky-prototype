@@ -23,16 +23,23 @@ function CampaignPanel({
   const rtl = dir === "rtl";
   return (
     <figure className={styles.panel} dir={dir} lang={lang} style={{ "--tint": tint } as React.CSSProperties}>
+      {/* The customer now leads the panel rather than sitting as a 24px mark
+          inside the copy column. Mark, name and what the campaign is for —
+          then the language label, which is the smaller fact of the two. */}
       <figcaption className={styles.panelHead}>
-        <span className={rtl ? styles.labelAr : styles.label}>{side.label}</span>
+        <span className={styles.brandLockup}>
+          <CustomerLogo customer={customer} size={38} />
+          <span className={styles.brandText}>
+            <span className={styles.brandName}>{customer.name}</span>
+            <span className={styles.brandContext}>{BILINGUAL_CAMPAIGN.context}</span>
+          </span>
+        </span>
         <span className={styles.badge}>{side.badge}</span>
       </figcaption>
+      <p className={rtl ? styles.labelAr : styles.label}>{side.label}</p>
 
       <div className={styles.body}>
         <div className={styles.copy}>
-          {/* Larger than a social avatar on purpose: this is a campaign
-              panel, and a detailed lockup is illegible at 24px. */}
-          <CustomerLogo customer={customer} size={40} />
           <h3 className={rtl ? styles.headlineAr : styles.headline}>{side.headline}</h3>
           <p className={rtl ? styles.subAr : styles.sub}>{side.subhead}</p>
           <p className={rtl ? styles.textAr : styles.text}>{side.body}</p>

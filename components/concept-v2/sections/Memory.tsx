@@ -59,15 +59,21 @@ export function Memory() {
         />
 
         <div className={styles.flow} ref={ref}>
+          {/* The customer leads the sequence instead of hiding in a label.
+              A 16px mark in a caption was unreadable and read as decoration;
+              at 46px in its own header it says whose marketing this is before
+              the first draft is read. */}
+          <div className={styles.brandBar}>
+            <CustomerLogo customer={customer} size={46} />
+            <span className={styles.brandText}>
+              <span className={styles.brandName}>{customer.name}</span>
+              <span className={styles.brandContext}>{MEMORY_EXAMPLE.context}</span>
+            </span>
+          </div>
+
           <div className={styles.lane}>
             <article className={styles.draft} data-on={step >= 1 || undefined}>
-              <p className={styles.draftLabel}>
-                {/* 22px rather than 16: a detailed lockup needs the extra
-                    height to read as a mark rather than a smudge. Container
-                    only — the artwork is untouched. */}
-                <CustomerLogo customer={customer} size={22} />
-                Original draft
-              </p>
+              <p className={styles.draftLabel}>Original draft</p>
               <p className={`${styles.draftBody} ${styles.draftOld}`}>
                 {MEMORY_EXAMPLE.original}
               </p>

@@ -260,53 +260,53 @@ export const ACTIVITY_TIMELINE: ActivityEntry[] = [
  * where that came from; the four outputs below are ours.
  */
 export const SOURCE_EVENT = {
-  customerId: "ataccama" as CustomerId,
-  kind: "Product update",
-  title: "Data Observability now available.",
+  customerId: "alpha-pro" as CustomerId,
+  kind: "Campaign moment",
+  title: "Free AI assessment for enterprise leaders.",
   detail:
-    "Ataccama ONE monitors data in motion across pipelines alongside the data quality checks it already runs on data at rest, with anomaly detection, existing data quality rules reused across both, and alerting routed to the channels a team already uses.",
+    "Alpha Pro MENA offers enterprise leaders an AI assessment covering an AI roadmap, a data readiness review, use-case identification and an AI opportunity report.",
   source:
-    "Ataccama's data observability product page, and its announcement of Agentic Data Observability in Ataccama ONE (26 February 2026).",
+    "Alpha Pro MENA's own published LinkedIn post, held in this repository at public/brand/real-posts/alpha-pro-mena/.",
 };
 
 /**
- * The same real moment, adapted per channel — and every word of it written by
- * Malaky rather than by Ataccama.
+ * The same real moment, adapted per channel — every word of it written by
+ * Malaky rather than by Alpha Pro.
  *
- * Four channels, not six. Each is wide enough to actually read, and every one
- * differs in copy, length, register and shape: a square image with one line, a
- * wide image carrying the operational detail, a draft in an executive's voice,
- * and a right-to-left campaign composed in Arabic.
+ * Four channels, each genuinely different in copy, length, register and shape:
+ * a square image with one line, a wide image carrying the operational detail,
+ * a draft in an executive's voice, and a right-to-left campaign composed in
+ * Arabic for a market Alpha Pro actually works in.
  */
 export const EVENT_FANOUT: DrawnPiece[] = [
   {
     id: "fanout-instagram",
-    customerId: "ataccama",
+    customerId: "alpha-pro",
     platform: "instagram",
     label: "Instagram",
     status: "prepared",
     copy: {
-      body: "Now watching the pipeline, not just the table.",
-      cta: "Data Observability, in Ataccama ONE.",
+      body: "Before the AI programme, the readiness review.",
+      cta: "Free AI assessment for enterprise leaders.",
     },
     media: {
       scene: "data-lattice",
-      alt: "An abstract lattice of data records with three anomalies flagged",
+      alt: "An abstract lattice of data records with three points flagged",
       aspect: "1:1",
-      overline: "Now available",
+      overline: "AI assessment",
     },
     engagement: { likes: 88, comments: 6 },
   },
   {
     id: "fanout-linkedin-company",
-    customerId: "ataccama",
+    customerId: "alpha-pro",
     platform: "linkedin-company",
     label: "LinkedIn Company",
     status: "prepared",
     timestamp: "Prepared",
     copy: {
       body:
-        "Data Observability is now part of Ataccama ONE. Pipelines are monitored alongside the data quality rules you already run.",
+        "Our AI assessment covers four things: an AI roadmap, a data readiness review, use-case identification, and an opportunity report you can take to a board.",
     },
     media: {
       scene: "signal-flow",
@@ -317,37 +317,37 @@ export const EVENT_FANOUT: DrawnPiece[] = [
     engagement: { likes: 41, comments: 6, reposts: 2 },
   },
   {
-    /* No named executive: Ataccama has not assigned one, and putting a real
+    /* No named executive: Alpha Pro has not assigned one, and putting a real
        person's name on our copy without them is the exact thing this pass
        exists to remove. The card shows the draft waiting for a voice. */
     id: "fanout-linkedin-executive",
-    customerId: "ataccama",
+    customerId: "alpha-pro",
     platform: "linkedin-executive",
     label: "Executive LinkedIn",
     status: "prepared",
     timestamp: "Awaiting assignment",
     copy: {
       body:
-        "Quality checks tell you the data was wrong. Observability tells you when it went wrong, and where. Those two belong in one place.",
+        "Every stalled AI programme I have seen stalled for the same reason: nobody could say where the data came from. Start with readiness, not with the model.",
     },
     engagement: { likes: 58, comments: 9 },
   },
   {
     id: "fanout-arabic-social",
-    customerId: "ataccama",
+    customerId: "alpha-pro",
     platform: "arabic-social",
     label: "Arabic Social",
     status: "prepared",
     dir: "rtl",
     copy: {
-      headline: "راقب المسار، لا النتيجة وحدها.",
+      headline: "الحوكمة أولًا، ثم الذكاء الاصطناعي.",
       body:
-        "مراقبة البيانات صارت جزءًا من منصّة Ataccama ONE: تتبُّع لمسارات البيانات، وكشفٌ للانحرافات قبل أن تصل إلى التقارير، وتنبيهات تصل حيث يعمل فريقك.",
-      cta: "تعرّف على الخدمة",
+        "تقييم مجاني لجاهزية مؤسستك: خارطة طريق للذكاء الاصطناعي، ومراجعة لجاهزية البيانات، وتحديد لحالات الاستخدام، وتقرير بالفرص المتاحة.",
+      cta: "اطلب التقييم",
     },
     media: {
       scene: "data-lattice",
-      alt: "An abstract lattice of data records with three anomalies flagged",
+      alt: "An abstract lattice of data records with three points flagged",
       aspect: "1:1",
     },
     engagement: { likes: 52, comments: 4 },
@@ -370,21 +370,31 @@ export const EVENT_FANOUT: DrawnPiece[] = [
 export const APPROVAL_PIECE: MarketingPiece = {
   id: "approval-linkedin",
   customerId: "baker-tilly-sa",
-  platform: "linkedin-company",
+  /* The review item is Baker Tilly's own published IFRS 18 post, shown whole.
+     A drawn approximation of their creative was the weaker thing to review —
+     approval is about looking at finished work, so the section now shows
+     finished work. What that costs in honesty is paid back by APPROVAL_NOTE,
+     which states plainly that the creative is theirs rather than ours. */
+  platform: "real-screenshot",
+  realPostId: "baker-tilly-ifrs18",
   label: "LinkedIn Company Post",
   status: "ready",
-  timestamp: "Prepared 05:47",
+  timestamp: "Ready for review",
   copy: {
     body:
-      "IFRS 18 changes how performance is presented, not just what is disclosed. Our audit and assurance teams in Riyadh, Jeddah and Khobar are working through readiness with clients now.",
+      "IFRS 18 changes how performance is presented, not just what is disclosed.",
   },
-  media: {
-    scene: "office",
-    alt: "A working office at dusk, city beyond the window",
-    aspect: "16:9",
-  },
-  engagement: { likes: 41, comments: 6, reposts: 2 },
 };
+
+/**
+ * The one sentence that keeps this section true.
+ *
+ * Everything else on the page is work Malaky prepared. This card is not: it is
+ * the customer's own published post, standing in for a prepared draft so the
+ * review step is exercised against real finished creative.
+ */
+export const APPROVAL_NOTE =
+  "The creative shown is Baker Tilly Saudi Arabia's own published post, used here to demonstrate the review step.";
 
 export const APPROVAL_STAGES = ["Ready for review", "Approved", "Scheduled"] as const;
 
@@ -414,6 +424,8 @@ export const MEMORY_EXAMPLE = {
     context: "Next draft — written 9 days later, unprompted",
     body: "Design through delivery, handled end to end.",
   },
+  /** Sits under the customer's mark, above the drafts. */
+  context: "Company voice · LinkedIn & Instagram",
   note: "Illustrative. Prepared by Malaky to show how a correction becomes a rule.",
 };
 
@@ -455,6 +467,8 @@ export const BILINGUAL_CAMPAIGN = {
     scene: "long-table" as MediaScene,
     alt: "A long table laid for service under low warm light",
   },
+  /** Sits beside the customer's mark at the head of each panel. */
+  context: "Campaign · The crispy fish sandwich",
   note: "Different language. Different rhythm. Same brand.",
 };
 
