@@ -140,8 +140,12 @@ export function GetStarted() {
                 <p className={styles.stepLabel}>
                   <span className={styles.stepNum}>02</span> Billing
                 </p>
+                {/* Says what the control does. It deliberately makes no
+                    commitment about ending or continuing a subscription —
+                    that belongs in the service agreement, not in a helper
+                    line above a pair of radio buttons. */}
                 <p className={styles.blockNote}>
-                  No contractual term is stated on Business or Scale during the Middle East launch.
+                  Choose monthly or annual billing. Save 10% with annual prepayment.
                 </p>
               </div>
 
