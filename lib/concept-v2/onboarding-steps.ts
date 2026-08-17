@@ -171,13 +171,13 @@ export interface ChannelOption {
 export const CHANNEL_OPTIONS: ChannelOption[] = [
   {
     id: "linkedin-company",
-    label: "LinkedIn — company",
+    label: "LinkedIn — Company",
     detail: "Company page posts",
     state: "supported",
   },
   {
     id: "linkedin-exec",
-    label: "LinkedIn — executive",
+    label: "LinkedIn — Executive",
     detail: "Written in a named person's voice",
     state: "supported",
   },
@@ -187,7 +187,7 @@ export const CHANNEL_OPTIONS: ChannelOption[] = [
   { id: "tiktok", label: "TikTok", detail: "Short-form video scripts", state: "supported" },
   { id: "youtube", label: "YouTube", detail: "Titles, descriptions, scripts", state: "supported" },
   { id: "email", label: "Email", detail: "Campaigns and newsletters", state: "supported" },
-  { id: "website", label: "Website & blog", detail: "Articles and landing copy", state: "supported" },
+  { id: "website", label: "Website & Blog", detail: "Articles and landing copy", state: "supported" },
   { id: "whatsapp", label: "WhatsApp Business", detail: "Broadcast messaging", state: "scoped" },
   { id: "press", label: "Press & PR", detail: "Statements and announcements", state: "scoped" },
 ];
