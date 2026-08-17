@@ -1,6 +1,6 @@
 "use client";
 
-import { useEffect, useMemo, useState } from "react";
+import { useMemo, useState } from "react";
 import {
   ANCHOR,
   DEFAULT_ENTRY_ID,
@@ -11,7 +11,7 @@ import {
   resolveEntries,
   type ResolvedEntry,
 } from "@/lib/concept-v2/operating-calendar";
-import { daysUntil, formatCountdown } from "@/lib/concept-v2/calendar";
+import { formatObservanceDate } from "@/lib/concept-v2/calendar";
 import { useReveal } from "@/hooks/useConceptHooks";
 import { SectionHead, Stop } from "../ui";
 import { ArrowRight, CheckIcon } from "../icons";
@@ -59,16 +59,13 @@ export function Prompts() {
   const selected =
     entries.find((e) => e.id === selectedId) ?? (entries[0] as ResolvedEntry);
 
-  /* Only a verified occasion gets a countdown, and only against the real
-     clock — so it is added after mount rather than prerendered stale. */
-  const [countdown, setCountdown] = useState<string | null>(null);
-  useEffect(() => {
-    setCountdown(
-      selected.observance
-        ? formatCountdown(daysUntil(selected.observance, new Date()))
-        : null,
-    );
-  }, [selected]);
+  /* A verified occasion shows its verified date, not a distance from the
+     viewer's clock. The grid is an anchored illustration, so a live countdown
+     would put two different timelines on the same card. daysUntil() and
+     formatCountdown() remain in ./calendar for surfaces that are live. */
+  const observedOn = selected.observance
+    ? formatObservanceDate(selected.observance)
+    : null;
 
   const status = STATUS[selected.status];
   const finished = status.tone === "done";
@@ -91,7 +88,12 @@ export function Prompts() {
           {/* --- the month --------------------------------------------- */}
           <div className={styles.calendar}>
             <div className={styles.calHead}>
-              <h3 className={styles.month}>{monthName()}</h3>
+              {/* The month is an anchored illustration, not the viewer's own
+                  month — said quietly, next to the thing it qualifies. */}
+              <div className={styles.monthBlock}>
+                <h3 className={styles.month}>{monthName()}</h3>
+                <p className={styles.calNote}>Illustrative operating calendar</p>
+              </div>
               <ul className={styles.legend}>
                 {[
                   ["check", "Done"],
@@ -177,13 +179,13 @@ export function Prompts() {
             <h3 className={styles.detailTitle}>{selected.title}</h3>
 
             <div className={styles.detailMeta}>
+              {observedOn && <span className={styles.observedOn}>{observedOn}</span>}
               <span className={styles.statusPill} data-tone={status.tone}>
                 <span className={styles.statusMark}>
                   <StatusGlyph glyph={status.glyph} />
                 </span>
                 {status.label}
               </span>
-              {countdown && <span className={styles.countdown}>{countdown}</span>}
             </div>
 
             <p className={styles.workHead}>{finished ? "Completed" : "Prepared"}</p>

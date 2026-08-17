@@ -54,6 +54,14 @@
   margin-bottom: 1.1rem;
 }
 
+.monthBlock {
+  display: flex;
+  align-items: baseline;
+  flex-wrap: wrap;
+  gap: 0.2rem 0.7rem;
+  min-width: 0;
+}
+
 .month {
   font-family: var(--f-serif);
   font-weight: 400;
@@ -61,6 +69,13 @@
   line-height: 1;
   letter-spacing: -0.02em;
   color: var(--c-text);
+}
+
+/* Sits on the month's baseline, and stays narrow enough that the legend keeps
+   its place on the same line — the header must not grow a row for it. */
+.calNote {
+  font-size: var(--t-micro);
+  color: var(--c-text-4);
 }
 
 .legend {
@@ -308,7 +323,8 @@
 }
 .statusPill[data-tone="noticed"] { color: var(--tone-noticed); }
 
-.countdown {
+/* The verified date, read off the record in lib/concept-v2/calendar.ts. */
+.observedOn {
   font-size: var(--t-small);
   color: var(--c-text-3);
 }

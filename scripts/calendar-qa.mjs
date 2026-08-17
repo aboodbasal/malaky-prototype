@@ -3,7 +3,12 @@
  * actually reads as a month of work rather than one event in a box.
  */
 import { chromium } from "playwright";
-import { OBSERVANCES, daysUntil, formatCountdown } from "../lib/concept-v2/calendar.ts";
+import {
+  OBSERVANCES,
+  daysUntil,
+  formatCountdown,
+  formatObservanceDate,
+} from "../lib/concept-v2/calendar.ts";
 import { ANCHOR, ENTRIES, STATUS, resolveEntries } from "../lib/concept-v2/operating-calendar.ts";
 
 const b = await chromium.launch({ executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome" });
@@ -97,8 +102,17 @@ ok("all four readings appear in the month",
 let panel = (await cal.innerText()).replace(/\s+/g, " ").toLowerCase();
 ok("the verified occasion is selected by default", panel.includes("saudi national day"));
 ok("it is labelled a public holiday", panel.includes("public holiday"));
-const expected = formatCountdown(daysUntil(nationalDay, new Date()));
-ok("its countdown is computed from the verified date", panel.includes(expected.toLowerCase()), expected);
+/* The grid is an anchored illustration, so the panel shows the verified date
+   rather than a distance from the viewer's clock — two timelines on one card
+   is what a countdown here would mean. */
+const dateLine = formatObservanceDate(nationalDay);
+ok("it shows the verified date", panel.includes(dateLine.toLowerCase()), dateLine);
+ok("no live countdown anywhere in the section", !/\b\d+ days away\b|\btomorrow\b/.test(panel));
+ok("the calendar says it is illustrative", panel.includes("illustrative operating calendar"));
+
+/* The countdown utilities stay available for surfaces that are actually live. */
+ok("countdown utilities still work",
+   formatCountdown(daysUntil(nationalDay, new Date(2026, 8, 22))) === "Tomorrow");
 ok("the prepared channels are listed",
    ["instagram", "linkedin company", "executive linkedin", "arabic social", "newsletter"]
      .every((c) => panel.includes(c)));
@@ -113,7 +127,7 @@ ok("selecting another event updates the panel", panel.includes("quarterly campai
 ok("a company event is labelled as one", panel.includes("company event"));
 ok("a finished event reads as completed", panel.includes("completed"));
 ok("a finished event offers no review CTA", !panel.includes("review campaign"));
-ok("a finished event carries no countdown", !/\d+ days away/.test(panel));
+ok("a company event carries no date line of its own", !/\d+ september/.test(panel));
 
 /* Nothing anywhere invents performance. */
 ok("no fabricated performance figures",
