@@ -35,10 +35,17 @@
   padding-top: clamp(0rem, 1.5vw, 1.5rem);
 }
 
+/* Newsreader is under test here, and only here — every other serif on the
+   site is still Instrument Serif. */
 .title {
-  font-family: var(--f-serif);
+  font-family: var(--f-display-test);
   font-weight: 400;
-  font-size: var(--t-display-1);
+  /* Newsreader sets about 12% wider than Instrument Serif, so at the token
+     size "before you were." no longer fits the copy column and the three
+     authored line breaks turn into five. The size is capped here — and only
+     at this breakpoint, where the column is fixed — to hold them. Below
+     1080px the column is full width and the size below already fits. */
+  font-size: min(2.55vw + 35.5px, 72px);
   line-height: 1.02;
   letter-spacing: -0.028em;
   color: var(--c-text);

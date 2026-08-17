@@ -44,6 +44,10 @@
   /* --- Type ------------------------------------------------------- */
   --f-serif: var(--font-serif), "Iowan Old Style", "Palatino Linotype", Georgia,
     serif;
+  /* Under test on the hero headline only. Same fallback stack as --f-serif so
+     a failed load lands in the same place. */
+  --f-display-test: var(--font-display-test), "Iowan Old Style",
+    "Palatino Linotype", Georgia, serif;
   --f-sans: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, Helvetica, Arial, sans-serif;
   --f-arabic: var(--font-arabic), var(--font-sans), "Segoe UI", Tahoma, sans-serif;
