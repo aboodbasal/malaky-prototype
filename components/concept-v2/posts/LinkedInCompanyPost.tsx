@@ -1,6 +1,6 @@
 import type { MarketingPiece } from "@/lib/concept-v2/content";
 import { BrandMedia } from "../BrandMedia";
-import { CustomerLogo } from "../CustomerLogo";
+import { CustomerLogo, isWordmark } from "../CustomerLogo";
 import { EngagementRow, PlatformBar, PostShell, pieceCustomer, postStyles as s } from "./shared";
 
 export function LinkedInCompanyPost({ piece }: { piece: MarketingPiece }) {
@@ -11,7 +11,9 @@ export function LinkedInCompanyPost({ piece }: { piece: MarketingPiece }) {
       <div className={s.account}>
         <CustomerLogo customer={customer} size={30} />
         <div className={s.accountText}>
-          <span className={s.accountName}>{customer.name}</span>
+          {!isWordmark(customer) && (
+            <span className={s.accountName}>{customer.name}</span>
+          )}
           <span className={s.accountMeta}>
             {customer.shortCategory}
             {piece.timestamp ? ` · ${piece.timestamp}` : ""}

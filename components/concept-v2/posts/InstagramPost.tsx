@@ -1,12 +1,15 @@
 import type { MarketingPiece } from "@/lib/concept-v2/content";
 import { BrandMedia } from "../BrandMedia";
-import { CustomerLogo } from "../CustomerLogo";
+import { CustomerLogo, isWordmark } from "../CustomerLogo";
 import { BookmarkIcon, CommentIcon, HeartIcon, ShareIcon } from "../icons";
 import { PlatformBar, PostShell, formatCount, pieceCustomer, postStyles as s } from "./shared";
 
 export function InstagramPost({ piece }: { piece: MarketingPiece }) {
   const customer = pieceCustomer(piece);
   const rtl = piece.dir === "rtl";
+  /* A wordmark lockup already carries the name; printing it again beside
+     itself reads as a duplication rather than as branding. */
+  const named = isWordmark(customer);
   return (
     <PostShell dir={piece.dir}>
       <PlatformBar platform="instagram" label={piece.label} />
@@ -16,7 +19,7 @@ export function InstagramPost({ piece }: { piece: MarketingPiece }) {
           {/* A company's name is not translated. None of these customers has
               given us an official Arabic name, so the Latin one stands in both
               directions rather than one being invented for the RTL card. */}
-          <span className={s.accountName}>{customer.name}</span>
+          {!named && <span className={s.accountName}>{customer.name}</span>}
           {/* A handle we have not seen is a handle we do not print. */}
           {customer.handle && (
             <span className={s.accountMeta} dir="ltr">

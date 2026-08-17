@@ -8,7 +8,7 @@ import {
 } from "@/lib/concept-v2/content";
 import { getCustomer } from "@/lib/concept-v2/customers";
 import { useReveal } from "@/hooks/useConceptHooks";
-import { CustomerLogo } from "../CustomerLogo";
+import { CustomerLogo, isWordmark } from "../CustomerLogo";
 import { PostCard } from "../posts";
 import { SectionHead, Stop } from "../ui";
 import {
@@ -58,7 +58,10 @@ export function OneEvent() {
             <div className={styles.eventTop}>
               <CustomerLogo customer={customer} size={26} />
               <div>
-                <span className={styles.eventBrand}>{customer.name}</span>
+                {/* The wordmark already says it. */}
+                {!isWordmark(customer) && (
+                  <span className={styles.eventBrand}>{customer.name}</span>
+                )}
                 <span className={styles.eventKind}>
                   <CalendarIcon size={11} /> {SOURCE_EVENT.kind}
                 </span>

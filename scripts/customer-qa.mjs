@@ -157,10 +157,33 @@ ok("the memory correction is disclosed as illustrative", /Illustrative/i.test(bo
 ok("both Arabic campaigns are disclosed as prepared",
    /Both campaigns prepared by Malaky/i.test(body));
 
-/* Customers without artwork show a reserved slot rather than an invented mark. */
+/* Every customer's own artwork is now supplied, so no slot should be reserved
+   anywhere. The placeholder path stays in the component for the next customer,
+   and is covered by the customersMissingLogos() assertion above rather than by
+   a rendered example. */
 const pending = await page.locator('[aria-label*="logo not yet supplied"]').count();
-ok("customers without artwork show a reserved slot, not an invented mark", pending >= 1,
-   `${pending} slot(s)`);
+ok("no reserved slots remain — every logo is supplied", pending === 0, `${pending} slot(s)`);
+ok("and the factual layer agrees", customersMissingLogos().length === 0,
+   customersMissingLogos().map((c) => c.name).join(", "));
+
+/* Official artwork, placed rather than processed. */
+const placed = await page.locator('[class*="BrandMark"] img').evaluateAll((els) =>
+  els.map((e) => {
+    const r = e.getBoundingClientRect();
+    return {
+      src: e.getAttribute("src"),
+      fit: getComputedStyle(e).objectFit,
+      /* contain never distorts, but check the box is not absurd either. */
+      boxRatio: r.height ? +(r.width / r.height).toFixed(2) : 0,
+      natRatio: e.naturalHeight ? +(e.naturalWidth / e.naturalHeight).toFixed(2) : 0,
+    };
+  }),
+);
+ok("every placed logo is contained, never stretched",
+   placed.length > 0 && placed.every((p) => p.fit === "contain"), `${placed.length} placements`);
+ok("no logo is squeezed into a box wildly off its own ratio",
+   placed.every((p) => p.natRatio === 0 || p.boxRatio / Math.min(p.natRatio, 3.2) < 1.35),
+   placed.map((p) => `${p.boxRatio}/${p.natRatio}`).join(" "));
 
 /* ------------------------------------------------------------------ *
  * The brand demo, which is where the supplied artwork actually renders

@@ -1,6 +1,6 @@
 import type { MarketingPiece } from "@/lib/concept-v2/content";
 import { BrandMedia } from "../BrandMedia";
-import { CustomerLogo } from "../CustomerLogo";
+import { CustomerLogo, isWordmark } from "../CustomerLogo";
 import { ArrowRight } from "../icons";
 import { PlatformBar, PostShell, pieceCustomer, postStyles as s } from "./shared";
 
@@ -13,7 +13,8 @@ export function NewsletterPreview({ piece }: { piece: MarketingPiece }) {
       <div className={s.mailHead}>
         <span className={s.mailFrom}>
           <CustomerLogo customer={customer} size={16} />
-          {customer.name} · {piece.timestamp ?? "Draft"}
+          {isWordmark(customer) ? "" : `${customer.name} · `}
+          {piece.timestamp ?? "Draft"}
         </span>
         <h4 className={s.mailSubject}>{piece.copy.headline}</h4>
         {piece.copy.subhead && <span className={s.mailPreheader}>{piece.copy.subhead}</span>}

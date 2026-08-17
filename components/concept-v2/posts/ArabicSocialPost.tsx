@@ -1,6 +1,6 @@
 import type { MarketingPiece } from "@/lib/concept-v2/content";
 import { BrandMedia } from "../BrandMedia";
-import { CustomerLogo } from "../CustomerLogo";
+import { CustomerLogo, isWordmark } from "../CustomerLogo";
 import { EngagementRow, PlatformBar, PostShell, pieceCustomer, postStyles as s } from "./shared";
 
 /**
@@ -17,7 +17,9 @@ export function ArabicSocialPost({ piece }: { piece: MarketingPiece }) {
         <div className={s.accountText}>
           {/* Not translated: no customer here has supplied an official Arabic
               name, and inventing one would be inventing an identity. */}
-          <span className={s.accountName}>{customer.name}</span>
+          {!isWordmark(customer) && (
+            <span className={s.accountName}>{customer.name}</span>
+          )}
           <span className={`${s.accountMeta} ${s.arabic}`}>{piece.timestamp}</span>
         </div>
       </div>

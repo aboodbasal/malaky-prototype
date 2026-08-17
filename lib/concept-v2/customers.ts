@@ -48,12 +48,28 @@ export interface VerifiedFact {
   source: string;
 }
 
-/** Official artwork, exactly as supplied. Never generated. */
+/**
+ * Official artwork, exactly as supplied. Never generated, and never edited.
+ *
+ * `background` is the one thing presentation has to know, and it describes the
+ * file rather than changing it. Three of these six are knockout artwork on
+ * transparency and sit straight on the graphite. The other three arrived with
+ * their own white plate baked in, which is how the customer supplied them — so
+ * the container gives them a light surface to sit on instead of anyone
+ * cutting the background out. Editing the artwork to suit our page is exactly
+ * what we do not do.
+ */
 export interface LogoAsset {
   src: string;
   /** Intrinsic pixels, so it is placed at its own ratio and never distorted. */
   width: number;
   height: number;
+  /**
+   * "transparent" — knockout artwork, placed directly on the dark surface.
+   * "light" — the file carries its own light background; the container
+   * supplies a matching plate so it does not sit on graphite as a raw square.
+   */
+  background: "transparent" | "light";
   alt: string;
 }
 
@@ -89,7 +105,13 @@ export const CUSTOMERS: Record<CustomerId, Customer> = {
     shortCategory: "Enterprise data",
     website: "ataccama.com",
     handle: null,
-    logo: null,
+    logo: {
+      src: "/brand/customers/ataccama/ataccama-logo.svg",
+      width: 1266,
+      height: 180,
+      background: "transparent",
+      alt: "Ataccama",
+    },
     facts: [
       {
         claim:
@@ -123,7 +145,13 @@ export const CUSTOMERS: Record<CustomerId, Customer> = {
     shortCategory: "Audit & advisory",
     website: "bakertilly.sa",
     handle: null,
-    logo: null,
+    logo: {
+      src: "/brand/customers/baker-tilly-saudi/baker-tilly-logo.svg",
+      width: 151,
+      height: 40,
+      background: "transparent",
+      alt: "Baker Tilly",
+    },
     facts: [
       {
         claim:
@@ -149,7 +177,13 @@ export const CUSTOMERS: Record<CustomerId, Customer> = {
     shortCategory: "Branding & production",
     website: "inceptiondap.com",
     handle: null,
-    logo: null,
+    logo: {
+      src: "/brand/customers/inception-dap/inception-dap.png",
+      width: 1248,
+      height: 722,
+      background: "light",
+      alt: "Inception DAP — for design, advertising and printing",
+    },
     /**
      * Deliberately short. Nothing beyond their own published post could be
      * independently confirmed, so nothing beyond it is claimed.
@@ -161,6 +195,11 @@ export const CUSTOMERS: Record<CustomerId, Customer> = {
         source:
           "Inception DAP's own published Instagram post, held in this repository at public/brand/real-posts/inception-dap/.",
       },
+      {
+        claim: "Its own logo lockup reads “for design, advertising and printing”.",
+        source:
+          "The official artwork the customer supplied, at public/brand/customers/inception-dap/.",
+      },
     ],
   },
 
@@ -171,7 +210,13 @@ export const CUSTOMERS: Record<CustomerId, Customer> = {
     shortCategory: "Restaurant",
     website: null,
     handle: null,
-    logo: null,
+    logo: {
+      src: "/brand/customers/shrimp-joint/shrimp-joint-logo.jpg",
+      width: 960,
+      height: 960,
+      background: "light",
+      alt: "Shrimp Joint",
+    },
     /**
      * Same restraint. Their published post is the only source we can reach, so
      * no city, no branch count and no menu beyond what the post itself shows.
@@ -204,6 +249,7 @@ export const CUSTOMERS: Record<CustomerId, Customer> = {
       src: "/brand/customers/ila/ila-logo.png",
       width: 500,
       height: 500,
+      background: "transparent",
       alt: "International Language Academy of Washington D.C.",
     },
     facts: [
@@ -226,7 +272,13 @@ export const CUSTOMERS: Record<CustomerId, Customer> = {
     shortCategory: "Data & AI consulting",
     website: "alphapromena.com",
     handle: null,
-    logo: null,
+    logo: {
+      src: "/brand/customers/alpha-pro-mena/alpha-pro-logo.jpg",
+      width: 4899,
+      height: 4899,
+      background: "light",
+      alt: "Alpha Pro MENA",
+    },
     facts: [
       {
         claim:

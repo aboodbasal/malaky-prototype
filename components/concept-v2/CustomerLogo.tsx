@@ -2,18 +2,48 @@ import type { Customer, CustomerExecutive } from "@/lib/concept-v2/customers";
 import styles from "./BrandMark.module.css";
 
 /**
- * A customer's own logo, or an honest gap where it is not yet supplied.
+ * A customer's own logo, placed exactly as supplied.
  *
- * There is no third case. Nothing here draws a mark, letters a company name
- * into one, recolours artwork or crops a logo out of a screenshot — the whole
- * reason the fictional brand ecosystem was retired is that an invented mark
- * makes a real customer look made up. When `customer.logo` is null the
- * placeholder below renders instead: a neutral tile that reads as a reserved
- * slot rather than as anyone's identity.
+ * Nothing here edits artwork. It is not recoloured, not traced, not lettered,
+ * not cropped and not cut out of its background — the whole reason the
+ * fictional brand ecosystem was retired is that an invented mark makes a real
+ * customer look made up, and a *modified* mark is the same problem wearing a
+ * better disguise.
  *
- * Supplying the artwork is a one-line change in lib/concept-v2/customers.ts.
- * See public/brand/customers/README.md for what is still outstanding.
+ * Two things about the files therefore have to be solved in the container
+ * rather than in the file.
+ *
+ * **Shape.** Three of these are wordmark lockups, not square avatars —
+ * Ataccama's is seven times wider than it is tall. Forcing one into a square
+ * would shrink it to an unreadable smear, so the box takes the artwork's own
+ * ratio up to a cap and stays square for anything roughly square. The rows
+ * these sit in are flex, so a wider mark shifts the text along and nothing
+ * else moves.
+ *
+ * **Background.** Three arrived with a light plate baked in, which is how the
+ * customer supplied them. Rather than knock the background out, the container
+ * gives them a light surface to sit on. That reads as a logo on its own card,
+ * which is a normal way to place a mark on a dark page.
  */
+
+/** Past this, a mark is a wordmark and gets a wider box. */
+const WORDMARK_RATIO = 1.6;
+/** No lockup gets more than this much width, however wide the file is. */
+const MAX_RATIO = 3.2;
+
+/**
+ * True when the supplied artwork is a lockup that already spells the company
+ * out — Ataccama, Baker Tilly and Inception DAP all do.
+ *
+ * Account rows use this to avoid printing the name twice. A square badge like
+ * ILA's needs the name beside it; a wordmark is the name, and setting it again
+ * next to itself reads as a mistake.
+ */
+export function isWordmark(customer: Customer): boolean {
+  const logo = customer.logo;
+  return !!logo && logo.width / logo.height > WORDMARK_RATIO;
+}
+
 export function CustomerLogo({
   customer,
   size = 32,
@@ -22,15 +52,24 @@ export function CustomerLogo({
   size?: number;
 }) {
   if (customer.logo) {
+    const { logo } = customer;
+    const ratio = logo.width / logo.height;
+    const wide = ratio > WORDMARK_RATIO;
+    const boxWidth = wide ? Math.round(size * Math.min(ratio, MAX_RATIO)) : size;
+    const light = logo.background === "light";
+
     return (
-      <span className={styles.mark} style={{ width: size, height: size }}>
-        {/* Placed at its own ratio inside the square, never stretched to it. */}
+      <span
+        className={`${styles.mark} ${light ? styles.plate : ""}`}
+        style={{ width: boxWidth, height: size }}
+      >
+        {/* contain, always: the artwork keeps its own proportions. */}
         {/* eslint-disable-next-line @next/next/no-img-element */}
         <img
-          src={customer.logo.src}
-          alt={customer.logo.alt}
-          width={customer.logo.width}
-          height={customer.logo.height}
+          src={logo.src}
+          alt={logo.alt}
+          width={logo.width}
+          height={logo.height}
           loading="lazy"
           decoding="async"
           style={{ width: "100%", height: "100%", objectFit: "contain" }}
@@ -39,11 +78,12 @@ export function CustomerLogo({
     );
   }
 
+  /* No artwork yet. A neutral tile that reads as a reserved slot rather than
+     as anyone's identity — never a drawn mark standing in for a real one. */
   return (
     <span
       className={`${styles.mark} ${styles.pending}`}
       style={{ width: size, height: size }}
-      /* Named, so the absence is legible to a screen reader too. */
       role="img"
       aria-label={`${customer.name} — logo not yet supplied`}
       title={`${customer.name} — official logo pending`}

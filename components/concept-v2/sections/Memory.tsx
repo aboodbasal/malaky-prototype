@@ -62,7 +62,10 @@ export function Memory() {
           <div className={styles.lane}>
             <article className={styles.draft} data-on={step >= 1 || undefined}>
               <p className={styles.draftLabel}>
-                <CustomerLogo customer={customer} size={16} />
+                {/* 22px rather than 16: a detailed lockup needs the extra
+                    height to read as a mark rather than a smudge. Container
+                    only — the artwork is untouched. */}
+                <CustomerLogo customer={customer} size={22} />
                 Original draft
               </p>
               <p className={`${styles.draftBody} ${styles.draftOld}`}>
