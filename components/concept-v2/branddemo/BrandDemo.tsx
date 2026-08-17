@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useCallback, useEffect, useRef, useState } from "react";
 import {
   ANALYSIS_STATES,
@@ -175,7 +176,13 @@ export function BrandDemo() {
         )}
 
         {/* The honest end of an illustrative run: the example has shown the
-            shape, and the only way to get the real thing is a conversation. */}
+            shape, and nothing here has read anyone's website.
+
+            Two ways forward, ranked. Get started is the default because
+            Business and Scale are self-serve; the demo request stays as a
+            quiet link beside it for the buyer who wants a conversation, in the
+            same shape the header uses. Two filled buttons would make them look
+            like alternatives rather than a default and an exception. */}
         {phase === "ready" && analysis?.mode === "illustrative" && (
           <div className={styles.convert}>
             <div>
@@ -187,9 +194,14 @@ export function BrandDemo() {
                 priorities.
               </p>
             </div>
-            <Button href="/concept-v2/request-demo" tone="primary" size="lg" arrow>
-              Request a private demo
-            </Button>
+            <div className={styles.convertActions}>
+              <Link href="/concept-v2/request-demo" className={styles.convertLink}>
+                Request a private demo
+              </Link>
+              <Button href="/concept-v2/get-started" tone="primary" size="lg" arrow>
+                Get started
+              </Button>
+            </div>
           </div>
         )}
       </div>
