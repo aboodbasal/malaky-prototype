@@ -89,8 +89,18 @@ ok("and it is a moment the customer really published",
    /AI assessment/i.test(SOURCE_EVENT.title), SOURCE_EVENT.title);
 ok("every fan-out output is Alpha Pro's",
    EVENT_FANOUT.every((p) => p.customerId === "alpha-pro"));
+/* Four channels, by label rather than by platform: the Arabic card is a
+   LinkedIn post too, so two of them share a platform and differ in language
+   and composition. */
 ok("the fan-out covers four distinct channels",
-   new Set(EVENT_FANOUT.map((p) => p.platform)).size === 4);
+   new Set(EVENT_FANOUT.map((p) => p.label)).size === 4,
+   EVENT_FANOUT.map((p) => p.label).join(", "));
+ok("the fourth is Arabic LinkedIn, not Arabic social",
+   EVENT_FANOUT.some((p) => p.label === "Arabic LinkedIn" && p.dir === "rtl") &&
+     !EVENT_FANOUT.some((p) => p.platform === "arabic-social"));
+ok("and it is composed, not translated",
+   EVENT_FANOUT.find((p) => p.label === "Arabic LinkedIn")?.copy.body !==
+     EVENT_FANOUT.find((p) => p.label === "LinkedIn Company")?.copy.body);
 ok("no fan-out card names an executive Alpha Pro has not assigned",
    EVENT_FANOUT.filter((p) => p.platform === "linkedin-executive").every((p) => !p.executiveId));
 
@@ -156,6 +166,10 @@ ok("and claims nothing about results",
 /* Prepared work says it is prepared. */
 ok("the fan-out discloses that its cards are ours",
    /Prepared by Malaky/i.test(body));
+/* The One Event section must not name a channel it no longer has. */
+const oneEvent = (await page.locator("#how-it-works").innerText()).replace(/\s+/g, " ");
+ok("One Event calls no channel Arabic Social", !/Arabic Social/i.test(oneEvent));
+ok("and does name Arabic LinkedIn", /Arabic LinkedIn/i.test(oneEvent));
 ok("engagement figures are disclaimed rather than presented as performance",
    /not performance/i.test(body));
 ok("the memory correction is disclosed as illustrative", /Illustrative/i.test(body));

@@ -333,22 +333,27 @@ export const EVENT_FANOUT: DrawnPiece[] = [
     engagement: { likes: 58, comments: 9 },
   },
   {
-    id: "fanout-arabic-social",
+    /* Arabic LinkedIn, not Arabic social: the same professional surface as the
+       English company post, composed independently for an Arabic-speaking
+       business audience. It opens on the question rather than the offer, and
+       nothing in it is a rendering of the English card above — read them side
+       by side and the order of the argument is different. */
+    id: "fanout-arabic-linkedin",
     customerId: "alpha-pro",
-    platform: "arabic-social",
-    label: "Arabic Social",
+    platform: "linkedin-company",
+    label: "Arabic LinkedIn",
     status: "prepared",
     dir: "rtl",
+    timestamp: "Prepared",
     copy: {
-      headline: "الحوكمة أولًا، ثم الذكاء الاصطناعي.",
       body:
-        "تقييم مجاني لجاهزية مؤسستك: خارطة طريق للذكاء الاصطناعي، ومراجعة لجاهزية البيانات، وتحديد لحالات الاستخدام، وتقرير بالفرص المتاحة.",
-      cta: "اطلب التقييم",
+        "قبل أن تبدأ أي مبادرة للذكاء الاصطناعي: هل بياناتك جاهزة؟ التقييم يبدأ من مراجعة الجاهزية، ثم خارطة الطريق، وينتهي بتقرير يصلح لمجلس الإدارة.",
     },
     media: {
-      scene: "data-lattice",
-      alt: "An abstract lattice of data records with three points flagged",
-      aspect: "1:1",
+      scene: "signal-flow",
+      alt: "Streams of data crossing a wide frame, one interrupted and flagged",
+      aspect: "16:9",
+      focal: { x: 0.4, y: 0.55 },
     },
     engagement: { likes: 52, comments: 4 },
   },

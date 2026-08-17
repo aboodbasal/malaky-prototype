@@ -404,3 +404,13 @@
   border-radius: 50%;
   border: 1px dashed var(--c-line-2);
 }
+
+
+/* Arabic set inside the LinkedIn card. Same card, same size — Arabic simply
+   needs the leading its script asks for. */
+.bodyAr {
+  font-family: var(--f-arabic);
+  line-height: 1.85;
+  -webkit-line-clamp: 3;
+  line-clamp: 3;
+}

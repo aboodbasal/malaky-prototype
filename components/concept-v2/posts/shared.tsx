@@ -119,8 +119,10 @@ export function EngagementRow({
   style?: "social" | "linkedin";
 }) {
   if (rowStyle === "linkedin") {
+    /* dir is pinned: the counts and the word "comments" are English, and an
+       RTL card would otherwise reverse them into "comments 4". */
     return (
-      <div className={styles.engagementLinkedIn}>
+      <div className={styles.engagementLinkedIn} dir="ltr">
         <span className={styles.reactionDots} aria-hidden="true">
           <i style={{ background: "#4a9bd6" }} />
           <i style={{ background: "#d64a4a" }} />
