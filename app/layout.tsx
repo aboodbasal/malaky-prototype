@@ -1,5 +1,6 @@
 import type { Metadata } from "next";
 import { IBM_Plex_Sans_Arabic, DM_Sans } from "next/font/google";
+import { HOME_DESCRIPTION, HOME_TITLE, SITE_URL, pageMetadata } from "@/lib/site";
 import "./globals.css";
 
 /**
@@ -29,9 +30,20 @@ const arabic = IBM_Plex_Sans_Arabic({
   variable: "--font-arabic",
 });
 
+/**
+ * The site-wide defaults.
+ *
+ * `metadataBase` is what turns the relative image path into the absolute URL
+ * a social crawler needs. It reads the configured hostname and falls back to
+ * localhost, so this builds with or without the production value — see
+ * lib/site.ts.
+ *
+ * The title and description here are the homepage's, and every child page
+ * that sets its own overrides them.
+ */
 export const metadata: Metadata = {
-  title: "Malaky",
-  description: "A proactive marketing operating system.",
+  metadataBase: new URL(SITE_URL),
+  ...pageMetadata({ title: HOME_TITLE, description: HOME_DESCRIPTION }),
 };
 
 export default function RootLayout({

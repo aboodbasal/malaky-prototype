@@ -1,43 +1,16 @@
-import Link from "next/link";
+import { redirect } from "next/navigation";
 
 /**
- * Placeholder root. The repository had no production site when this concept
- * was built, so nothing here is overwritten — the concept lives entirely
- * under /concept-v2.
+ * The base URL is Malaky.
+ *
+ * The concept still lives under /concept-v2 and keeps every route it has —
+ * moving the directory would rewrite every internal link for no benefit at
+ * this stage. This is the entry point only: anyone who opens the deployment
+ * hostname lands on the site rather than on a list of builds.
+ *
+ * A redirect rather than a second copy of the homepage. Duplicating it here
+ * would give the same page two addresses, and the two would drift.
  */
-export default function Home() {
-  return (
-    <main
-      style={{
-        minHeight: "100vh",
-        display: "grid",
-        placeContent: "center",
-        gap: "1.25rem",
-        textAlign: "center",
-        padding: "2rem",
-      }}
-    >
-      <p
-        style={{
-          fontSize: "0.6875rem",
-          letterSpacing: "0.16em",
-          textTransform: "uppercase",
-          color: "var(--c-text-3)",
-        }}
-      >
-        Malaky prototype
-      </p>
-      <h1 style={{ fontFamily: "var(--f-display)", fontSize: "2.5rem", fontWeight: 400 }}>
-        Concept builds
-      </h1>
-      <ul style={{ display: "grid", gap: "0.5rem", color: "var(--c-accent)" }}>
-        <li>
-          <Link href="/concept-v2">/concept-v2</Link>
-        </li>
-        <li>
-          <Link href="/concept-v2/pricing">/concept-v2/pricing</Link>
-        </li>
-      </ul>
-    </main>
-  );
+export default function RootPage() {
+  redirect("/concept-v2");
 }

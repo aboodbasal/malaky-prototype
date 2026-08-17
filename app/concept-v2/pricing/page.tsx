@@ -1,12 +1,15 @@
 import type { Metadata } from "next";
+import { pageMetadata } from "@/lib/site";
 import { PricingPage } from "@/components/concept-v2/pricing/PricingPage";
 import { ClosingCta } from "@/components/concept-v2/sections/ClosingCta";
 
-export const metadata: Metadata = {
+/* Title and description unchanged — wrapped so this page shares the site
+   card instead of dropping it. */
+export const metadata: Metadata = pageMetadata({
   title: "Pricing — Malaky",
   description:
     "Malaky is not another tool. It's your marketing operation. Business, Scale and Enterprise deployments, each beginning with intelligence setup.",
-};
+});
 
 export default function Pricing() {
   return (
