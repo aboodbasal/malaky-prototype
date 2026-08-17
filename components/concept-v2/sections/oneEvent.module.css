@@ -173,3 +173,12 @@
     max-width: none;
   }
 }
+
+/* The disclosure line under the fan-out. Quiet by design: the minimum needed
+   for a reader to know the four cards are ours and the moment above is not. */
+.prepared {
+  margin-top: clamp(1.25rem, 2vw, 1.75rem);
+  font-size: var(--t-small);
+  line-height: 1.6;
+  color: var(--c-text-4);
+}

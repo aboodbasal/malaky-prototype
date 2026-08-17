@@ -55,7 +55,7 @@ for (const [selector, label] of SECTIONS) {
 // 7 — the illustrative result for a real company's domain, and an authored one.
 for (const [domain, label, width] of [
   ["ataccama.com", "demo-unknown", 1440],
-  ["falaklogistics.com", "demo-known", 1440],
+  ["ataccama.com", "demo-known", 1440],
   ["ataccama.com", "demo-unknown", 390],
 ]) {
   const ctx = await ctxFor(width);

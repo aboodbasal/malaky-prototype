@@ -12,3 +12,22 @@
   overflow: hidden;
   flex: none;
 }
+
+/* A reserved slot, not a mark. Quiet enough that it reads as "pending"
+   rather than as a company that chose a dashed square for a logo. */
+.pending {
+  color: var(--c-text-4);
+  background: rgba(255, 255, 255, 0.03);
+}
+
+/* No photograph. Initials on a neutral surface — a convention, not a
+   likeness invented for a real person. */
+.monogram {
+  display: inline-grid;
+  place-items: center;
+  background: var(--c-surface-3);
+  color: var(--c-text-3);
+  font-weight: var(--w-strong);
+  letter-spacing: 0.02em;
+  line-height: 1;
+}

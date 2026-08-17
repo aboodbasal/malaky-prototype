@@ -193,7 +193,19 @@ export const CUSTOMERS: Record<CustomerId, Customer> = {
     shortCategory: "Education",
     website: "ila.edu",
     handle: null,
-    logo: null,
+    /**
+     * The official knockout lockup, supplied by the customer and used exactly
+     * as delivered: the ring, the ILA monogram with its globe, the ® and the
+     * full descriptor. White artwork on transparency, which is why it is the
+     * right file for this site's graphite surfaces and looks blank on a white
+     * one. Placed at its own 1:1 ratio and never recoloured.
+     */
+    logo: {
+      src: "/brand/customers/ila/ila-logo.png",
+      width: 500,
+      height: 500,
+      alt: "International Language Academy of Washington D.C.",
+    },
     facts: [
       {
         claim:

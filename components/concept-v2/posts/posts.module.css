@@ -233,7 +233,9 @@
   overflow: hidden;
 }
 
+/* Same rule as .mailCta — the card's own type colour, never a borrowed one. */
 .arabicCta {
+  color: var(--c-text);
   margin: 0 0.75rem 0.75rem;
   display: inline-flex;
   align-self: flex-start;
@@ -289,7 +291,10 @@
   overflow: hidden;
 }
 
+/* Neutral by default: we hold no customer's brand colour, so a prepared
+   newsletter uses the card's own ink rather than one invented for them. */
 .mailCta {
+  background: #2b2723;
   display: inline-flex;
   align-items: center;
   gap: 0.35rem;
@@ -388,4 +393,14 @@
   border: 1px solid var(--c-accent-line);
   color: var(--c-accent-hi);
   backdrop-filter: blur(4px);
+}
+
+/* A draft with no executive attached yet. Reads as a reserved slot, not as a
+   person — the alternative is putting a real name on copy they have not seen. */
+.pendingAvatar {
+  width: 32px;
+  height: 32px;
+  flex: none;
+  border-radius: 50%;
+  border: 1px dashed var(--c-line-2);
 }

@@ -1,7 +1,7 @@
 "use client";
 
 import type { BrandAnalysis } from "@/lib/concept-v2/analysis";
-import { BrandMark } from "../BrandMark";
+import { CustomerLogo } from "../CustomerLogo";
 import { SparkIcon } from "../icons";
 import styles from "./brandDemo.module.css";
 
@@ -21,7 +21,7 @@ export function IntelligenceSummary({ analysis }: { analysis: BrandAnalysis }) {
   return (
     <div className={styles.summary}>
       <div className={styles.company}>
-        <BrandMark brand={company.logo} size={40} />
+        <CustomerLogo customer={company.logo} size={40} />
         <div>
           <p className={styles.companyName}>{company.name}</p>
           <p className={styles.companyMeta}>{subtitle}</p>
@@ -35,16 +35,21 @@ export function IntelligenceSummary({ analysis }: { analysis: BrandAnalysis }) {
             <dd>{row.value}</dd>
           </div>
         ))}
-        <div className={styles.learnedRow}>
-          <dt>{paletteLabel}</dt>
-          <dd>
-            <span className={styles.swatches}>
-              {palette.map((c) => (
-                <span key={c} style={{ background: c }} title={c} />
-              ))}
-            </span>
-          </dd>
-        </div>
+        {/* Only where colours were genuinely supplied. We hold no customer's
+            brand palette, so the row disappears rather than showing four
+            plausible swatches we picked ourselves. */}
+        {palette.length > 0 && (
+          <div className={styles.learnedRow}>
+            <dt>{paletteLabel}</dt>
+            <dd>
+              <span className={styles.swatches}>
+                {palette.map((c) => (
+                  <span key={c} style={{ background: c }} title={c} />
+                ))}
+              </span>
+            </dd>
+          </div>
+        )}
       </dl>
 
       <div className={styles.opportunity} data-illustrative={illustrative || undefined}>

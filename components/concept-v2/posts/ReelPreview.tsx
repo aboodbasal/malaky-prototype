@@ -1,16 +1,16 @@
 import { isVideo } from "@/lib/concept-v2/media";
 import type { MarketingPiece } from "@/lib/concept-v2/content";
 import { BrandMedia } from "../BrandMedia";
-import { BrandMark } from "../BrandMark";
+import { CustomerLogo } from "../CustomerLogo";
 import { PlayIcon } from "../icons";
-import { PostShell, pieceBrand, postStyles as s } from "./shared";
+import { PostShell, pieceCustomer, postStyles as s } from "./shared";
 
 /**
  * Static poster frame with a play affordance — nothing autoplays, so a page
  * full of these costs nothing at runtime.
  */
 export function ReelPreview({ piece }: { piece: MarketingPiece }) {
-  const brand = pieceBrand(piece);
+  const customer = pieceCustomer(piece);
   // Once a real video is attached its own duration wins; the piece-level
   // value is the placeholder until then.
   const duration =
@@ -24,7 +24,7 @@ export function ReelPreview({ piece }: { piece: MarketingPiece }) {
         )}
         <div className={s.reelOverlay}>
           <div className={s.reelTop}>
-            <BrandMark brand={brand} size={18} />
+            <CustomerLogo customer={customer} size={18} />
             {piece.label}
             {duration && <span className={s.reelDuration}>{duration}</span>}
           </div>

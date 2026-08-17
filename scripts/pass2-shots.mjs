@@ -25,7 +25,7 @@ await shoot(1440, "initial", async (p) => { await clip(p, "p2-1-initial"); });
 
 // 2. during analysis
 await shoot(1440, "analysis", async (p) => {
-  await p.fill("#company-url", "falaklogistics.com");
+  await p.fill("#company-url", "ataccama.com");
   await p.getByRole("button", { name: /Show me/ }).click();
   await p.waitForTimeout(2600);
   await clip(p, "p2-2-analysis");
@@ -33,7 +33,7 @@ await shoot(1440, "analysis", async (p) => {
 
 // 3. results (LinkedIn) + 4. different channel (Executive)
 await shoot(1440, "results", async (p) => {
-  await p.fill("#company-url", "falaklogistics.com");
+  await p.fill("#company-url", "ataccama.com");
   await p.getByRole("button", { name: /Show me/ }).click();
   await p.waitForSelector("text=Here's what Malaky would prepare today", { timeout: 15000 });
   await p.waitForTimeout(900);
@@ -48,7 +48,7 @@ await shoot(1440, "results", async (p) => {
 
 // Arabic RTL check on the hospitality brand
 await shoot(1440, "arabic", async (p) => {
-  await p.fill("#company-url", "darsidra.com");
+  await p.fill("#company-url", "ila.edu");
   await p.getByRole("button", { name: /Show me/ }).click();
   await p.waitForSelector("text=Here's what Malaky would prepare today", { timeout: 15000 });
   await p.getByRole("tab", { name: "Instagram", exact: true }).click();
@@ -58,7 +58,7 @@ await shoot(1440, "arabic", async (p) => {
 
 // 5. mobile results
 await shoot(390, "mobile", async (p) => {
-  await p.fill("#company-url", "falaklogistics.com");
+  await p.fill("#company-url", "ataccama.com");
   await p.getByRole("button", { name: /Show me/ }).click();
   await p.waitForSelector("text=Here's what Malaky would prepare today", { timeout: 15000 });
   await p.waitForTimeout(900);

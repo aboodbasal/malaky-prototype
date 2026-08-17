@@ -77,7 +77,7 @@ interface OrbitSlot {
  * Scale and opacity are now per card. The real-company screenshots carry far
  * more detail than a composed card does, so they get a taller near/far curve
  * to be worth reading at the front and a higher opacity floor so they recede
- * rather than drop out. Dar Sidra goes the other way: it is the tallest object
+ * rather than drop out. The Arabic card goes the other way: it is the tallest object
  * in the set and was overpowering everything it passed.
  *
  * The primaries are spaced unevenly. Even quarter-turns look tidy in the
@@ -96,7 +96,7 @@ interface OrbitSlot {
 const LAYOUT: Record<string, OrbitSlot> = {
   // Inception DAP — dense packaging creative, needs the size to be worth it.
   "hero-instagram": { phase: 0, width: 192, y: -14, roll: -1.2, scaleMax: 1.19, opacityMin: 0.56 },
-  // Dar Sidra — the Arabic proof point, pulled back so it stops dominating.
+  // The Arabic card — the bilingual proof point, pulled back so it stops dominating.
   "hero-arabic-social": { phase: 0.24, width: 164, y: -34, roll: -1, scaleMax: 0.95 },
   // Shrimp Joint — the strongest single image in the set; it leads.
   "hero-facebook": { phase: 0.47, width: 208, y: 30, roll: 1.4, scaleMax: 1.24, opacityMin: 0.56 },

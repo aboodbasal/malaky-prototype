@@ -21,12 +21,12 @@ ok("malformed input rejected", (await page.locator("#company-url-error").innerTe
 
 // --- domain normalisation -------------------------------------------
 for (const [input, expect] of [
-  ["falaklogistics.com", "Falak Logistics"],
-  ["https://falaklogistics.com", "Falak Logistics"],
-  ["www.falaklogistics.com/about?x=1", "Falak Logistics"],
-  ["nuraliving.com", "Nura Living"],
-  ["meezanadvisory.com", "Meezan Advisory"],
-  ["darsidra.com", "Dar Sidra"],
+  ["ataccama.com", "Ataccama"],
+  ["https://ataccama.com", "Ataccama"],
+  ["www.ataccama.com/platform?x=1", "Ataccama"],
+  ["bakertilly.sa", "Baker Tilly Saudi Arabia"],
+  ["alphapromena.com", "Alpha Pro MENA"],
+  ["ila.edu", "International Language Academy"],
   ["acmetrading.com", "Acmetrading"],
   ["blue-harbour.co", "Blue Harbour"],
 ]) {
@@ -43,7 +43,7 @@ for (const [input, expect] of [
 // --- analysis sequence timing ---------------------------------------
 await go();
 const t0 = Date.now();
-await page.fill("#company-url", "falaklogistics.com");
+await page.fill("#company-url", "ataccama.com");
 await page.getByRole("button", { name: /Show me/ }).click();
 await page.waitForSelector("text=Understanding your business");
 await page.waitForTimeout(1800);
@@ -54,8 +54,8 @@ ok(`analysis takes 4-7s (${elapsed.toFixed(1)}s)`, elapsed >= 4 && elapsed <= 7.
 
 // --- causal story present -------------------------------------------
 const body = (await page.locator("#brand-demo").innerText()).toLowerCase();
-for (const frag of ["Logistics · Saudi Arabia", "B2B operations & logistics leaders", "Riyadh · Jeddah",
-                    "Direct · Professional · Operational", "Opportunity detected", "Regional delivery expansion"]) {
+for (const frag of ["Enterprise data management", "Data leaders in regulated enterprises", "Global",
+                    "Precise · Technical · Plain", "Public business moment", "Data Observability now available"]) {
   ok(`summary shows "${frag}"`, body.includes(frag.toLowerCase()));
 }
 
@@ -126,7 +126,7 @@ rm.on("pageerror", (e) => errs.push("rm pageerror: " + e.message));
 await rm.goto("http://localhost:3000/concept-v2", { waitUntil: "networkidle" });
 await rm.locator("#brand-demo").scrollIntoViewIfNeeded();
 const rt = Date.now();
-await rm.fill("#company-url", "falaklogistics.com");
+await rm.fill("#company-url", "ataccama.com");
 await rm.getByRole("button", { name: /Show me/ }).click();
 await rm.waitForSelector("text=Here's what Malaky would prepare today", { timeout: 10000 });
 ok(`reduced motion skips the timed sequence (${((Date.now()-rt)/1000).toFixed(1)}s)`, (Date.now()-rt) < 2000);

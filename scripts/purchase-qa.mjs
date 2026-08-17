@@ -193,13 +193,13 @@ ok("and it says what is missing",
    (await page.locator("[class*=fieldError]").count()) >= 1);
 
 const fill = async (email) => {
-  await page.fill("input[autocomplete=name]", "Layla Haddad");
+  await page.fill("input[autocomplete=name]", "Sam Visitor");
   await page.fill("input[type=email]", email);
   await page.fill("input[autocomplete=organization]", "Northline Group");
   await page.selectOption("select", "Saudi Arabia");
 };
 
-await fill("layla@fail.test");
+await fill("sam@fail.test");
 await page.locator("button[type=submit]").click();
 await page.waitForTimeout(1600);
 const declined = await page.locator("p[role=alert]").innerText();
@@ -208,7 +208,7 @@ ok("and says nothing was charged", /nothing has been charged/i.test(declined), d
 ok("the typed details survive a decline",
    (await page.inputValue("input[autocomplete=organization]")) === "Northline Group");
 
-await fill("layla@northline.sa");
+await fill("sam@northline.sa");
 await page.locator("button[type=submit]").click();
 await page.waitForTimeout(2200);
 ok("a successful checkout moves to Intelligence Setup",

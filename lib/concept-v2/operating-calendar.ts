@@ -199,11 +199,11 @@ export const MARKETS: Market[] = [
         day: 17,
         status: "awaiting-approval",
         work: [
-          { channel: "Executive LinkedIn", state: "Drafted in the CEO's voice", done: true },
+          { channel: "Executive LinkedIn", state: "Drafted in an executive's voice", done: true },
           { channel: "LinkedIn company", state: "Drafted", done: true },
           { channel: "Instagram", state: "Drafted", done: true },
         ],
-        awaiting: "Approval from Ahmed Al Farsi",
+        awaiting: "Approval from the marketing lead",
       },
       {
         kind: "market",

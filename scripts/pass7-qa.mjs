@@ -20,10 +20,10 @@ const newPage = async (width = 1440, opts = {}) => {
   return [ctx, p];
 };
 
-const fillValid = async (p, website = "nuraliving.com") => {
-  await field(p, "name").fill("Huda Nasser");
-  await field(p, "email").fill("huda@nuraliving.com");
-  await field(p, "company").fill("Nura Living");
+const fillValid = async (p, website = "example-visitor.com") => {
+  await field(p, "name").fill("Sam Visitor");
+  await field(p, "email").fill("sam@example-visitor.com");
+  await field(p, "company").fill("Example Visitor Co");
   await field(p, "website").fill(website);
   await field(p, "role").fill("Chief Marketing Officer");
   await field(p, "market").fill("Saudi Arabia");
@@ -63,22 +63,22 @@ for (const w of [1440, 1280, 1024, 768, 390, 360]) {
   const [ctx, p] = await newPage();
   await p.goto(URL, { waitUntil: "networkidle" });
   await fillValid(p);
-  await field(p, "email").fill("huda@@nura");
+  await field(p, "email").fill("sam@@example");
   await p.getByRole("button", { name: /Send request/ }).click();
   await p.waitForTimeout(300);
   ok("invalid email rejected", (await p.locator("input[id$='-email'] ~ [id$='-error']").innerText()).length > 0);
 
-  await field(p, "email").fill("huda@nuraliving.com");
+  await field(p, "email").fill("sam@example-visitor.com");
   await field(p, "website").fill("not a website");
   await p.getByRole("button", { name: /Send request/ }).click();
   await p.waitForTimeout(300);
   ok("invalid website rejected", (await p.locator("input[id$='-website'] ~ [id$='-error']").innerText()).length > 0);
 
-  await field(p, "website").fill("https://www.Nuraliving.com/about?x=1");
+  await field(p, "website").fill("https://www.Example-Visitor.com/about?x=1");
   await p.waitForTimeout(200);
   ok("messy but valid website accepted", (await p.locator("input[id$='-website'] ~ [id$='-error']").count()) === 0);
 
-  await field(p, "email").fill("huda@gmail.com");
+  await field(p, "email").fill("sam@gmail.com");
   await p.waitForTimeout(200);
   ok("personal address nudges, does not block",
     (await p.locator("input[id$='-email'] ~ span").innerText()).includes("work address"));
@@ -120,7 +120,7 @@ for (const w of [1440, 1280, 1024, 768, 390, 360]) {
     await p.keyboard.press("Tab");
   }
   ok("keyboard reaches the first field", (await p.evaluate(() => document.activeElement?.id ?? "")).endsWith("-name"));
-  for (const v of ["Huda Nasser", "huda@nuraliving.com", "Nura Living", "nuraliving.com", "CMO", "Saudi Arabia"]) {
+  for (const v of ["Sam Visitor", "sam@example-visitor.com", "Example Visitor Co", "example-visitor.com", "CMO", "Saudi Arabia"]) {
     await p.keyboard.type(v);
     await p.keyboard.press("Tab");
   }
@@ -157,10 +157,10 @@ for (const w of [1440, 1280, 1024, 768, 390, 360]) {
   await p.waitForSelector("form [role=alert]:not([hidden])", { timeout: 8000 });
   ok("mock failure surfaces a message", (await p.locator("form [role=alert]").innerText()).length > 0);
   ok("form is still there after a failure", (await p.locator("form").count()) === 1);
-  ok("values survive a failure", (await field(p, "company").inputValue()) === "Nura Living");
+  ok("values survive a failure", (await field(p, "company").inputValue()) === "Example Visitor Co");
   ok("submission error tracked", (await events(p)).filter((e) => e === "demo_request_error").length === 1);
 
-  await field(p, "website").fill("nuraliving.com");
+  await field(p, "website").fill("example-visitor.com");
   await p.getByRole("button", { name: /Send request/ }).click();
   await p.waitForSelector("text=/You.re on the list/", { timeout: 8000 });
   ok("retry after failure succeeds", true);
@@ -209,7 +209,9 @@ for (const w of [1440, 1280, 1024, 768, 390, 360]) {
   // The brand demo's own conversion CTA.
   await p.goto("http://localhost:3000/concept-v2", { waitUntil: "networkidle" });
   await p.locator("#brand-demo").scrollIntoViewIfNeeded();
-  await p.fill("#company-url", "ataccama.com");
+  /* Unrecognised on purpose: the conversion block belongs to the
+     illustrative path, and the Malaky customers are authored profiles now. */
+  await p.fill("#company-url", "acmetrading.com");
   await p.getByRole("button", { name: /Show me/ }).click();
   await p.waitForSelector("text=Want Malaky to actually learn your company?", { timeout: 15000 });
   const href = await p.locator("#brand-demo a", { hasText: "Request a private demo" }).getAttribute("href");

@@ -1,5 +1,5 @@
 import type { ReactNode } from "react";
-import { getBrand, type Brand, type BrandId } from "@/lib/concept-v2/brands";
+import { getCustomer, type Customer, type CustomerId } from "@/lib/concept-v2/customers";
 import type { DrawnPlatform, MarketingPiece } from "@/lib/concept-v2/content";
 import {
   ArabicIcon,
@@ -26,20 +26,20 @@ export function formatCount(n: number): string {
 }
 
 /**
- * The brand a post component draws.
+ * The customer a post component draws.
  *
- * An explicit `brand` wins, so a generated (non-catalogue) company renders
+ * An explicit `customer` wins, so a company typed into the brand demo renders
  * through the same components. Every piece that reaches a post component has
- * one or the other — real screenshots carry their own branding inside the
- * image and never get here.
+ * one or the other — work a customer really published carries its own branding
+ * inside the screenshot and never gets here.
  */
-export function pieceBrand(piece: MarketingPiece, brandId?: BrandId): Brand {
-  const id = brandId ?? piece.brandId;
-  const brand = piece.brand ?? (id ? getBrand(id) : undefined);
-  if (!brand) {
-    throw new Error(`Marketing piece "${piece.id}" has no brand to draw.`);
+export function pieceCustomer(piece: MarketingPiece, customerId?: CustomerId): Customer {
+  const id = customerId ?? piece.customerId;
+  const customer = piece.customer ?? (id ? getCustomer(id) : undefined);
+  if (!customer) {
+    throw new Error(`Marketing piece "${piece.id}" has no customer to draw.`);
   }
-  return brand;
+  return customer;
 }
 
 const PLATFORM_META: Record<

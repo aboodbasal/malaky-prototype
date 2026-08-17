@@ -17,8 +17,13 @@ approximate mark on a real customer is worse than an honest gap.
 | Baker Tilly Saudi Arabia | `baker-tilly-saudi/baker-tilly-logo.svg` | outstanding |
 | Inception DAP | `inception-dap/inception-dap-logo.svg` | outstanding |
 | Shrimp Joint | `shrimp-joint/shrimp-joint-logo.svg` | outstanding |
-| International Language Academy | `ila/ila-logo.svg` | outstanding |
+| International Language Academy | `ila/ila-logo.png` | **supplied** — official knockout lockup, 500×500, transparent |
 | Alpha Pro MENA | `alpha-pro-mena/alpha-pro-logo.svg` | outstanding |
+
+The supplied ILA file is white artwork on transparency, drawn for dark
+backgrounds. It therefore looks empty when previewed on a white canvas — that
+is correct, not a broken file. The other five should ideally match it: a
+knockout or full-colour version that holds on graphite.
 
 ## What to supply
 

@@ -1,10 +1,10 @@
 "use client";
 
 import { useEffect, useState } from "react";
-import { getBrand } from "@/lib/concept-v2/brands";
+import { getCustomer } from "@/lib/concept-v2/customers";
 import { MEMORY_EXAMPLE } from "@/lib/concept-v2/content";
 import { usePrefersReducedMotion, useReveal } from "@/hooks/useConceptHooks";
-import { BrandMark } from "../BrandMark";
+import { CustomerLogo } from "../CustomerLogo";
 import { SectionHead, Stop } from "../ui";
 import { ArrowRight, CheckIcon, MemoryIcon, PencilIcon } from "../icons";
 import styles from "./memory.module.css";
@@ -19,7 +19,7 @@ const STEP_DELAYS = [0, 400, 800, 1200];
  * derived from it, and a later draft written by Malaky already obeys the rule.
  */
 export function Memory() {
-  const brand = getBrand(MEMORY_EXAMPLE.brandId);
+  const customer = getCustomer(MEMORY_EXAMPLE.customerId);
   const [ref, reveal] = useReveal<HTMLDivElement>({ threshold: 0.2 });
   const reducedMotion = usePrefersReducedMotion();
   // Fully emphasised until the observer arms, so the sequence never withholds
@@ -62,7 +62,7 @@ export function Memory() {
           <div className={styles.lane}>
             <article className={styles.draft} data-on={step >= 1 || undefined}>
               <p className={styles.draftLabel}>
-                <BrandMark brand={brand} size={16} />
+                <CustomerLogo customer={customer} size={16} />
                 Original draft
               </p>
               <p className={`${styles.draftBody} ${styles.draftOld}`}>
@@ -119,6 +119,8 @@ export function Memory() {
             </article>
           </div>
         </div>
+
+        <p className={styles.prepared}>{MEMORY_EXAMPLE.note}</p>
 
         <button type="button" className={styles.replay} onClick={() => setRun((r) => r + 1)}>
           Replay the sequence

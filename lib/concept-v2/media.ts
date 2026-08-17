@@ -16,19 +16,28 @@
  * ------------------------------------------------------------------ */
 
 /**
- * Generated placeholder scenes. These are the Pass 0 SVG illustrations and
- * are explicitly temporary — every one of them is scheduled for replacement
- * by a purpose-built asset. They remain only so the site renders unchanged
- * until those assets land.
+ * Concept creative, drawn by Malaky.
+ *
+ * Every scene here is neutral by construction: none carries a customer's
+ * colours, marks or photography, because we hold none of those and inventing
+ * them would turn a real customer back into a fictional one.
+ *
+ * So a scene is named for what it depicts, never for whose it is. Assigning
+ * one to a concept execution is a composition decision — it is not a claim
+ * that the customer's own creative looks like this, and every card carrying
+ * one is labelled as prepared work.
  */
 export type MediaScene =
-  | "nura-room"
-  | "nura-still"
-  | "falak-port"
-  | "falak-ship"
-  | "meezan-office"
-  | "sidra-colonnade"
-  | "sidra-table";
+  /** Abstract lattice of records and links — data, governance, monitoring. */
+  | "data-lattice"
+  /** Abstract flow across a wide frame — pipelines, movement, throughput. */
+  | "signal-flow"
+  /** A working office at dusk — professional services subjects. */
+  | "office"
+  /** A long table laid for service — dining and hospitality subjects. */
+  | "long-table"
+  /** A close still life — product and food subjects. */
+  | "still-life";
 
 export type AspectRatio = "1:1" | "4:5" | "16:9" | "9:16" | "3:2";
 
@@ -65,16 +74,14 @@ interface MediaCommon {
   /** Text set into the creative, as a real campaign image would carry. */
   overline?: string;
   caption?: string;
-  /**
-   * Generated placeholder used until `src` is supplied. Temporary.
-   */
+  /** Malaky-drawn concept creative, used where no real asset is supplied. */
   scene?: MediaScene;
 }
 
 export interface ImageMedia extends MediaCommon {
   /** Optional so existing content is valid unchanged; defaults to "image". */
   type?: "image";
-  /** Public path, e.g. /brand/falak/linkedin-16x9.jpg. */
+  /** Public path, e.g. /brand/customers/ataccama/linkedin-16x9.jpg. */
   src?: string;
   /** Density or format alternatives, passed straight to srcset. */
   srcSet?: string;

@@ -2,6 +2,7 @@
 
 import { useEffect, useRef, useState } from "react";
 import { APPROVAL_PIECE, APPROVAL_STAGES, TRUST_PILLARS } from "@/lib/concept-v2/content";
+import { getCustomer } from "@/lib/concept-v2/customers";
 import { usePrefersReducedMotion } from "@/hooks/useConceptHooks";
 import { PostCard } from "../posts";
 import { SectionHead, Stop } from "../ui";
@@ -22,6 +23,9 @@ type Outcome = "idle" | "running" | "done" | "editing" | "declined";
  * planned.
  */
 export function Approval() {
+  /* The remembered-preference line names the customer this piece was
+     prepared for, rather than hardcoding one. */
+  const customer = getCustomer(APPROVAL_PIECE.customerId!);
   const [outcome, setOutcome] = useState<Outcome>("idle");
   const [stage, setStage] = useState(0);
   const [remembered, setRemembered] = useState(false);
@@ -176,8 +180,8 @@ export function Approval() {
                   <CheckIcon size={12} className={styles.detailCheck} />
                 </p>
                 <p className={styles.detailBody}>
-                  Approved without edits. Malaky will keep this length and register for Falak
-                  Logistics.
+                  Approved without edits. Malaky will keep this length and register for{" "}
+                  {customer.name}.
                 </p>
               </div>
             </div>

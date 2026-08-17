@@ -1,35 +1,41 @@
-import { EXECUTIVES } from "@/lib/concept-v2/brands";
+import { EXECUTIVES } from "@/lib/concept-v2/customers";
 import type { MarketingPiece } from "@/lib/concept-v2/content";
 import { BrandMedia } from "../BrandMedia";
-import { Portrait } from "../BrandMark";
-import { EngagementRow, PlatformBar, PostShell, pieceBrand, postStyles as s } from "./shared";
+import { ExecutiveAvatar } from "../CustomerLogo";
+import { EngagementRow, PlatformBar, PostShell, pieceCustomer, postStyles as s } from "./shared";
 
+/**
+ * A post written in a person's voice — or waiting for the person.
+ *
+ * Two cases, and the difference matters. Where a customer has a named
+ * executive who publicly identifies themselves in that role, the draft carries
+ * their name and the card says it is a draft. Where no executive has been
+ * assigned, the draft is shown unattributed rather than having a real person's
+ * name put on copy they have never seen.
+ */
 export function LinkedInExecutivePost({ piece }: { piece: MarketingPiece }) {
-  const exec = piece.executive ?? EXECUTIVES[piece.executiveKey ?? "ahmed"];
-  const brand = pieceBrand(piece, exec.brandId);
+  const customer = pieceCustomer(piece);
+  const exec = piece.executive ?? (piece.executiveId ? EXECUTIVES[piece.executiveId] : undefined);
+
   return (
     <PostShell>
       <PlatformBar platform="linkedin-executive" label={piece.label} />
       <div className={s.account}>
-        <Portrait
-          brand={brand}
-          initials={exec.initials}
-          size={32}
-          src={exec.portrait?.src}
-          alt={exec.portrait?.alt ?? exec.name}
-        />
+        {exec ? (
+          <ExecutiveAvatar executive={exec} size={32} />
+        ) : (
+          <span className={s.pendingAvatar} aria-hidden="true" />
+        )}
         <div className={s.accountText}>
-          <span className={s.accountName}>{exec.name}</span>
+          <span className={s.accountName}>{exec ? exec.name : "Executive voice"}</span>
           <span className={s.accountMeta}>
-            {exec.role}
+            {exec ? exec.role : `${customer.name} · voice not yet assigned`}
             {piece.timestamp ? ` · ${piece.timestamp}` : ""}
           </span>
         </div>
       </div>
       <p className={`${s.body} ${s.bodyStrong}`}>{piece.copy.body}</p>
-      {piece.media && (
-        <BrandMedia {...piece.media} />
-      )}
+      {piece.media && <BrandMedia {...piece.media} />}
       <EngagementRow {...piece.engagement} style="linkedin" />
     </PostShell>
   );

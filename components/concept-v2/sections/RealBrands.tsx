@@ -9,14 +9,17 @@ import { ArrowRight } from "../icons";
 import styles from "./realBrands.module.css";
 
 /**
- * Real companies, at a size where the work can actually be read.
+ * Malaky customers, at a size where the work can actually be read.
  *
- * Everything else on this page is demo content, so this section is the one
- * place the work is not ours to compose — each item is a brand-approved
- * concept example shown whole, at its own aspect ratio, with no chrome drawn
- * around it. The caption underneath is two lines and no more: the company,
- * then sector and channel. It states the range Malaky covers rather than
- * reviewing the creative.
+ * This is the one section where the work is not ours to compose. Everything
+ * here is marketing these companies really published — shown whole, at its own
+ * aspect ratio, with no chrome drawn around it and nothing written over it.
+ * Elsewhere on the page the cards are Malaky-prepared concept executions and
+ * say so; here they are not, and that difference is the point of the section.
+ *
+ * The caption underneath is two lines and no more: the company, then sector
+ * and channel. It states the range Malaky covers rather than reviewing the
+ * creative, and it makes no claim about results.
  *
  * The rail is a native horizontal scroller: it works with a trackpad, a
  * touch drag, the arrow keys and the buttons, and needs no JavaScript to be
@@ -97,7 +100,7 @@ export function RealBrands() {
           onScroll={syncEdge}
           tabIndex={0}
           role="group"
-          aria-label="Concept examples across five real companies"
+          aria-label="Published marketing from five Malaky customers"
         >
           {GALLERY_POSTS.map((post, i) => (
             <li
@@ -131,9 +134,12 @@ export function RealBrands() {
       </div>
 
       <div className="shell">
+        {/* Truthful and quiet. They are customers, which the founder has
+            confirmed — so the line says customers, and says nothing about
+            results, which nobody has measured here. */}
         <p className={styles.note}>
-          Brand-approved concept examples featuring Alpha Pro MENA, Inception DAP, Baker
-          Tilly Saudi Arabia, Shrimp Joint and Ataccama.
+          Malaky customer examples across education, technology, professional services,
+          branding and hospitality.
         </p>
       </div>
     </section>

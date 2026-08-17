@@ -49,7 +49,9 @@ const run = async (domain) => {
 
 /* Real companies a visitor might plausibly type, including three named in the
    gallery on the same page. */
-const UNKNOWN = ["ataccama.com", "bakertilly.sa", "inceptiondap.com", "acmetrading.com"];
+/* Domains the demo has never heard of. The Malaky customers moved out of this
+   list when they became recognised profiles — see KNOWN_DOMAINS. */
+const UNKNOWN = ["acmetrading.com", "northline-group.com", "quiethouse.co", "vela-partners.com"];
 
 /* Claims the previous build invented for whatever domain was typed. None of
    them may appear for a company nothing was read about. */
@@ -82,7 +84,13 @@ for (const domain of UNKNOWN) {
   );
   ok(
     `${domain.padEnd(20)} every intelligence row is an example`,
-    text.includes("example audience") && text.includes("example palette"),
+    text.includes("example audience") && text.includes("example voice"),
+  );
+  /* The invented palette is gone rather than relabelled: a placeholder
+     identity is still an identity nobody chose. */
+  ok(
+    `${domain.padEnd(20)} invents no brand palette at all`,
+    !text.includes("palette") && !text.includes("brand colors"),
   );
   ok(
     `${domain.padEnd(20)} offers the real-analysis conversion`,
@@ -92,9 +100,12 @@ for (const domain of UNKNOWN) {
 }
 
 /* The authored companies keep working, and keep their detected framing. */
-for (const domain of ["falaklogistics.com", "darsidra.com"]) {
+for (const domain of ["ataccama.com", "bakertilly.sa"]) {
   const text = await run(domain);
-  ok(`${domain.padEnd(20)} still an authored profile`, text.includes("opportunity detected"));
+  /* The label changed with the conversion: what the demo shows for a
+     recognised customer is a business moment that company has actually made
+     public, so it says so rather than claiming Malaky detected it. */
+  ok(`${domain.padEnd(20)} still an authored profile`, text.includes("public business moment"));
   ok(`${domain.padEnd(20)} not mislabelled illustrative`, !text.includes("illustrative opportunity"));
   ok(
     `${domain.padEnd(20)} no conversion block`,

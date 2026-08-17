@@ -1,7 +1,7 @@
-import { getBrand } from "@/lib/concept-v2/brands";
+import { getCustomer } from "@/lib/concept-v2/customers";
 import { BILINGUAL_CAMPAIGN } from "@/lib/concept-v2/content";
 import { BrandMedia } from "../BrandMedia";
-import { BrandMark } from "../BrandMark";
+import { CustomerLogo } from "../CustomerLogo";
 import { SectionHead, Stop } from "../ui";
 import { ArrowRight } from "../icons";
 import styles from "./arabic.module.css";
@@ -19,7 +19,7 @@ function CampaignPanel({
   lang: string;
   tint: string;
 }) {
-  const brand = getBrand(BILINGUAL_CAMPAIGN.brandId);
+  const customer = getCustomer(BILINGUAL_CAMPAIGN.customerId);
   const rtl = dir === "rtl";
   return (
     <figure className={styles.panel} dir={dir} lang={lang} style={{ "--tint": tint } as React.CSSProperties}>
@@ -30,7 +30,7 @@ function CampaignPanel({
 
       <div className={styles.body}>
         <div className={styles.copy}>
-          <BrandMark brand={brand} size={24} />
+          <CustomerLogo customer={customer} size={24} />
           <h3 className={rtl ? styles.headlineAr : styles.headline}>{side.headline}</h3>
           <p className={rtl ? styles.subAr : styles.sub}>{side.subhead}</p>
           <p className={rtl ? styles.textAr : styles.text}>{side.body}</p>
@@ -68,11 +68,15 @@ export function Arabic() {
         />
 
         <div className={styles.pair}>
-          <CampaignPanel side={BILINGUAL_CAMPAIGN.en} dir="ltr" lang="en" tint="62, 74, 50" />
-          <CampaignPanel side={BILINGUAL_CAMPAIGN.ar} dir="rtl" lang="ar" tint="92, 39, 51" />
+          {/* Neutral tints. They separate the two panels; they are not anyone's
+              brand colours, because we hold none. */}
+          <CampaignPanel side={BILINGUAL_CAMPAIGN.en} dir="ltr" lang="en" tint="38, 48, 58" />
+          <CampaignPanel side={BILINGUAL_CAMPAIGN.ar} dir="rtl" lang="ar" tint="46, 39, 33" />
         </div>
 
-        <p className={styles.note}>{BILINGUAL_CAMPAIGN.note}</p>
+        <p className={styles.note}>
+          {BILINGUAL_CAMPAIGN.note} Both campaigns prepared by Malaky.
+        </p>
       </div>
     </section>
   );

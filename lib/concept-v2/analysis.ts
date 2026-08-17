@@ -1,5 +1,5 @@
 /**
- * Brand analysis — the replaceable layer behind "See Malaky with your brand".
+ * Customer analysis — the replaceable layer behind "See Malaky with your brand".
  *
  * `analyzeBrand(domain)` is the seam. Today it is a pure, synchronous mock:
  * nothing is fetched, no request leaves the page, and no website is read. It
@@ -33,7 +33,13 @@
  * built here.
  */
 
-import { BRANDS, type Brand, type BrandId, type Executive } from "./brands";
+import {
+  CUSTOMERS,
+  EXECUTIVES,
+  type Customer,
+  type CustomerExecutive,
+  type CustomerId,
+} from "./customers";
 import type { MarketingPiece } from "./content";
 import {
   resolveChannelMedia,
@@ -88,10 +94,10 @@ export interface BrandAnalysis {
     name: string;
     domain: string;
     /**
-     * Brand-shaped identity: mark, palette and handle. Named `logo` to match
-     * the analysis contract — it is what BrandMark and the post chrome draw.
+     * Customer-shaped identity: mark, palette and handle. Named `logo` to match
+     * the analysis contract — it is what CustomerMark and the post chrome draw.
      */
-    logo: Brand;
+    logo: Customer;
   };
   /**
    * Sits under the company name. In illustrative mode this must not be a
@@ -115,7 +121,7 @@ const DOMAIN_RE = /^[a-z0-9]([a-z0-9-]*[a-z0-9])?(\.[a-z0-9]([a-z0-9-]*[a-z0-9])
 
 /**
  * Reduces what a person actually types to a bare host.
- * "https://www.Falak Logistics.com/about?x=1" → "falaklogistics.com".
+ * "https://www.Ataccama.com/about?x=1" → "ataccama.com".
  * Returns null when the input could not be a website address.
  */
 export function normalizeDomain(input: string): string | null {
@@ -153,16 +159,18 @@ function pick<T>(list: T[], seed: number, offset = 0): T {
  * ------------------------------------------------------------------ */
 
 interface Profile {
-  brandId: BrandId;
+  customerId: CustomerId;
   industry: string;
-  location: string;
+  /** Only where we can source one. Omitted rather than guessed. */
+  location?: string;
   products: string[];
   audiences: string[];
   markets: string[];
   tone: string[];
   /** The label is applied by `analyzeBrand`, which knows the mode. */
   opportunity: Omit<Opportunity, "label">;
-  executive: Executive;
+  /** Null where the customer has assigned no public executive voice. */
+  executive: CustomerExecutive | null;
   /**
    * Purpose-built creative per channel. Empty today — every channel falls
    * back to `fallbackScene` until real assets are supplied.
@@ -179,169 +187,195 @@ interface Profile {
   };
 }
 
-const PROFILES: Record<BrandId, Profile> = {
-  falak: {
-    brandId: "falak",
-    industry: "Logistics",
-    location: "Saudi Arabia",
-    products: ["Regional logistics", "Same-day delivery"],
-    audiences: ["B2B operations & logistics leaders"],
-    markets: ["Riyadh", "Jeddah"],
-    tone: ["Direct", "Professional", "Operational"],
+/**
+ * What Malaky prepares for a customer it already knows.
+ *
+ * Every value in a profile is either sourced in ./customers or is copy Malaky
+ * wrote. Nothing in between: no revenue, no result, no date we did not read,
+ * and no executive who has not publicly identified themselves in that role —
+ * which is why `executive` is null for five of these six.
+ *
+ * `opportunity` is the business moment the outputs are written about, and it
+ * must be something the company has actually said publicly.
+ */
+const PROFILES: Partial<Record<CustomerId, Profile>> = {
+  ataccama: {
+    customerId: "ataccama",
+    industry: "Enterprise data management",
+    products: ["Ataccama ONE", "Data quality", "Data observability"],
+    audiences: ["Data leaders in regulated enterprises"],
+    markets: ["Global"],
+    tone: ["Precise", "Technical", "Plain"],
     opportunity: {
-      title: "Regional delivery expansion",
+      title: "Data Observability now available",
       detail:
-        "Two-day regional transit replaces the five-day standard from the 14th. Confirmed by operations, not yet announced.",
+        "Ataccama presents data observability as part of Ataccama ONE, monitoring pipelines alongside the data quality it already runs on data at rest.",
     },
-    executive: {
-      name: "Ahmed Al Farsi",
-      role: "Chief Executive Officer, Falak Logistics",
-      brandId: "falak",
-      initials: "AF",
-    },
-    fallbackScene: "falak-port",
+    executive: null,
+    fallbackScene: "data-lattice",
     copy: {
       company:
-        "Our regional network moves to a two-day standard on Monday. Committed arrival windows on contracted volume, tracked end to end, and no change to how you book.",
+        "Data Observability is now part of Ataccama ONE. Pipelines are monitored alongside the data quality rules you already run, and anomalies surface before they reach anything downstream.",
       instagram: {
-        overline: "From Monday",
-        caption: "Two days. Region-wide. Same booking, shorter wait.",
+        overline: "Now available",
+        caption: "Now watching the pipeline, not just the table.",
       },
       executive:
-        "We used to quote five days and hope. Rebuilding the network took three years of unglamorous work — depots, night runs, a lot of arguing about routing. From Monday we quote two, and we mean it.",
+        "Quality checks tell you the data was wrong. Observability tells you when it went wrong, and where. Those two belong in one place.",
       newsletter: {
-        subject: "A shorter route for your shipments",
-        preheader: "What changes on your account on Monday",
+        subject: "Observability, where your quality rules already live",
+        preheader: "Monitoring for data in motion",
         body:
-          "From the 14th your regional lanes move to a two-day standard. Your rates, pickup windows and booking flow stay exactly as they are.",
-        cta: "See your new lanes",
+          "Pipelines and persisted data, checked by the same rules and governed by the same context, with alerts routed to the channels your team already uses.",
+        cta: "See what changed",
       },
     },
   },
-  nura: {
-    brandId: "nura",
-    industry: "Interiors & home lifestyle",
+
+  "baker-tilly-sa": {
+    customerId: "baker-tilly-sa",
+    industry: "Audit, tax and advisory",
     location: "Saudi Arabia",
-    products: ["Living room collections", "Made-to-order upholstery"],
-    audiences: ["Homeowners furnishing slowly", "Interior designers"],
-    markets: ["Riyadh", "Jeddah"],
-    tone: ["Calm", "Considered", "Unhurried"],
+    products: ["Audit & assurance", "Consulting", "Tax"],
+    audiences: ["Finance leaders and audit committees"],
+    markets: ["Riyadh", "Jeddah", "Khobar"],
+    tone: ["Measured", "Professional", "Precise"],
     opportunity: {
-      title: "New collection launch",
+      title: "IFRS 18 readiness",
       detail:
-        "The autumn collection opens to trade partners on Sunday, with an eight-week made-to-order lead time.",
+        "IFRS 18 readiness is a service the firm publicly offers, and a subject its audience is actively working through.",
     },
-    executive: {
-      name: "Layla Haddad",
-      role: "Founder, Nura Living",
-      brandId: "nura",
-      initials: "LH",
-    },
-    fallbackScene: "nura-room",
+    executive: null,
+    fallbackScene: "office",
     copy: {
       company:
-        "The new collection opens to trade partners on Sunday. Made-to-order upholstery, eight-week lead times, and a full specification pack for designers working to a deadline.",
+        "IFRS 18 changes how performance is presented, not just what is disclosed. Our audit and assurance teams in Riyadh, Jeddah and Khobar are working through readiness with clients now.",
       instagram: {
-        overline: "New collection",
-        caption: "Made to be kept, not replaced. The new collection is here.",
+        overline: "IFRS 18",
+        caption: "Presentation changes before disclosure does. Readiness starts with the statements.",
       },
       executive:
-        "We nearly cut the made-to-order line last year. Eight weeks is a hard promise to sell against furniture that ships tomorrow. We kept it because the people willing to wait are the ones who still have the sofa in ten years.",
+        "Most readiness conversations start with disclosure. The harder work is presentation — and that is the part that changes what a reader sees first.",
       newsletter: {
-        subject: "This week at Nura Living",
-        preheader: "The new collection, and the thinking behind it",
+        subject: "IFRS 18 readiness",
+        preheader: "What changes in presentation",
         body:
-          "A short update on what has just arrived and what is coming next — written for people who furnish slowly and keep things for a long time.",
-        cta: "Read this week's edition",
+          "A short view of what IFRS 18 changes in how performance is presented, and the questions worth asking your finance team before the work starts.",
+        cta: "Talk to our team",
       },
     },
   },
-  meezan: {
-    brandId: "meezan",
-    industry: "Professional advisory",
-    location: "Saudi Arabia",
-    products: ["Operating reviews", "Market entry advisory"],
-    audiences: ["Boards and mid-market operators"],
-    markets: ["Riyadh", "GCC"],
-    tone: ["Credible", "Precise", "Executive"],
+
+  "alpha-pro": {
+    customerId: "alpha-pro",
+    industry: "Data governance and enterprise AI",
+    location: "MENA",
+    products: ["Data governance", "Enterprise AI", "Banking & finance advisory"],
+    audiences: ["Regulated institutions, including banking and finance"],
+    markets: ["MENA"],
+    tone: ["Advisory", "Direct", "Enterprise"],
     opportunity: {
-      title: "Quarterly outlook publication",
+      title: "Governance before AI",
       detail:
-        "The 2026 outlook for regional mid-market operators is signed off and scheduled for release this quarter.",
+        "Alpha Pro MENA is an Ataccama certified partner working in data governance and enterprise AI for regulated institutions.",
     },
-    executive: {
-      name: "Huda Nasser",
-      role: "Managing Partner, Meezan Advisory",
-      brandId: "meezan",
-      initials: "HN",
-    },
-    fallbackScene: "meezan-office",
+    executive: null,
+    fallbackScene: "signal-flow",
     copy: {
       company:
-        "Our 2026 outlook for regional mid-market operators is out. Three shifts we think boards should be budgeting for, and one we think is overstated.",
+        "Enterprise AI runs on governed data or it does not run for long. Data catalog, quality, MDM and reference data come first — then the models have something to stand on.",
       instagram: {
-        overline: "2026 outlook",
-        caption: "One chart, one decision: the cost line most boards read backwards.",
+        overline: "Governed, then intelligent",
+        caption: "AI is only as good as the data underneath it.",
       },
       executive:
-        "Most boards I sit with are budgeting for the shock they remember rather than the one in front of them. That is the whole reason we publish this, and why the least popular section is usually the useful one.",
+        "Every AI programme I have seen stall did so for the same reason: nobody could say where the data came from. Governance is not the slow part. It is the part that makes the rest fast.",
       newsletter: {
-        subject: "The quarter in three decisions",
-        preheader: "What we're advising clients this month",
+        subject: "Governance before AI",
+        preheader: "Why the order matters",
         body:
-          "A short read for operators: where cost pressure is real, where it is seasonal, and the one line item worth protecting.",
-        cta: "Read the note",
+          "Catalog, quality, master data and reference data — what a regulated institution needs in place before an enterprise AI programme is worth starting.",
+        cta: "Book a conversation",
       },
     },
   },
-  sidra: {
-    brandId: "sidra",
-    industry: "Hospitality",
-    location: "Saudi Arabia",
-    products: ["Courtyard rooms", "Seasonal dining"],
-    audiences: ["Weekend travellers", "Private dining groups"],
-    markets: ["Riyadh", "Jeddah"],
-    tone: ["Warm", "Unhurried", "Hospitable"],
+
+  ila: {
+    customerId: "ila",
+    industry: "English-language education",
+    location: "McLean, Virginia",
+    products: ["English language instruction", "University preparation"],
+    audiences: ["International students and their families"],
+    markets: ["United States"],
+    tone: ["Warm", "Plain", "Encouraging"],
     opportunity: {
-      title: "Season opening",
+      title: "Preparing students for American universities",
       detail:
-        "The courtyard reopens in October with one seasonal menu and long tables held every Thursday.",
+        "The academy teaches English and prepares students to study at American universities and to enter the U.S. workforce.",
     },
-    executive: {
-      name: "Reem Al Qadi",
-      role: "Founder, Dar Sidra",
-      brandId: "sidra",
-      initials: "RQ",
-    },
-    fallbackScene: "sidra-colonnade",
+    executive: EXECUTIVES.dana,
+    fallbackScene: "office",
     copy: {
       company:
-        "The courtyard reopens in October. One seasonal menu, long tables every Thursday, and rooms kept quiet for anyone staying the night.",
-      // Composed in Arabic, not translated from the company post.
+        "English for the classroom you are actually going into. Our teaching is built around what American universities ask of students once they arrive.",
       instagram: {
-        overline: "أكتوبر",
-        caption: "موسم جديد في دار سِدرة. موائد تبدأ مع الغروب، وغرفٌ تطل على الفناء.",
-        dir: "rtl",
+        overline: "Washington D.C.",
+        caption: "The English you were taught, and the English you will need. We close the gap.",
       },
       executive:
-        "We closed for two months and the question everyone asked was what we were adding. We took things away — half the menu, most of the noise. The courtyard was always the reason people came.",
+        "Students arrive with the English they were taught. An American university asks for the English they will actually need. Closing that gap is the whole job.",
       newsletter: {
-        subject: "Thursdays at Dar Sidra",
-        preheader: "The open table returns this month",
+        subject: "From the classroom to the campus",
+        preheader: "What university English actually asks for",
         body:
-          "Long tables in the courtyard, one seasonal menu, and rooms kept quiet for anyone staying the night.",
-        cta: "Reserve a seat",
+          "The difference between passing an English exam and following a first-year lecture, and how our teaching is arranged around the second one.",
+        cta: "See our programmes",
+      },
+    },
+  },
+
+  "inception-dap": {
+    customerId: "inception-dap",
+    industry: "Customering and production",
+    location: "Jeddah",
+    products: ["Customering", "Production"],
+    audiences: ["Customers that need design carried through to delivery"],
+    markets: ["Saudi Arabia"],
+    tone: ["Direct", "Confident", "Unfussy"],
+    opportunity: {
+      title: "End-to-end branding and production",
+      detail:
+        "Inception DAP publicly describes itself as providing end-to-end branding and production solutions.",
+    },
+    executive: null,
+    fallbackScene: "still-life",
+    copy: {
+      company:
+        "End-to-end branding and production. Design through delivery, handled in one place, so what was drawn is what arrives.",
+      instagram: {
+        overline: "Design through delivery",
+        caption: "Customering that survives production.",
+      },
+      executive:
+        "Most brand work is judged on a screen and lives in a warehouse. The interesting question is whether it holds up once it is made.",
+      newsletter: {
+        subject: "Design through delivery",
+        preheader: "End-to-end branding and production",
+        body:
+          "What changes when the people who design the brand are also the people who produce it.",
+        cta: "See the work",
       },
     },
   },
 };
 
 /** Domains the mock recognises, mapped to the centralised demo brands. */
-const KNOWN_DOMAINS: Record<string, BrandId> = {
-  "falaklogistics.com": "falak",
-  "nuraliving.com": "nura",
-  "meezanadvisory.com": "meezan",
-  "darsidra.com": "sidra",
+const KNOWN_DOMAINS: Record<string, CustomerId> = {
+  "ataccama.com": "ataccama",
+  "bakertilly.sa": "baker-tilly-sa",
+  "alphapromena.com": "alpha-pro",
+  "ila.edu": "ila",
+  "inceptiondap.com": "inception-dap",
 };
 
 export const DEMO_DOMAINS = Object.keys(KNOWN_DOMAINS);
@@ -357,61 +391,15 @@ export const DEMO_DOMAINS = Object.keys(KNOWN_DOMAINS);
  * ------------------------------------------------------------------ */
 
 /**
- * A palette and mark so the preview looks like a designed artifact rather
- * than a wireframe. Chosen by a stable hash of the domain so the same input
- * always looks the same — it is a placeholder identity, never a claim about
- * the company's real branding, and it is labelled as such.
+ * A scene, and nothing else.
+ *
+ * This used to carry a palette and a geometric mark chosen by hashing the
+ * domain — a made-up visual identity for a company we had not read. That is
+ * exactly the thing this concept no longer does, so all that survives is which
+ * drawn scene the preview uses, still chosen by a stable hash so the same
+ * input always looks the same.
  */
-const EXAMPLE_IDENTITIES: Array<{
-  mark: Brand["mark"];
-  palette: Brand["palette"];
-  scene: MediaScene;
-}> = [
-  {
-    mark: "wing",
-    palette: {
-      primary: "#1b3350",
-      secondary: "#d9743a",
-      accent: "#6b8fb8",
-      ink: "#101f33",
-      paper: "#ffffff",
-    },
-    scene: "falak-ship",
-  },
-  {
-    mark: "scales",
-    palette: {
-      primary: "#164a4a",
-      secondary: "#262a2e",
-      accent: "#8fb3ac",
-      ink: "#0b1c1c",
-      paper: "#e8e2d6",
-    },
-    scene: "meezan-office",
-  },
-  {
-    mark: "arch",
-    palette: {
-      primary: "#a9927d",
-      secondary: "#6f7357",
-      accent: "#c08c82",
-      ink: "#33291f",
-      paper: "#efe6da",
-    },
-    scene: "nura-room",
-  },
-  {
-    mark: "canopy",
-    palette: {
-      primary: "#3e4a32",
-      secondary: "#5c2733",
-      accent: "#c2a878",
-      ink: "#25291d",
-      paper: "#eae0ce",
-    },
-    scene: "sidra-colonnade",
-  },
-];
+const EXAMPLE_SCENES: MediaScene[] = ["signal-flow", "office", "long-table", "still-life"];
 
 /**
  * The example copy set.
@@ -456,18 +444,19 @@ function companyNameFromDomain(domain: string): string {
  * ------------------------------------------------------------------ */
 
 function buildOutputs(args: {
-  brand: Brand;
-  executive: Executive;
+  customer: Customer;
+  /** Null where the customer has assigned no public executive voice. */
+  executive: CustomerExecutive | null;
   /** Purpose-built creative per channel. */
   media?: BrandMediaSet;
   /** Stand-in for any channel without an assigned asset. */
   fallbackScene: MediaScene;
   copy: Profile["copy"];
 }): AnalysisOutput[] {
-  const { brand, executive, media, fallbackScene, copy } = args;
+  const { customer, executive, media, fallbackScene, copy } = args;
   const fallback = {
     scene: fallbackScene,
-    alt: `Campaign creative prepared for ${brand.name}`,
+    alt: `Concept creative prepared by Malaky for ${customer.name}`,
   };
 
   /**
@@ -483,8 +472,8 @@ function buildOutputs(args: {
       label: "LinkedIn",
       piece: {
         id: "demo-linkedin-company",
-        brandId: brand.id,
-        brand,
+        customerId: customer.id,
+        customer,
         platform: "linkedin-company",
         label: "LinkedIn Company Post",
         timestamp: "Prepared",
@@ -498,8 +487,8 @@ function buildOutputs(args: {
       label: "Instagram",
       piece: {
         id: "demo-instagram",
-        brandId: brand.id,
-        brand,
+        customerId: customer.id,
+        customer,
         platform: "instagram",
         label: "Instagram Post",
         dir: copy.instagram.dir,
@@ -514,9 +503,9 @@ function buildOutputs(args: {
       label: "Executive",
       piece: {
         id: "demo-linkedin-executive",
-        brandId: brand.id,
-        brand,
-        executive,
+        customerId: customer.id,
+        customer,
+        executive: executive ?? undefined,
         platform: "linkedin-executive",
         label: "LinkedIn · Executive",
         timestamp: "Prepared",
@@ -529,8 +518,8 @@ function buildOutputs(args: {
       label: "Newsletter",
       piece: {
         id: "demo-newsletter",
-        brandId: brand.id,
-        brand,
+        customerId: customer.id,
+        customer,
         platform: "newsletter",
         label: "Newsletter",
         timestamp: "Draft",
@@ -558,29 +547,28 @@ function buildOutputs(args: {
 export function analyzeBrand(domain: string): BrandAnalysis {
   const knownId = KNOWN_DOMAINS[domain];
 
-  if (knownId) {
-    const profile = PROFILES[knownId];
-    const brand = BRANDS[knownId];
+  const profile = knownId ? PROFILES[knownId] : undefined;
+
+  if (knownId && profile) {
+
+    const customer = CUSTOMERS[knownId];
     return {
       mode: "authored",
-      company: { name: brand.name, domain, logo: brand },
-      subtitle: `${profile.industry} · ${profile.location}`,
-      palette: [
-        brand.palette.primary,
-        brand.palette.secondary,
-        brand.palette.accent,
-        brand.palette.paper,
-      ],
-      paletteLabel: "Brand colors",
+      company: { name: customer.name, domain, logo: customer },
+      subtitle: [profile.industry, profile.location].filter(Boolean).join(" · "),
+      /* No swatches. We hold no customer's brand colours, and sampling four
+         plausible ones would be inventing an identity for a real company. */
+      palette: [],
+      paletteLabel: "",
       facts: [
         { label: "Audience", value: profile.audiences.join(" · ") },
         { label: "Markets", value: profile.markets.join(" · ") },
-        { label: "Brand voice", value: profile.tone.join(" · ") },
+        { label: "Voice", value: profile.tone.join(" · ") },
         { label: "Products / services", value: profile.products.join(" · ") },
       ],
-      opportunity: { ...profile.opportunity, label: "Opportunity detected" },
+      opportunity: { ...profile.opportunity, label: "Public business moment" },
       outputs: buildOutputs({
-        brand,
+        customer,
         executive: profile.executive,
         media: profile.media,
         fallbackScene: profile.fallbackScene,
@@ -593,40 +581,38 @@ export function analyzeBrand(domain: string): BrandAnalysis {
      name comes from what the visitor typed and every other value below is an
      example, labelled as one. */
   const seed = hash(domain);
-  const identity = pick(EXAMPLE_IDENTITIES, seed);
+  const scene = pick(EXAMPLE_SCENES, seed);
   const name = companyNameFromDomain(domain) || "Your Company";
 
-  const brand: Brand = {
-    id: "falak", // structural placeholder; identity below is what renders
+  /* Everything except the name is empty on purpose. No logo, no colours, no
+     handle: this company has not been read, and a placeholder identity is
+     still an identity somebody did not choose. */
+  const customer: Customer = {
+    id: "ataccama", // structural only; nothing below reads it
     name,
     category: "Example preview",
     shortCategory: "Example preview",
-    feel: "Example",
-    palette: identity.palette,
-    handle: domain.split(".")[0],
     website: domain,
-    mark: identity.mark,
+    handle: null,
+    logo: null,
+    facts: [],
   };
 
-  /* A silhouette and a role, never a person. The avatar is generic artwork
-     already; `initials` is only the SVG title. */
-  const executive: Executive = {
+  /* A role, never a person. */
+  const executive: CustomerExecutive = {
+    id: "example",
     name: "Your executive",
     role: "Example executive voice",
-    brandId: "falak",
-    initials: "Example executive",
+    customerId: "ataccama",
+    source: "Example — no person is named.",
+    portrait: null,
   };
 
   return {
     mode: "illustrative",
-    company: { name, domain, logo: brand },
+    company: { name, domain, logo: customer },
     subtitle: "Example profile — this website has not been read",
-    palette: [
-      identity.palette.primary,
-      identity.palette.secondary,
-      identity.palette.accent,
-      identity.palette.paper,
-    ],
+    palette: [],
     paletteLabel: "Example palette",
     facts: [
       { label: "Example audience", value: "The people this company already sells to" },
@@ -641,9 +627,9 @@ export function analyzeBrand(domain: string): BrandAnalysis {
         "In a real deployment this is a date on your calendar, a product milestone or a market event Malaky is already tracking. Here it stands in for one.",
     },
     outputs: buildOutputs({
-      brand,
+      customer,
       executive,
-      fallbackScene: identity.scene,
+      fallbackScene: scene,
       copy: EXAMPLE_COPY,
     }),
   };
@@ -660,10 +646,10 @@ export async function analyzeBrandAsync(domain: string): Promise<BrandAnalysis> 
 
 /** The six states shown while the analysis runs. */
 export const ANALYSIS_STATES = [
-  "Brand identity identified",
+  "Customer identity identified",
   "Products & services understood",
   "Audience identified",
   "Markets identified",
-  "Brand voice analyzed",
+  "Customer voice analyzed",
   "Relevant opportunities found",
 ] as const;

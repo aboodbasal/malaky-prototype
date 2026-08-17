@@ -1,25 +1,28 @@
 import type { MarketingPiece } from "@/lib/concept-v2/content";
 import { BrandMedia } from "../BrandMedia";
-import { BrandMark } from "../BrandMark";
+import { CustomerLogo } from "../CustomerLogo";
 import { BookmarkIcon, CommentIcon, HeartIcon, ShareIcon } from "../icons";
-import { PlatformBar, PostShell, formatCount, pieceBrand, postStyles as s } from "./shared";
+import { PlatformBar, PostShell, formatCount, pieceCustomer, postStyles as s } from "./shared";
 
 export function InstagramPost({ piece }: { piece: MarketingPiece }) {
-  const brand = pieceBrand(piece);
+  const customer = pieceCustomer(piece);
   const rtl = piece.dir === "rtl";
   return (
     <PostShell dir={piece.dir}>
       <PlatformBar platform="instagram" label={piece.label} />
       <div className={s.account}>
-        <BrandMark brand={brand} size={26} />
+        <CustomerLogo customer={customer} size={26} />
         <div className={s.accountText}>
-          <span className={`${s.accountName} ${rtl ? s.arabic : ""}`}>
-            {rtl ? (brand.nameAr ?? brand.name) : brand.name}
-          </span>
-          {/* Latin handles and English UI strings stay LTR inside an RTL post. */}
-          <span className={s.accountMeta} dir="ltr">
-            @{brand.handle}
-          </span>
+          {/* A company's name is not translated. None of these customers has
+              given us an official Arabic name, so the Latin one stands in both
+              directions rather than one being invented for the RTL card. */}
+          <span className={s.accountName}>{customer.name}</span>
+          {/* A handle we have not seen is a handle we do not print. */}
+          {customer.handle && (
+            <span className={s.accountMeta} dir="ltr">
+              @{customer.handle}
+            </span>
+          )}
         </div>
       </div>
       {piece.media && (
@@ -42,7 +45,7 @@ export function InstagramPost({ piece }: { piece: MarketingPiece }) {
         className={`${s.caption} ${rtl ? s.arabic : ""}`}
         style={piece.postedAt ? undefined : { paddingBottom: "0.75rem" }}
       >
-        <span className={s.captionName}>{brand.handle}</span>
+        <span className={s.captionName}>{customer.handle ?? customer.name}</span>{" "}
         {piece.copy.body}
       </p>
 

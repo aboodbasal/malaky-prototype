@@ -1,12 +1,32 @@
 /**
- * Content schema + demo content for the /concept-v2 concept.
+ * Concept executions — the illustrative layer.
  *
- * All marketing pieces rendered anywhere on the concept come from here, so a
- * single piece of data can be reused by the hero orbit, the mobile stack, the
- * fan-out section and the brand demo without being re-declared.
+ * Every company named here is a real Malaky customer, and every fact about
+ * those companies lives in ./customers with the source it came from. This file
+ * holds the other half: marketing **Malaky prepared**, written to demonstrate
+ * what the product does.
+ *
+ * ## The line this file must not cross
+ *
+ * A real customer, real business context, and illustrative Malaky output. Not
+ * fictional business information presented as reality, and not our copy
+ * presented as theirs. So:
+ *
+ * - The business moment a piece is written about must be something the
+ *   customer has actually said publicly. `SOURCE_EVENT` carries its source.
+ * - The copy in the cards is ours. It is labelled as prepared work, and it is
+ *   never shown as something the customer published.
+ * - No engagement figure on a prepared card describes real performance. See
+ *   ENGAGEMENT_NOTE below — the numbers are part of the depicted platform
+ *   surface, and the section says so.
+ * - Nothing states a revenue, a result, a date, a location, a partnership or
+ *   an executive opinion that ./customers cannot source.
+ *
+ * Work the customers really published is not in this file at all. It lives in
+ * ./real-posts as finished screenshots and renders untouched.
  */
 
-import type { Brand, BrandId, Executive } from "./brands";
+import type { Customer, CustomerExecutive, CustomerId } from "./customers";
 import type { MediaScene, PieceMedia } from "./media";
 import type { RealPostId } from "./real-posts";
 
@@ -18,8 +38,8 @@ export type Platform =
   | "newsletter"
   | "reel"
   /**
-   * The piece *is* a finished screenshot. Nothing draws chrome for it — the
-   * chrome is in the image. See ./real-posts and <RealPostCard />.
+   * The piece *is* a finished screenshot the customer published. Nothing draws
+   * chrome for it — the chrome is in the image. See ./real-posts.
    */
   | "real-screenshot";
 
@@ -30,8 +50,6 @@ export type Platform =
  */
 export type DrawnPlatform = Exclude<Platform, "real-screenshot">;
 
-/* Media types live in ./media — a creative belongs to a channel, and framing
-   travels with the asset. Re-exported so existing imports keep working. */
 export type {
   AspectRatio,
   FocalPoint,
@@ -48,35 +66,47 @@ export interface Engagement {
   views?: string;
 }
 
+/**
+ * Said once, wherever prepared cards carry engagement chrome.
+ *
+ * The counts exist so a depicted post looks like a post rather than like a
+ * text box. They are not performance, they are not anyone's results, and no
+ * surface may present them as either.
+ */
+export const ENGAGEMENT_NOTE =
+  "Prepared by Malaky. Interface figures are part of the illustration, not performance.";
+
+/** The short label a prepared card carries so it is never mistaken for published work. */
+export const PREPARED_LABEL = "Prepared by Malaky";
+
 export type PieceStatus = "prepared" | "ready" | "approved" | "scheduled";
 
 export interface MarketingPiece {
   id: string;
-  /** Omitted only by real-screenshot pieces, which are not demo brands. */
-  brandId?: BrandId;
+  /** Omitted only by real-screenshot pieces, which carry their own branding. */
+  customerId?: CustomerId;
   /**
-   * Overrides the BRANDS lookup. The brand-analysis layer uses this so a
-   * generated (non-catalogue) company renders through the same components.
+   * Overrides the CUSTOMERS lookup. The brand-analysis layer uses this so a
+   * company the visitor typed renders through the same components.
    */
-  brand?: Brand;
+  customer?: Customer;
   platform: Platform;
   /** Chrome label, e.g. "Instagram Post". */
   label: string;
-  /** Executive key from EXECUTIVES, for executive posts. */
-  executiveKey?: string;
-  /** Overrides the EXECUTIVES lookup, for generated companies. */
-  executive?: Executive;
+  /** Key from EXECUTIVES. Omit where no named person is attached. */
+  executiveId?: string;
+  /** Overrides the EXECUTIVES lookup, for companies typed into the demo. */
+  executive?: CustomerExecutive;
   status?: PieceStatus;
   /** Malaky's own state, e.g. "Prepared 05:47". */
   timestamp?: string;
   /**
-   * Platform-native posting time, e.g. "2 hours ago". Only set where the
-   * piece is shown as a published post rather than as prepared work.
+   * Platform-native posting time. Only ever set on a piece that really was
+   * published — which in this repository means never, on a drawn card.
    */
   postedAt?: string;
   dir?: "ltr" | "rtl";
   copy: {
-    /** Newsletter subject / reel title / instagram overline. */
     headline?: string;
     subhead?: string;
     body: string;
@@ -86,36 +116,28 @@ export interface MarketingPiece {
   engagement?: Engagement;
   /** Reel duration, e.g. "0:18". */
   duration?: string;
-  /**
-   * Set only on `platform: "real-screenshot"` pieces. Points at the published
-   * screenshot in ./real-posts, which supplies its own chrome, caption and
-   * engagement — so `copy`, `media` and `engagement` are not rendered for
-   * these pieces and exist here only to describe the piece.
-   */
+  /** Set only on `platform: "real-screenshot"` pieces. */
   realPostId?: RealPostId;
 }
 
 /**
  * A piece whose chrome this concept draws. Narrower than MarketingPiece by
- * exactly one case, so a surface that reasons per channel — icons, labels,
- * platform bars — can be sure a real screenshot never arrives there.
+ * exactly one case, so a surface that reasons per channel can be sure a real
+ * screenshot never arrives there.
  */
 export interface DrawnPiece extends MarketingPiece {
   platform: DrawnPlatform;
 }
 
 /* ------------------------------------------------------------------ *
- * Hero — six finished pieces across the demo ecosystem
+ * Hero — six pieces across the customer base
  * ------------------------------------------------------------------ */
 
 /**
- * Four pieces carry the orbit and two ride the dimmer inner path.
- *
- * Three of the four primaries are brand-approved concept examples for real
- * companies — they enter as `real-screenshot` pieces and render as the
- * finished screenshot, with no chrome drawn around them. The remaining primary
- * and both supporting cards stay demo brands, so the Arabic composition and
- * the video format are still represented.
+ * Three of the six are work the customers actually published, entering as
+ * `real-screenshot` pieces and rendering as the finished screenshot with no
+ * chrome drawn around them. The other three are prepared concept work, and
+ * each is labelled as prepared on the card itself.
  */
 export const HERO_PIECES: MarketingPiece[] = [
   {
@@ -136,21 +158,23 @@ export const HERO_PIECES: MarketingPiece[] = [
     copy: { body: "Crispy. Hot. Loaded. Our crispy fish sandwich is here." },
   },
   {
+    /* Composed in Arabic for a restaurant, not translated from an English
+       original. The subject is the sandwich Shrimp Joint markets publicly. */
     id: "hero-arabic-social",
-    brandId: "sidra",
+    customerId: "shrimp-joint",
     platform: "arabic-social",
     label: "Arabic Social",
     dir: "rtl",
     status: "prepared",
     timestamp: "أُعدّ 06:02",
     copy: {
-      headline: "موسم جديد في دار سِدرة",
-      body: "موائد مفتوحة كل خميس، وغرفٌ تطل على الفناء وتفتح على هدوء المساء.",
-      cta: "احجز طاولتك",
+      headline: "مقرمشة. ساخنة. للتو.",
+      body: "ساندويتش السمك المقرمش — يُقلى عند الطلب، ويُقدَّم وهو لا يزال يطقطق.",
+      cta: "شوف القائمة",
     },
     media: {
-      scene: "sidra-colonnade",
-      alt: "An arched colonnade in olive and cream with evening light",
+      scene: "still-life",
+      alt: "A close still life of a plated dish under warm light",
       aspect: "1:1",
     },
     engagement: { likes: 74, comments: 5 },
@@ -166,34 +190,38 @@ export const HERO_PIECES: MarketingPiece[] = [
     },
   },
   {
+    /* A draft prepared for a named executive, shown before she has seen it —
+       which is the point of the card. Not a quotation, not something she has
+       said, and the status says so. Subject matter is limited to what ILA
+       states publicly about its own mission. */
     id: "hero-linkedin-executive",
-    brandId: "falak",
+    customerId: "ila",
     platform: "linkedin-executive",
     label: "Executive LinkedIn",
-    executiveKey: "ahmed",
-    status: "ready",
-    timestamp: "4h",
+    executiveId: "dana",
+    status: "prepared",
+    timestamp: "Draft prepared 05:51",
     copy: {
       body:
-        "Three years ago, five days was a normal regional delivery quote. From Monday, we quote two. The network our team rebuilt is what made that ordinary.",
+        "Students arrive with the English they were taught. An American university asks for the English they will actually need. Closing that gap is the whole job.",
     },
     engagement: { likes: 58, comments: 9 },
   },
   {
     id: "hero-reel",
-    brandId: "falak",
+    customerId: "alpha-pro",
     platform: "reel",
     label: "Reel / Video",
     status: "prepared",
     duration: "0:18",
     timestamp: "Prepared 05:56",
     copy: {
-      headline: "The next two days",
-      body: "How the new regional route actually works.",
+      headline: "Governed, then intelligent",
+      body: "Why data governance comes before enterprise AI.",
     },
     media: {
-      scene: "falak-ship",
-      alt: "A container ship at berth during blue hour",
+      scene: "signal-flow",
+      alt: "An abstract flow of data across a wide dark frame",
       aspect: "9:16",
     },
     engagement: { views: "1,240" },
@@ -215,107 +243,111 @@ export interface ActivityEntry {
 export const ACTIVITY_TIMELINE: ActivityEntry[] = [
   { time: "05:42", label: "Campaign opportunity identified", kind: "trigger", icon: "target" },
   { time: "05:47", label: "Instagram prepared", kind: "output", icon: "instagram" },
-  { time: "05:51", label: "CEO LinkedIn prepared", kind: "output", icon: "linkedin" },
+  { time: "05:51", label: "Executive LinkedIn prepared", kind: "output", icon: "linkedin" },
   { time: "05:56", label: "Newsletter prepared", kind: "output", icon: "mail" },
   { time: "06:02", label: "Arabic campaign prepared", kind: "output", icon: "arabic" },
 ];
 
 /* ------------------------------------------------------------------ *
- * Section 2 — the operating calendar
- *
- * Lives in ./operating-calendar, because it is a month of work rather than a
- * piece of copy: real occasions resolved from the verified ./calendar, demo
- * business events, and the status of each.
- * ------------------------------------------------------------------ */
-
-/* ------------------------------------------------------------------ *
  * Section 3 — one event becomes everything
  * ------------------------------------------------------------------ */
 
+/**
+ * The source event is real, and it is the only part of this section that is.
+ *
+ * Ataccama presents data observability as part of Ataccama ONE, and announced
+ * Agentic Data Observability publicly on 26 February 2026. `source` records
+ * where that came from; the four outputs below are ours.
+ */
 export const SOURCE_EVENT = {
-  brandId: "falak" as BrandId,
-  kind: "Business event",
-  title: "New regional delivery service launches Monday.",
+  customerId: "ataccama" as CustomerId,
+  kind: "Product update",
+  title: "Data Observability now available.",
   detail:
-    "Two-day delivery across the region, replacing the five-day standard. Confirmed by operations, effective the 14th.",
+    "Ataccama ONE monitors data in motion across pipelines alongside the data quality checks it already runs on data at rest, with anomaly detection, existing data quality rules reused across both, and alerting routed to the channels a team already uses.",
+  source:
+    "Ataccama's data observability product page, and its announcement of Agentic Data Observability in Ataccama ONE (26 February 2026).",
 };
 
 /**
- * The same event, adapted per channel.
+ * The same real moment, adapted per channel — and every word of it written by
+ * Malaky rather than by Ataccama.
  *
- * Four channels, not six. The argument is that one moment becomes genuinely
- * different pieces of work, and four make it better than six do: each is wide
- * enough to actually read, and the set no longer repeats a composition to fill
- * a grid. Every one differs in copy, length, register and shape — a square
- * image with one line, a wide image with the operational detail, a text-only
- * post in a person's voice, and a right-to-left campaign composed in Arabic.
+ * Four channels, not six. Each is wide enough to actually read, and every one
+ * differs in copy, length, register and shape: a square image with one line, a
+ * wide image carrying the operational detail, a draft in an executive's voice,
+ * and a right-to-left campaign composed in Arabic.
  */
 export const EVENT_FANOUT: DrawnPiece[] = [
   {
     id: "fanout-instagram",
-    brandId: "falak",
+    customerId: "ataccama",
     platform: "instagram",
     label: "Instagram",
+    status: "prepared",
     copy: {
-      body: "Two days. Region-wide. From Monday.",
-      cta: "Faster. Smarter. Delivered.",
+      body: "Now watching the pipeline, not just the table.",
+      cta: "Data Observability, in Ataccama ONE.",
     },
     media: {
-      scene: "falak-port",
-      alt: "Stacked shipping containers and crane gantries at sunset",
+      scene: "data-lattice",
+      alt: "An abstract lattice of data records with three anomalies flagged",
       aspect: "1:1",
-      overline: "From Monday",
+      overline: "Now available",
     },
     engagement: { likes: 88, comments: 6 },
   },
   {
     id: "fanout-linkedin-company",
-    brandId: "falak",
+    customerId: "ataccama",
     platform: "linkedin-company",
     label: "LinkedIn Company",
+    status: "prepared",
     timestamp: "Prepared",
     copy: {
       body:
-        "Our new regional delivery service launches Monday. Two-day standard transit, tracked end to end, with committed arrival windows for contracted volume.",
+        "Data Observability is now part of Ataccama ONE. Pipelines are monitored alongside the data quality rules you already run.",
     },
     media: {
-      scene: "falak-ship",
-      alt: "A container ship at berth during blue hour",
+      scene: "signal-flow",
+      alt: "Streams of data crossing a wide frame, one interrupted and flagged",
       aspect: "16:9",
-      // A wide crop off the vessel's centre, so the two image cards in this
-      // row never show the same framing of the same scene.
-      focal: { x: 0.62, y: 0.58 },
+      focal: { x: 0.62, y: 0.55 },
     },
     engagement: { likes: 41, comments: 6, reposts: 2 },
   },
   {
+    /* No named executive: Ataccama has not assigned one, and putting a real
+       person's name on our copy without them is the exact thing this pass
+       exists to remove. The card shows the draft waiting for a voice. */
     id: "fanout-linkedin-executive",
-    brandId: "falak",
+    customerId: "ataccama",
     platform: "linkedin-executive",
-    label: "CEO LinkedIn",
-    executiveKey: "ahmed",
-    timestamp: "Prepared",
-    // No image: an executive post carries a voice, not a campaign visual.
+    label: "Executive LinkedIn",
+    status: "prepared",
+    timestamp: "Awaiting assignment",
     copy: {
       body:
-        "We used to quote five days and hope. Rebuilding the network took three years of unglamorous work. From Monday we quote two.",
+        "Quality checks tell you the data was wrong. Observability tells you when it went wrong, and where. Those two belong in one place.",
     },
     engagement: { likes: 58, comments: 9 },
   },
   {
     id: "fanout-arabic-social",
-    brandId: "falak",
+    customerId: "ataccama",
     platform: "arabic-social",
     label: "Arabic Social",
+    status: "prepared",
     dir: "rtl",
     copy: {
-      headline: "يومان. لا خمسة.",
-      body: "من الاثنين، شبكة فلك تختصر الطريق بين مدنك. مواعيد تُلتزم، وشحنات تصل حين تحتاجها.",
+      headline: "راقب المسار، لا النتيجة وحدها.",
+      body:
+        "مراقبة البيانات صارت جزءًا من منصّة Ataccama ONE: تتبُّع لمسارات البيانات، وكشفٌ للانحرافات قبل أن تصل إلى التقارير، وتنبيهات تصل حيث يعمل فريقك.",
       cta: "تعرّف على الخدمة",
     },
     media: {
-      scene: "falak-port",
-      alt: "Stacked shipping containers and crane gantries at sunset",
+      scene: "data-lattice",
+      alt: "An abstract lattice of data records with three anomalies flagged",
       aspect: "1:1",
     },
     engagement: { likes: 52, comments: 4 },
@@ -326,20 +358,29 @@ export const EVENT_FANOUT: DrawnPiece[] = [
  * Section 4 — approval
  * ------------------------------------------------------------------ */
 
+/**
+ * Professional-services marketing is where approval earns its keep, so the
+ * piece under review is prepared for Baker Tilly Saudi Arabia.
+ *
+ * IFRS 18 readiness is a service the firm publicly offers, and the three
+ * cities are its own. Everything else on the card is ours — and deliberately
+ * carries no effective date, no deadline and no regulatory claim, because
+ * none of those has been verified here.
+ */
 export const APPROVAL_PIECE: MarketingPiece = {
   id: "approval-linkedin",
-  brandId: "falak",
+  customerId: "baker-tilly-sa",
   platform: "linkedin-company",
   label: "LinkedIn Company Post",
   status: "ready",
   timestamp: "Prepared 05:47",
   copy: {
     body:
-      "Our new regional delivery service launches Monday. Built for speed. Designed for businesses that plan around arrival times.",
+      "IFRS 18 changes how performance is presented, not just what is disclosed. Our audit and assurance teams in Riyadh, Jeddah and Khobar are working through readiness with clients now.",
   },
   media: {
-    scene: "falak-port",
-    alt: "Stacked shipping containers and crane gantries at dusk",
+    scene: "office",
+    alt: "A working office at dusk, city beyond the window",
     aspect: "16:9",
   },
   engagement: { likes: 41, comments: 6, reposts: 2 },
@@ -351,51 +392,68 @@ export const APPROVAL_STAGES = ["Ready for review", "Approved", "Scheduled"] as 
  * Section 5 — memory / learning
  * ------------------------------------------------------------------ */
 
+/**
+ * A demonstration of how Malaky would learn while operating a customer's
+ * marketing — not a record of anything Inception DAP did.
+ *
+ * The edit is illustrative and the note on the section says so. It is about
+ * register rather than about the business, precisely so that nothing here
+ * turns into a claim: no product, no launch, no date.
+ */
 export const MEMORY_EXAMPLE = {
-  brandId: "falak" as BrandId,
-  original: "We're excited to announce our new service launch next week!",
-  edited: "Starting Monday, we're raising the bar for regional delivery.",
+  customerId: "inception-dap" as CustomerId,
+  original: "We're thrilled to announce that we now offer end-to-end branding and production!",
+  edited: "End-to-end branding and production. Design through delivery.",
   learned: {
     title: "Preference learned",
     body: "Direct. Less promotional language.",
-    rules: ["No “excited to announce”", "Lead with the date", "Claim, then evidence"],
+    rules: ["No “thrilled to announce”", "Lead with the offer", "Claim, then evidence"],
   },
   /** Written later, by itself, in the learned style. */
   future: {
     context: "Next draft — written 9 days later, unprompted",
-    body: "From the 14th, same-day pickup covers the Eastern Province.",
+    body: "Design through delivery, handled end to end.",
   },
+  note: "Illustrative. Prepared by Malaky to show how a correction becomes a rule.",
 };
 
 /* ------------------------------------------------------------------ *
  * Section 6 — Arabic is not a toggle
  * ------------------------------------------------------------------ */
 
+/**
+ * One customer, one subject, two campaigns — each composed in its own
+ * language rather than translated across.
+ *
+ * The subject is the sandwich Shrimp Joint markets publicly. Both campaigns
+ * are ours: different opening, different rhythm, different call to action, and
+ * neither is a rendering of the other.
+ */
 export const BILINGUAL_CAMPAIGN = {
-  brandId: "sidra" as BrandId,
+  customerId: "shrimp-joint" as CustomerId,
   en: {
     label: "English campaign",
     badge: "EN",
-    headline: "A stay that keeps its quiet",
-    subhead: "Courtyard rooms, from October",
-    body: "One seasonal menu, long tables on Thursdays, and rooms that face away from the street.",
-    cta: "Book a stay",
-    scene: "sidra-colonnade" as MediaScene,
-    alt: "An arched colonnade in olive and cream with evening light",
+    headline: "Fried to order, not to schedule",
+    subhead: "The crispy fish sandwich",
+    body: "It goes in when you order it, and it reaches you while it is still loud.",
+    cta: "See the menu",
+    scene: "still-life" as MediaScene,
+    alt: "A close still life of a plated dish under warm light",
   },
   /**
-   * Composed in Arabic, not translated from the English above — different
-   * opening, different rhythm, its own call to action.
+   * Composed in Arabic — its own opening, its own rhythm, its own call to
+   * action. Read the two side by side and neither is the other's translation.
    */
   ar: {
     label: "الحملة بالعربية",
     badge: "AR",
-    headline: "إقامةٌ تُشبه الهدوء",
-    subhead: "غرفٌ حول الفناء، وموائد تبدأ مع الغروب",
-    body: "من أكتوبر: ليالٍ أطول، وقائمة موسمية واحدة، وخميسٌ محجوز للطاولات الطويلة.",
-    cta: "احجز إقامتك",
-    scene: "sidra-table" as MediaScene,
-    alt: "A long dining table set in warm cream and burgundy tones",
+    headline: "تسمعها قبل أن تذوقها",
+    subhead: "ساندويتش السمك المقرمش",
+    body: "يُقلى عند الطلب، ويصل إليك وهو ما زال يطقطق. لا شيء يُحضَّر قبل أوانه.",
+    cta: "اطلبها الآن",
+    scene: "long-table" as MediaScene,
+    alt: "A long table laid for service under low warm light",
   },
   note: "Different language. Different rhythm. Same brand.",
 };

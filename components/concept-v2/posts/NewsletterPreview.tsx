@@ -1,19 +1,19 @@
 import type { MarketingPiece } from "@/lib/concept-v2/content";
 import { BrandMedia } from "../BrandMedia";
-import { BrandMark } from "../BrandMark";
+import { CustomerLogo } from "../CustomerLogo";
 import { ArrowRight } from "../icons";
-import { PlatformBar, PostShell, pieceBrand, postStyles as s } from "./shared";
+import { PlatformBar, PostShell, pieceCustomer, postStyles as s } from "./shared";
 
 /** Renders as paper rather than app chrome — an email is a different object. */
 export function NewsletterPreview({ piece }: { piece: MarketingPiece }) {
-  const brand = pieceBrand(piece);
+  const customer = pieceCustomer(piece);
   return (
     <PostShell variant="paper">
       <PlatformBar platform="newsletter" label={piece.label} onLight tone="#3f7d63" />
       <div className={s.mailHead}>
         <span className={s.mailFrom}>
-          <BrandMark brand={brand} size={16} />
-          {brand.name} · {piece.timestamp ?? "Draft"}
+          <CustomerLogo customer={customer} size={16} />
+          {customer.name} · {piece.timestamp ?? "Draft"}
         </span>
         <h4 className={s.mailSubject}>{piece.copy.headline}</h4>
         {piece.copy.subhead && <span className={s.mailPreheader}>{piece.copy.subhead}</span>}
@@ -23,7 +23,7 @@ export function NewsletterPreview({ piece }: { piece: MarketingPiece }) {
       )}
       <p className={s.mailBody}>{piece.copy.body}</p>
       {piece.copy.cta && (
-        <span className={s.mailCta} style={{ background: brand.palette.ink }}>
+        <span className={s.mailCta}>
           {piece.copy.cta}
           <ArrowRight size={12} />
         </span>

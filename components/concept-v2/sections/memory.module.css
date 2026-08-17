@@ -245,3 +245,11 @@
     gap: 0.75rem;
   }
 }
+
+/* Says the correction is a demonstration, not something the customer did. */
+.prepared {
+  margin-top: clamp(1.25rem, 2vw, 1.75rem);
+  font-size: var(--t-small);
+  line-height: 1.6;
+  color: var(--c-text-4);
+}

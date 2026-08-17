@@ -1,9 +1,14 @@
 "use client";
 
-import { EVENT_FANOUT, SOURCE_EVENT, type DrawnPlatform } from "@/lib/concept-v2/content";
-import { getBrand } from "@/lib/concept-v2/brands";
+import {
+  ENGAGEMENT_NOTE,
+  EVENT_FANOUT,
+  SOURCE_EVENT,
+  type DrawnPlatform,
+} from "@/lib/concept-v2/content";
+import { getCustomer } from "@/lib/concept-v2/customers";
 import { useReveal } from "@/hooks/useConceptHooks";
-import { BrandMark } from "../BrandMark";
+import { CustomerLogo } from "../CustomerLogo";
 import { PostCard } from "../posts";
 import { SectionHead, Stop } from "../ui";
 import {
@@ -33,7 +38,7 @@ const CHANNEL_ICON: Record<DrawnPlatform, typeof InstagramIcon> = {
  * genuinely different, so the cards are sized to be read.
  */
 export function OneEvent() {
-  const brand = getBrand(SOURCE_EVENT.brandId);
+  const customer = getCustomer(SOURCE_EVENT.customerId);
   const [ref, reveal] = useReveal<HTMLDivElement>({ threshold: 0.1 });
 
   return (
@@ -51,9 +56,9 @@ export function OneEvent() {
         >
           <article className={styles.event}>
             <div className={styles.eventTop}>
-              <BrandMark brand={brand} size={26} />
+              <CustomerLogo customer={customer} size={26} />
               <div>
-                <span className={styles.eventBrand}>{brand.name}</span>
+                <span className={styles.eventBrand}>{customer.name}</span>
                 <span className={styles.eventKind}>
                   <CalendarIcon size={11} /> {SOURCE_EVENT.kind}
                 </span>
@@ -87,6 +92,11 @@ export function OneEvent() {
             })}
           </ol>
         </div>
+
+        {/* One line for four cards. The business moment above is Ataccama's
+            and is real; everything in the cards is ours. Minimum disclosure,
+            said once, rather than a badge on every card. */}
+        <p className={styles.prepared}>{ENGAGEMENT_NOTE}</p>
       </div>
     </section>
   );
