@@ -2,12 +2,13 @@
 
 import { useMemo, useState } from "react";
 import {
-  ANCHOR,
-  DEFAULT_ENTRY_ID,
+  DEFAULT_MARKET_ID,
+  MARKETS,
   STATUS,
   WEEKDAYS,
   buildMonth,
-  monthName,
+  getMarket,
+  monthLabel,
   resolveEntries,
   type ResolvedEntry,
 } from "@/lib/concept-v2/operating-calendar";
@@ -52,12 +53,22 @@ function StatusGlyph({ glyph }: { glyph: "check" | "full" | "half" | "ring" }) {
  */
 export function Prompts() {
   const [ref, reveal] = useReveal<HTMLDivElement>({ threshold: 0.15 });
-  const [selectedId, setSelectedId] = useState(DEFAULT_ENTRY_ID);
+  const [marketId, setMarketId] = useState(DEFAULT_MARKET_ID);
+  const [selectedId, setSelectedId] = useState(getMarket(DEFAULT_MARKET_ID).defaultEntryId);
 
-  const entries = useMemo(() => resolveEntries(), []);
-  const cells = useMemo(() => buildMonth(entries), [entries]);
+  const market = getMarket(marketId);
+  const entries = useMemo(() => resolveEntries(market), [market]);
+  const cells = useMemo(() => buildMonth(market, entries), [market, entries]);
   const selected =
     entries.find((e) => e.id === selectedId) ?? (entries[0] as ResolvedEntry);
+
+  /* Switching market switches everything the panel is showing, so the
+     selection moves to that market's own opening event rather than falling
+     back to whatever happens to be first. */
+  const chooseMarket = (id: string) => {
+    setMarketId(id);
+    setSelectedId(getMarket(id).defaultEntryId);
+  };
 
   /* A verified occasion shows its verified date, not a distance from the
      viewer's clock. The grid is an anchored illustration, so a live countdown
@@ -84,6 +95,24 @@ export function Prompts() {
           lead="Malaky watches what's coming and starts the work before anyone asks for it."
         />
 
+        {/* One control, above the calendar it changes. Switching market
+            switches the month, the verified occasions, the company events and
+            every status with them. */}
+        <div className={styles.markets} role="group" aria-label="Market">
+          {MARKETS.map((m) => (
+            <button
+              key={m.id}
+              type="button"
+              className={styles.market}
+              data-on={m.id === marketId || undefined}
+              aria-pressed={m.id === marketId}
+              onClick={() => chooseMarket(m.id)}
+            >
+              {m.label}
+            </button>
+          ))}
+        </div>
+
         <div className={styles.frame} ref={ref} data-reveal={reveal}>
           {/* --- the month --------------------------------------------- */}
           <div className={styles.calendar}>
@@ -91,8 +120,10 @@ export function Prompts() {
               {/* The month is an anchored illustration, not the viewer's own
                   month — said quietly, next to the thing it qualifies. */}
               <div className={styles.monthBlock}>
-                <h3 className={styles.month}>{monthName()}</h3>
-                <p className={styles.calNote}>Illustrative operating calendar</p>
+                <h3 className={styles.month}>{monthLabel(market)}</h3>
+                <p className={styles.calNote}>
+                  {market.country} &middot; illustrative operating calendar
+                </p>
               </div>
               <ul className={styles.legend}>
                 {[
@@ -117,7 +148,11 @@ export function Prompts() {
               ))}
             </div>
 
-            <div className={styles.grid} role="list" aria-label={`${monthName()} marketing calendar`}>
+            <div
+              className={styles.grid}
+              role="list"
+              aria-label={`${market.country} marketing calendar, ${monthLabel(market)}`}
+            >
               {cells.map((cell, i) => {
                 if (cell.day == null) {
                   return <span key={`pad-${i}`} className={styles.pad} aria-hidden="true" />;
@@ -159,9 +194,7 @@ export function Prompts() {
                         <span className="visually-hidden">
                           {" "}
                           — {meta.label},{" "}
-                          {entry.kind === "observance"
-                            ? "public holiday"
-                            : "company event"}
+                          {entry.kind === "market" ? "market event" : "company event"}
                         </span>
                       </button>
                     )}
@@ -173,8 +206,10 @@ export function Prompts() {
 
           {/* --- the selected event ------------------------------------ */}
           <div className={styles.detail} aria-live="polite">
-            <p className={styles.detailKind}>
-              {selected.kind === "observance" ? "Public holiday" : "Company event"}
+            <p className={styles.detailKind} data-kind={selected.kind}>
+              {selected.kind === "market"
+                ? `Market event · ${market.country}`
+                : `Company event · ${selected.eventType}`}
             </p>
             <h3 className={styles.detailTitle}>{selected.title}</h3>
 
@@ -187,6 +222,12 @@ export function Prompts() {
                 {status.label}
               </span>
             </div>
+
+            {/* What the market record actually says about the year, where
+                the occasion and the day off are not the same thing. */}
+            {selected.observance?.observedNote && (
+              <p className={styles.observedNote}>{selected.observance.observedNote}</p>
+            )}
 
             <p className={styles.workHead}>{finished ? "Completed" : "Prepared"}</p>
             <ul className={styles.work}>
@@ -221,8 +262,9 @@ export function Prompts() {
         </div>
 
         <p className={styles.frameNote}>
-          A month of {monthName()} in a Malaky deployment. Public holidays come from
-          verified calendar data; the business events are demo company context.
+          {market.monthRationale} Market events come from verified calendar data for{" "}
+          {market.country}; the business events are illustrative context for{" "}
+          {market.company}.
         </p>
       </div>
     </section>

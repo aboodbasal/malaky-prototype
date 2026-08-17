@@ -493,3 +493,59 @@
     transition: none;
   }
 }
+
+/* --- market selector ---------------------------------------------------- */
+
+/* Sits above the calendar it changes, in the same restrained language as the
+   chips on the demo form. */
+.markets {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+  margin-bottom: clamp(1rem, 1.6vw, 1.4rem);
+}
+
+.market {
+  padding: 0.5rem 0.9rem;
+  border-radius: 999px;
+  border: 1px solid var(--c-line-2);
+  background: var(--c-surface-2);
+  color: var(--c-text-3);
+  font-size: var(--t-small);
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    border-color 0.2s var(--ease-out),
+    background 0.2s var(--ease-out),
+    color 0.2s var(--ease-out);
+}
+
+.market:hover {
+  border-color: var(--c-line-3);
+  color: var(--c-text);
+}
+
+.market[data-on] {
+  border-color: var(--c-accent-line);
+  background: var(--c-accent-wash);
+  color: var(--c-text);
+}
+
+.market:focus-visible {
+  outline: 2px solid var(--c-accent-line);
+  outline-offset: 2px;
+}
+
+/* The year's holiday arrangement, where it differs from the occasion. */
+.observedNote {
+  margin-top: 0.85rem;
+  font-size: var(--t-small);
+  line-height: 1.55;
+  color: var(--c-text-3);
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .market {
+    transition: none;
+  }
+}
