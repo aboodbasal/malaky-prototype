@@ -63,11 +63,11 @@
 }
 
 .month {
-  font-family: var(--f-serif);
-  font-weight: 400;
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
   font-size: clamp(1.5rem, 2.2vw, 2rem);
   line-height: 1;
-  letter-spacing: -0.02em;
+  letter-spacing: var(--track-display-sm);
   color: var(--c-text);
 }
 
@@ -120,7 +120,7 @@
 .weekdays span {
   padding: 0.35rem 0.45rem;
   font-size: var(--t-micro);
-  font-weight: 600;
+  font-weight: var(--w-strong);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   color: var(--c-text-4);
@@ -166,7 +166,7 @@
 
 .cell[data-when="today"] .dayNum {
   color: var(--c-text);
-  font-weight: 600;
+  font-weight: var(--w-strong);
 }
 
 .dayRow {
@@ -265,7 +265,7 @@
 
 .detailKind {
   font-size: var(--t-micro);
-  font-weight: 600;
+  font-weight: var(--w-strong);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--c-text-4);
@@ -273,11 +273,11 @@
 
 .detailTitle {
   margin-top: 0.5rem;
-  font-family: var(--f-serif);
-  font-weight: 400;
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
   font-size: clamp(1.375rem, 1.9vw, 1.75rem);
-  line-height: 1.15;
-  letter-spacing: -0.02em;
+  line-height: 1.16;
+  letter-spacing: var(--track-display-sm);
   color: var(--c-text);
 }
 
@@ -299,7 +299,7 @@
   border-radius: 999px;
   border: 1px solid var(--c-line-2);
   font-size: var(--t-micro);
-  font-weight: 600;
+  font-weight: var(--w-strong);
   letter-spacing: 0.1em;
   text-transform: uppercase;
 }
@@ -332,7 +332,7 @@
 .workHead {
   margin-top: 1.1rem;
   font-size: var(--t-micro);
-  font-weight: 600;
+  font-weight: var(--w-strong);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--c-text-4);
@@ -391,7 +391,7 @@
 
 .awaitingHead {
   font-size: var(--t-micro);
-  font-weight: 600;
+  font-weight: var(--w-strong);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--c-text-4);
@@ -412,7 +412,7 @@
   margin-top: auto;
   padding-top: 1.25rem;
   font-size: var(--t-body);
-  font-weight: 500;
+  font-weight: var(--w-ui);
   color: var(--c-accent-hi);
 }
 

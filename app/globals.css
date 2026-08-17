@@ -42,15 +42,33 @@
   --c-ok-wash: rgba(79, 178, 134, 0.12);
 
   /* --- Type ------------------------------------------------------- */
-  --f-serif: var(--font-serif), "Iowan Old Style", "Palatino Linotype", Georgia,
-    serif;
-  /* Under test on the hero headline only. Falls back to the sans stack, since
-     what is being tried here now is a sans. */
-  --f-display-test: var(--font-display-test), -apple-system,
-    BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+  /* One Latin family, two roles.
+     --f-display is the same font as --f-sans; the separate name marks the
+     places that are set as display type, because those need their own
+     tracking and leading (see --track-display below), not their own face.
+     Hierarchy here is made of size, weight, spacing and opacity. */
   --f-sans: var(--font-sans), -apple-system, BlinkMacSystemFont, "Segoe UI",
     Roboto, Helvetica, Arial, sans-serif;
+  --f-display: var(--f-sans);
   --f-arabic: var(--font-arabic), var(--font-sans), "Segoe UI", Tahoma, sans-serif;
+
+  /* --- Weights ----------------------------------------------------
+     Four steps, used everywhere. Display type sits at 400 and leans on size
+     rather than weight; 450 is the single-step lift inside a headline; 500
+     carries UI — buttons, labels, table headers; 600 is the top of the scale
+     and is reserved for small type that has to hold at 11–13px. */
+  --w-display: 400;
+  --w-display-em: 450;
+  --w-ui: 500;
+  --w-strong: 600;
+
+  /* --- Tracking ---------------------------------------------------
+     A single face across 11px to 66px needs the optical correction the size
+     axis alone does not make: negative at display sizes so words hold
+     together, positive on small uppercase so they do not clot. */
+  --track-display: -0.03em;
+  --track-display-sm: -0.022em;
+  --track-caps: 0.1em;
 
   --t-display-1: clamp(2.75rem, 6.1vw, 5.25rem);
   --t-display-2: clamp(2.25rem, 4.4vw, 3.75rem);

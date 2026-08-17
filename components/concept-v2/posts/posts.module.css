@@ -47,7 +47,7 @@
 
 .platformLabel {
   font-size: 0.625rem;
-  font-weight: 600;
+  font-weight: var(--w-strong);
   letter-spacing: 0.04em;
   color: inherit;
   opacity: 0.85;
@@ -75,7 +75,7 @@
 
 .accountName {
   font-size: 0.75rem;
-  font-weight: 600;
+  font-weight: var(--w-strong);
   letter-spacing: -0.01em;
   white-space: nowrap;
   overflow: hidden;
@@ -121,7 +121,7 @@
 }
 
 .captionName {
-  font-weight: 600;
+  font-weight: var(--w-strong);
   margin-inline-end: 0.35em;
 }
 
@@ -188,7 +188,7 @@
 .igLikes {
   padding: 0.15rem 0.75rem 0;
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: var(--w-strong);
 }
 
 .igComments {
@@ -215,7 +215,7 @@
 .arabicHeadline {
   font-family: var(--f-arabic);
   font-size: 0.95rem;
-  font-weight: 600;
+  font-weight: var(--w-strong);
   line-height: 1.7;
   padding: 0.6rem 0.75rem 0.1rem;
 }
@@ -241,7 +241,7 @@
   gap: 0.35rem;
   font-family: var(--f-arabic);
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: var(--w-strong);
   padding: 0.32rem 0.7rem;
   border-radius: 999px;
   border: 1px solid currentColor;
@@ -265,7 +265,7 @@
 }
 
 .mailSubject {
-  font-family: var(--f-serif);
+  font-family: var(--f-display);
   font-size: 1.0625rem;
   line-height: 1.25;
   letter-spacing: -0.01em;
@@ -296,7 +296,7 @@
   margin: 0 0.8rem 0.85rem;
   align-self: flex-start;
   font-size: 0.6875rem;
-  font-weight: 600;
+  font-weight: var(--w-strong);
   padding: 0.4rem 0.75rem;
   border-radius: 6px;
   color: #fbf7f1;
@@ -324,7 +324,7 @@
   align-items: center;
   gap: 0.4rem;
   font-size: 0.625rem;
-  font-weight: 600;
+  font-weight: var(--w-strong);
   color: #fff;
   text-shadow: 0 1px 6px rgba(0, 0, 0, 0.55);
 }
@@ -360,7 +360,7 @@
 }
 
 .reelTitle {
-  font-family: var(--f-serif);
+  font-family: var(--f-display);
   font-size: 1rem;
   line-height: 1.2;
 }
@@ -379,7 +379,7 @@
   inset-inline-end: 0.55rem;
   z-index: 3;
   font-size: 0.5625rem;
-  font-weight: 600;
+  font-weight: var(--w-strong);
   letter-spacing: 0.1em;
   text-transform: uppercase;
   padding: 0.2rem 0.45rem;

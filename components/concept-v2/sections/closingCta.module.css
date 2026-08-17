@@ -29,11 +29,11 @@
 
 .title {
   position: relative;
-  font-family: var(--f-serif);
-  font-weight: 400;
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
   font-size: var(--t-display-2);
-  line-height: 1.05;
-  letter-spacing: -0.025em;
+  line-height: 1.06;
+  letter-spacing: var(--track-display);
   color: var(--c-text);
   max-width: 18ch;
 }

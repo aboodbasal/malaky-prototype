@@ -10,7 +10,7 @@
   align-items: center;
   gap: 0.5rem;
   font-size: var(--t-micro);
-  font-weight: 600;
+  font-weight: var(--w-strong);
   letter-spacing: 0.18em;
   text-transform: uppercase;
   color: var(--c-text-2);

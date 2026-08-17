@@ -24,7 +24,7 @@
 .eventBrand {
   display: block;
   font-size: 0.8125rem;
-  font-weight: 600;
+  font-weight: var(--w-strong);
   color: var(--c-text);
 }
 
@@ -39,11 +39,11 @@
 }
 
 .eventTitle {
-  font-family: var(--f-serif);
-  font-weight: 400;
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
   font-size: 1.375rem;
-  line-height: 1.2;
-  letter-spacing: -0.015em;
+  line-height: 1.22;
+  letter-spacing: var(--track-display-sm);
   color: var(--c-text);
   margin-bottom: 0.5rem;
 }
@@ -126,7 +126,7 @@
   align-items: center;
   gap: 0.4rem;
   font-size: var(--t-micro);
-  font-weight: 600;
+  font-weight: var(--w-strong);
   letter-spacing: 0.14em;
   text-transform: uppercase;
   color: var(--c-text-3);

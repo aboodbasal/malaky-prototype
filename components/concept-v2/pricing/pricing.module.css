@@ -31,11 +31,11 @@
 }
 
 .title {
-  font-family: var(--f-serif);
-  font-weight: 400;
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
   font-size: clamp(2.25rem, 4.6vw, 4rem);
-  line-height: 1.08;
-  letter-spacing: -0.028em;
+  line-height: 1.05;
+  letter-spacing: var(--track-display);
   color: var(--c-text);
   max-width: 28ch;
 }
@@ -60,7 +60,7 @@
   border: 1px solid var(--c-gold-line);
   background: var(--c-gold-wash);
   font-size: var(--t-small);
-  font-weight: 600;
+  font-weight: var(--w-strong);
   letter-spacing: 0.01em;
   color: var(--c-gold-hi);
 }
@@ -68,11 +68,11 @@
 /* --- section heads -------------------------------------------------- */
 
 .sectionTitle {
-  font-family: var(--f-serif);
-  font-weight: 400;
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
   font-size: var(--t-display-3);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  line-height: 1.12;
+  letter-spacing: var(--track-display-sm);
   color: var(--c-text);
   max-width: 16ch;
 }
@@ -117,7 +117,7 @@
 
 .capabilityTitle {
   font-size: var(--t-body);
-  font-weight: 600;
+  font-weight: var(--w-strong);
   color: var(--c-text);
 }
 
@@ -140,7 +140,7 @@
 
 .plannedHead {
   font-size: var(--t-micro);
-  font-weight: 600;
+  font-weight: var(--w-strong);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--c-text-4);
@@ -159,7 +159,7 @@
 }
 
 .plannedList li span {
-  font-weight: 600;
+  font-weight: var(--w-strong);
   color: var(--c-text-3);
 }
 
@@ -199,10 +199,10 @@
 }
 
 .planName {
-  font-family: var(--f-serif);
-  font-weight: 400;
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
   font-size: clamp(1.5rem, 2vw, 1.875rem);
-  letter-spacing: -0.02em;
+  letter-spacing: var(--track-display-sm);
   color: var(--c-text);
 }
 
@@ -228,10 +228,10 @@
 }
 
 .priceNum {
-  font-family: var(--f-serif);
+  font-family: var(--f-display);
   font-size: clamp(1.75rem, 2.9vw, 2.625rem);
-  line-height: 1.05;
-  letter-spacing: -0.02em;
+  line-height: 1.08;
+  letter-spacing: var(--track-display-sm);
   color: var(--c-gold);
 }
 
@@ -458,11 +458,11 @@
 }
 
 .setupTitle {
-  font-family: var(--f-serif);
-  font-weight: 400;
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
   font-size: var(--t-display-3);
-  line-height: 1.1;
-  letter-spacing: -0.02em;
+  line-height: 1.12;
+  letter-spacing: var(--track-display-sm);
   color: var(--c-text);
   max-width: 20ch;
 }
@@ -495,17 +495,17 @@
 
 .setupNum {
   font-size: var(--t-micro);
-  font-weight: 700;
+  font-weight: var(--w-strong);
   letter-spacing: 0.12em;
   color: var(--c-gold);
 }
 
 .setupClose {
-  font-family: var(--f-serif);
-  font-weight: 400;
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
   font-size: clamp(1.25rem, 2vw, 1.625rem);
   line-height: 1.3;
-  letter-spacing: -0.015em;
+  letter-spacing: var(--track-display-sm);
   color: var(--c-gold-hi);
   max-width: 42ch;
 }
@@ -550,7 +550,7 @@
 
 .table thead th {
   font-size: var(--t-micro);
-  font-weight: 600;
+  font-weight: var(--w-strong);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--c-text-3);
@@ -598,7 +598,7 @@
 
 .additionalHead {
   font-size: var(--t-micro);
-  font-weight: 600;
+  font-weight: var(--w-strong);
   letter-spacing: 0.12em;
   text-transform: uppercase;
   color: var(--c-text-4);

@@ -1,45 +1,25 @@
 import type { Metadata } from "next";
-import {
-  Inter,
-  Instrument_Serif,
-  IBM_Plex_Sans_Arabic,
-  DM_Sans,
-} from "next/font/google";
+import { IBM_Plex_Sans_Arabic, DM_Sans } from "next/font/google";
 import "./globals.css";
 
-const sans = Inter({
-  subsets: ["latin"],
-  display: "swap",
-  variable: "--font-sans",
-});
-
-const serif = Instrument_Serif({
-  subsets: ["latin"],
-  weight: "400",
-  style: ["normal", "italic"],
-  display: "swap",
-  variable: "--font-serif",
-});
-
 /**
- * Under test for the hero headline only — see components/concept-v2/hero.
+ * The Latin face for the whole site — display and text alike.
  *
- * DM Sans is OFL-licensed and free for commercial use, served here through
- * next/font/google like every other face on the site. Instrument Serif stays
- * loaded and still sets every other serif on the page, so the test is
- * contained to one headline.
+ * DM Sans is OFL-licensed and free for commercial use, served through
+ * next/font/google. One family carries the entire English hierarchy: size,
+ * weight, spacing and opacity do the separating, not a second typeface.
  *
- * Requested as the whole variable font, with italics, so the headline can be
- * tried at more than one weight without another network request. The optical
- * size axis is included because it is what stops a text face from looking
- * like small type enlarged when it is set at 70px.
+ * Requested as the whole variable font. The weight range is what the
+ * hierarchy is built from, and the optical-size axis is what stops the same
+ * face from looking like enlarged small type at 66px or like shrunk display
+ * type at 11px.
  */
-const displayTest = DM_Sans({
+const sans = DM_Sans({
   subsets: ["latin"],
   style: ["normal", "italic"],
   axes: ["opsz"],
   display: "swap",
-  variable: "--font-display-test",
+  variable: "--font-sans",
 });
 
 const arabic = IBM_Plex_Sans_Arabic({
@@ -60,10 +40,7 @@ export default function RootLayout({
   children: React.ReactNode;
 }) {
   return (
-    <html
-      lang="en"
-      className={`${sans.variable} ${serif.variable} ${displayTest.variable} ${arabic.variable}`}
-    >
+    <html lang="en" className={`${sans.variable} ${arabic.variable}`}>
       <body>{children}</body>
     </html>
   );

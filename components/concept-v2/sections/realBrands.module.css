@@ -96,18 +96,18 @@
 }
 
 .company {
-  font-family: var(--f-serif);
-  font-weight: 400;
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
   font-size: 1.1875rem;
-  line-height: 1.2;
-  letter-spacing: -0.015em;
+  line-height: 1.25;
+  letter-spacing: var(--track-display-sm);
   color: var(--c-text);
 }
 
 .channel {
   margin-top: 0.3rem;
   font-size: var(--t-micro);
-  font-weight: 600;
+  font-weight: var(--w-strong);
   letter-spacing: 0.11em;
   text-transform: uppercase;
   color: var(--c-accent-hi);

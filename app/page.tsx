@@ -27,7 +27,7 @@ export default function Home() {
       >
         Malaky prototype
       </p>
-      <h1 style={{ fontFamily: "var(--f-serif)", fontSize: "2.5rem", fontWeight: 400 }}>
+      <h1 style={{ fontFamily: "var(--f-display)", fontSize: "2.5rem", fontWeight: 400 }}>
         Concept builds
       </h1>
       <ul style={{ display: "grid", gap: "0.5rem", color: "var(--c-accent)" }}>

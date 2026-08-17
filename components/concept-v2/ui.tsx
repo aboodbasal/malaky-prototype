@@ -80,8 +80,8 @@ export function Eyebrow({
 }
 
 /**
- * The editorial section head: a large serif statement whose full stop carries
- * the accent, with supporting copy in the second column.
+ * The section head: a large display statement whose full stop carries the
+ * accent, with supporting copy in the second column.
  */
 export function SectionHead({
   title,
