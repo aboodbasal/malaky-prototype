@@ -110,7 +110,9 @@
   font-weight: var(--w-strong);
   letter-spacing: 0.11em;
   text-transform: uppercase;
-  color: var(--c-accent-hi);
+  /* Gold, not orange: these name a brand and its channel, they are not a
+     control. It also returns orange to meaning only action on this page. */
+  color: var(--c-gold);
 }
 
 .note {

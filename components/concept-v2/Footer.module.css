@@ -11,8 +11,18 @@
   padding-bottom: clamp(2.5rem, 4vw, 3.5rem);
 }
 
+/* 2rem of hairline, at a third of the wordmark's weight. */
+.brandRule {
+  display: block;
+  width: 2rem;
+  height: 1px;
+  margin-top: 1.15rem;
+  background: var(--c-gold);
+  opacity: 0.55;
+}
+
 .tagline {
-  margin-top: 1rem;
+  margin-top: 0.9rem;
   font-size: 0.875rem;
   line-height: 1.65;
   color: var(--c-text-3);

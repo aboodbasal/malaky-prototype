@@ -41,6 +41,9 @@ export function Footer() {
       <div className={`shell ${styles.grid}`}>
         <div className={styles.brand}>
           <MalakyLogo size="footer" />
+          {/* A hand's width of gold under the wordmark, so the logo reads as
+              part of the page rather than the only gold on it. */}
+          <span className={styles.brandRule} aria-hidden="true" />
           <p className={styles.tagline}>
             A proactive marketing operating system.
             <br />

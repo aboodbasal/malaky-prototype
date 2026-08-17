@@ -43,6 +43,10 @@
   letter-spacing: 0;
   text-transform: none;
   font-size: 0.75rem;
+  /* The one place on the page where Arabic names itself, set in the colour the
+     Arabic wordmark is drawn in. The English label opposite stays cream, so
+     the pairing is the point rather than decoration. */
+  color: var(--c-gold);
 }
 
 .badge {
