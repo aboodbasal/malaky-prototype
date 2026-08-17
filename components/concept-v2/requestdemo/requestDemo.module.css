@@ -481,3 +481,22 @@
     transition: none;
   }
 }
+
+/* Sits inside the privacy sentence beside the submit button. Quiet — it is a
+   reference, not a call to action, and requesting a demo requires no
+   acceptance of anything. */
+.privacyLink {
+  color: var(--c-text-3);
+  text-decoration: none;
+  border-bottom: 1px solid var(--c-line-2);
+}
+
+.privacyLink:hover {
+  color: var(--c-text);
+}
+
+.privacyLink:focus-visible {
+  outline: 2px solid var(--c-accent-line);
+  outline-offset: 3px;
+  border-radius: 2px;
+}

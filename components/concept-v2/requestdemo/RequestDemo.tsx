@@ -1,5 +1,6 @@
 "use client";
 
+import Link from "next/link";
 import { useEffect, useId, useRef, useState } from "react";
 import {
   DEPLOYMENT_CLOSE,
@@ -327,8 +328,14 @@ export function RequestDemo() {
               <Button type="submit" tone="primary" size="lg" arrow disabled={sending}>
                 {sending ? "Sending…" : "Send request"}
               </Button>
+              {/* The sentence stays as it was; the link is added so a visitor
+                  can read the detail without being asked to accept anything —
+                  requesting a demo is not agreeing to customer terms. */}
               <p className={styles.privacy}>
-                We&rsquo;ll use the information you provide to respond to this request.
+                We&rsquo;ll use the information you provide to respond to this request.{" "}
+                <Link href="/concept-v2/privacy" className={styles.privacyLink}>
+                  Privacy Policy
+                </Link>
               </p>
             </div>
           </form>

@@ -6,10 +6,10 @@ import styles from "./Footer.module.css";
  * Deliberately minimal — only links that correspond to something real in the
  * concept. No careers, press, status or certification claims.
  *
- * About, Privacy and Terms used to sit here pointing at anchors that do not
- * exist. A link to a page we have not built is worse than no link, so they are
- * removed rather than stubbed; the Legal column returns when there is
- * something behind it.
+ * About, Privacy and Terms used to sit here pointing at anchors that did not
+ * exist. A link to a page we have not built is worse than no link, so they
+ * were removed rather than stubbed. Privacy and Terms are back because both
+ * pages now exist; Cookie Policy, DPA and Security stay out until they do.
  */
 const COLUMNS = [
   {
@@ -25,6 +25,13 @@ const COLUMNS = [
   {
     title: "Company",
     links: [{ label: "Contact", href: "/concept-v2/request-demo" }],
+  },
+  {
+    title: "Legal",
+    links: [
+      { label: "Privacy", href: "/concept-v2/privacy" },
+      { label: "Terms", href: "/concept-v2/terms" },
+    ],
   },
 ];
 
