@@ -1,11 +1,13 @@
 .hero {
   position: relative;
-  /* The whole composition sits this far under the sticky header. It used to
-     be 112px at 1440, which left the orbit and the headline floating in a
-     band of nothing; 36px puts the composition where the eye expects it
-     without crowding the header. Below 1080px the media query at the foot of
-     this file keeps the mobile value, which already fits. */
-  padding-top: clamp(2rem, 2.5vw, 2.25rem);
+  /* Padding that falls as the viewport grows, because the slack above the
+     headline does the opposite: the copy column is centred against the taller
+     orbit, so at 1440 the grid already hands it ~65px and at 1080 it hands it
+     none. This expression cancels that out, landing the headline ~75px under
+     the header across the desktop range instead of 183px at 1440 and 9px at
+     1080. Below 1080px the media query at the foot of this file takes over
+     with the mobile value, which already fits. */
+  padding-top: clamp(0.75rem, 269px - 18vw, 4.5rem);
   padding-bottom: clamp(3.5rem, 6vw, 5.5rem);
   overflow: hidden;
 }
@@ -37,7 +39,10 @@
 .copy {
   position: relative;
   z-index: 2;
-  padding-top: clamp(0rem, 1.5vw, 1.5rem);
+  /* The copy column is shorter than the orbit beside it, so the grid centres
+     it; this padding used to add to that slack and push the headline further
+     down still. */
+  padding-top: 0;
 }
 
 .title {
