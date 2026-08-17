@@ -44,12 +44,14 @@
      the token size "before you were." no longer fits the fixed copy column
      and the three authored line breaks become four. Capped here to hold them;
      below 1080px the column is full width and the size below already fits. */
-  font-size: min(2.26vw + 31.5px, 64px);
+  font-size: min(2.33vw + 32.5px, 66px);
   /* A sans at this size carries a taller x-height than the serif did, so the
-     serif's 1.02 closed the lines up to touching. At 1.08 the three lines
-     read as one block with air between them rather than a stack. */
-  line-height: 1.08;
-  letter-spacing: -0.03em;
+     serif's 1.02 closed the lines up to touching. 1.05 is as close as the
+     three lines come before the descenders start to crowd the line below —
+     and buying it back is what lets the type run larger in the same block. */
+  line-height: 1.05;
+  /* Display sizes need the tracking the text sizes don't. */
+  letter-spacing: -0.032em;
   color: var(--c-text);
 }
 
@@ -116,10 +118,10 @@
     padding-top: 3rem;
   }
 
-  /* Same ~6% step down as the desktop cap, so the headline reads at one
-     weight of voice across the breakpoints. */
+  /* Tracks the desktop cap, so the headline reads at one weight of voice
+     across the breakpoints. */
   .title {
-    font-size: clamp(2.35rem, 9.4vw, 3.4rem);
+    font-size: clamp(2.42rem, 9.7vw, 3.5rem);
   }
 
   .lead {
