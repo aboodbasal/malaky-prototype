@@ -44,10 +44,11 @@
      the token size "before you were." no longer fits the fixed copy column
      and the three authored line breaks become four. Capped here to hold them;
      below 1080px the column is full width and the size below already fits. */
-  font-size: min(2.4vw + 33.5px, 68px);
+  font-size: min(2.26vw + 31.5px, 64px);
   /* A sans at this size carries a taller x-height than the serif did, so the
-     serif's 1.02 closed the lines up to touching. */
-  line-height: 1.06;
+     serif's 1.02 closed the lines up to touching. At 1.08 the three lines
+     read as one block with air between them rather than a stack. */
+  line-height: 1.08;
   letter-spacing: -0.03em;
   color: var(--c-text);
 }
@@ -57,7 +58,10 @@
    voice cut into the line — nothing here should look like a separate mark. */
 .accent {
   color: var(--c-accent);
-  font-weight: 500;
+  /* Between the headline's 400 and a true Medium: the colour is already doing
+     most of the work, and 500 beside 400 read as a heavier word set into the
+     line rather than the same word said with more certainty. */
+  font-weight: 450;
   /* <em> is italic by default in the UA stylesheet — say otherwise. */
   font-style: normal;
 }
@@ -112,8 +116,10 @@
     padding-top: 3rem;
   }
 
+  /* Same ~6% step down as the desktop cap, so the headline reads at one
+     weight of voice across the breakpoints. */
   .title {
-    font-size: clamp(2.5rem, 10vw, 3.6rem);
+    font-size: clamp(2.35rem, 9.4vw, 3.4rem);
   }
 
   .lead {
