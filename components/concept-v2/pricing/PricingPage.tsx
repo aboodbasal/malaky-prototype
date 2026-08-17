@@ -164,10 +164,20 @@ export function PricingPage() {
 
                 {plan.footnote && <p className={styles.planFootnote}>{plan.footnote}</p>}
 
+                {/* Business and Scale can be bought; Enterprise is scoped in a
+                    conversation, so it keeps the demo route. Same button,
+                    different destination — the difference in the offer is what
+                    makes the difference in the action. */}
                 <div className={styles.planCta}>
-                  <Button href="/concept-v2/request-demo" tone="secondary" full>
-                    Request a private demo
-                  </Button>
+                  {plan.monthly != null ? (
+                    <Button href={`/concept-v2/get-started?plan=${plan.id}`} tone="primary" full arrow>
+                      Get started
+                    </Button>
+                  ) : (
+                    <Button href="/concept-v2/request-demo" tone="secondary" full>
+                      Request a private demo
+                    </Button>
+                  )}
                 </div>
               </article>
             ))}

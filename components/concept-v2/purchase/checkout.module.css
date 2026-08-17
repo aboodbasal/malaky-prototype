@@ -1,0 +1,229 @@
+/* Checkout. Details on the left, the order on the right, and a payment
+   surface that is deliberately a placeholder rather than a form. */
+
+.form {
+  display: grid;
+  gap: clamp(1.75rem, 3vw, 2.5rem);
+}
+
+.section {
+  display: grid;
+  gap: 1rem;
+}
+
+.sectionHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.4rem 1rem;
+}
+
+.sectionTitle {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-size: var(--t-micro);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--c-text-3);
+}
+
+.sectionNum {
+  color: var(--c-gold);
+}
+
+.sectionNote {
+  font-size: var(--t-small);
+  color: var(--c-text-4);
+}
+
+/* --- payment methods -------------------------------------------------- */
+
+.methods {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 0.75rem;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.method {
+  position: relative;
+  display: grid;
+  gap: 0.2rem;
+  padding: 0.9rem 1rem;
+  border-radius: var(--r-md);
+  border: 1px solid var(--c-line-2);
+  background: var(--c-surface-2);
+  cursor: pointer;
+  transition:
+    border-color 0.2s var(--ease-out),
+    background 0.2s var(--ease-out);
+}
+
+.method:hover {
+  border-color: var(--c-line-3);
+}
+
+.method[data-on] {
+  border-color: var(--c-accent-line);
+  background: var(--c-accent-wash);
+}
+
+.method:has(.control:focus-visible) {
+  outline: 2px solid var(--c-accent-line);
+  outline-offset: 2px;
+}
+
+.control {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.methodLabel {
+  font-size: var(--t-body);
+  font-weight: var(--w-ui);
+  color: var(--c-text);
+}
+
+.methodNote {
+  font-size: var(--t-small);
+  color: var(--c-text-3);
+}
+
+/* --- the payment surface ---------------------------------------------- */
+
+.surface {
+  display: grid;
+  gap: 0.9rem;
+  padding: clamp(1.1rem, 1.8vw, 1.4rem);
+  border-radius: var(--r-lg);
+  border: 1px dashed var(--c-line-2);
+  background: var(--c-surface-1);
+}
+
+.surfaceHead {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.surfaceTitle {
+  font-size: var(--t-body);
+  font-weight: var(--w-ui);
+  color: var(--c-text-2);
+}
+
+.surfaceTag {
+  font-size: var(--t-micro);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--c-text-4);
+  padding: 0.25rem 0.55rem;
+  border-radius: 999px;
+  border: 1px solid var(--c-line);
+}
+
+/* Field-shaped, inert, and never focusable. There is nothing to type into
+   because there is nothing here to type into. */
+.ghostFields {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 0.7rem;
+}
+
+.ghostWide {
+  grid-column: 1 / -1;
+}
+
+.ghost {
+  display: grid;
+  gap: 0.4rem;
+  min-width: 0;
+}
+
+.ghostLabel {
+  font-size: var(--t-micro);
+  letter-spacing: 0.06em;
+  text-transform: uppercase;
+  color: var(--c-text-4);
+}
+
+.ghostBox {
+  height: 44px;
+  border-radius: var(--r-md);
+  border: 1px solid var(--c-line);
+  background: repeating-linear-gradient(
+    -45deg,
+    rgba(255, 255, 255, 0.016),
+    rgba(255, 255, 255, 0.016) 6px,
+    transparent 6px,
+    transparent 12px
+  );
+}
+
+.surfaceNote {
+  font-size: var(--t-small);
+  line-height: 1.6;
+  color: var(--c-text-3);
+}
+
+.invoiceNote {
+  display: grid;
+  gap: 0.5rem;
+  font-size: var(--t-small);
+  line-height: 1.6;
+  color: var(--c-text-3);
+}
+
+/* --- what happens next ------------------------------------------------- */
+
+.next {
+  display: grid;
+  gap: 0.8rem;
+}
+
+.next li {
+  display: grid;
+  grid-template-columns: 1.9rem minmax(0, 1fr);
+  gap: 0.25rem;
+  font-size: var(--t-small);
+  line-height: 1.55;
+  color: var(--c-text-2);
+}
+
+.nextNum {
+  font-size: var(--t-micro);
+  font-weight: var(--w-strong);
+  letter-spacing: 0.1em;
+  color: var(--c-accent-hi);
+  padding-top: 0.15rem;
+}
+
+/* --- responsive --------------------------------------------------------- */
+
+@media (max-width: 620px) {
+  .methods {
+    grid-template-columns: 1fr;
+  }
+
+  .ghostFields {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .method {
+    transition: none;
+  }
+}

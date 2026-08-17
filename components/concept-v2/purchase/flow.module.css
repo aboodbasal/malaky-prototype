@@ -1,0 +1,406 @@
+/* ------------------------------------------------------------------
+   Shared chrome for the purchase and onboarding journey.
+
+   Everything here is borrowed from surfaces that are already approved: the
+   opening block is the request-demo page's, the fields are its fields, and
+   the vertical rhythm is --section-y-dense because these are functional
+   screens — the reader is choosing and filling in, not being introduced to
+   anything. Nothing in this file changes a token.
+------------------------------------------------------------------ */
+
+/* --- opening ------------------------------------------------------- */
+
+.top {
+  position: relative;
+  padding-top: clamp(3rem, 5.5vw, 5rem);
+  padding-bottom: clamp(1.5rem, 2.4vw, 2.25rem);
+  overflow: hidden;
+}
+
+.topGlow {
+  position: absolute;
+  top: -60%;
+  left: 50%;
+  transform: translateX(-50%);
+  width: min(900px, 96%);
+  height: 520px;
+  pointer-events: none;
+  background: radial-gradient(closest-side, rgba(255, 78, 45, 0.11), transparent 76%);
+}
+
+.topInner {
+  position: relative;
+}
+
+.eyebrow {
+  display: inline-flex;
+  align-items: center;
+  font-size: var(--t-micro);
+  font-weight: var(--w-strong);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--c-accent-hi);
+  margin-bottom: 1rem;
+}
+
+.title {
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
+  font-size: var(--t-display-2);
+  line-height: 1.06;
+  letter-spacing: var(--track-display);
+  color: var(--c-text);
+  max-width: 20ch;
+}
+
+.lead {
+  margin-top: 1.25rem;
+  max-width: 58ch;
+  font-size: var(--t-lead);
+  line-height: 1.65;
+  color: var(--c-text-2);
+}
+
+/* --- the honesty line ----------------------------------------------
+   Present on every screen of the flow. Quiet, but never absent: a reader
+   should not have to wonder which parts of this are real. The gold rule is
+   the brand's, not an action's — it never becomes a link or a button. */
+
+.notice {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  margin-top: 1.5rem;
+  padding-left: 0.85rem;
+  border-left: 1px solid var(--c-gold-line);
+  font-size: var(--t-small);
+  line-height: 1.55;
+  color: var(--c-text-3);
+  max-width: 60ch;
+}
+
+.noticeLabel {
+  flex: none;
+  font-size: var(--t-micro);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--c-gold);
+}
+
+/* --- layout --------------------------------------------------------- */
+
+.body {
+  padding-bottom: var(--section-y-dense);
+}
+
+.grid {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 380px);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+}
+
+.main {
+  display: grid;
+  gap: clamp(1.75rem, 3vw, 2.5rem);
+  min-width: 0;
+}
+
+.aside {
+  position: sticky;
+  top: calc(var(--header-h, 76px) + 1.5rem);
+  display: grid;
+  gap: 1rem;
+  min-width: 0;
+}
+
+/* --- panels --------------------------------------------------------- */
+
+.panel {
+  padding: clamp(1.25rem, 2vw, 1.6rem);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--c-line);
+  background: linear-gradient(180deg, var(--c-surface-2), var(--c-surface-1));
+  min-width: 0;
+}
+
+.panelTitle {
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
+  font-size: 1.25rem;
+  line-height: 1.25;
+  letter-spacing: var(--track-display-sm);
+  color: var(--c-text);
+}
+
+.panelLead {
+  margin-top: 0.4rem;
+  font-size: var(--t-small);
+  line-height: 1.6;
+  color: var(--c-text-3);
+}
+
+.sectionLabel {
+  font-size: var(--t-micro);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--c-text-3);
+}
+
+/* --- fields (the request-demo set, unchanged) ------------------------ */
+
+.fields {
+  display: grid;
+  grid-template-columns: repeat(2, minmax(0, 1fr));
+  gap: 1.25rem clamp(1rem, 2vw, 1.5rem);
+}
+
+.fieldsOne {
+  grid-template-columns: 1fr;
+}
+
+.field {
+  display: grid;
+  gap: 0.5rem;
+  min-width: 0;
+}
+
+.fieldWide {
+  grid-column: 1 / -1;
+}
+
+.labelRow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.5rem;
+}
+
+.label {
+  font-size: var(--t-body);
+  font-weight: var(--w-ui);
+  color: var(--c-text-2);
+}
+
+.optional {
+  font-size: var(--t-micro);
+  font-weight: 400;
+  letter-spacing: 0.1em;
+  text-transform: uppercase;
+  color: var(--c-text-4);
+}
+
+.input {
+  width: 100%;
+  padding: 0.8rem 0.95rem;
+  border-radius: var(--r-md);
+  border: 1px solid var(--c-line-2);
+  background: var(--c-surface-2);
+  color: var(--c-text);
+  font: inherit;
+  font-size: 1rem;
+  line-height: 1.4;
+  transition:
+    border-color 0.2s var(--ease-out),
+    box-shadow 0.2s var(--ease-out),
+    background 0.2s var(--ease-out);
+}
+
+.input::placeholder {
+  color: var(--c-text-4);
+}
+
+.input:hover:not(:disabled) {
+  border-color: var(--c-line-3);
+}
+
+.input:focus-visible {
+  outline: none;
+  border-color: var(--c-accent-line);
+  background: var(--c-surface-3);
+  box-shadow: 0 0 0 3px var(--c-accent-wash);
+}
+
+.input:disabled {
+  opacity: 0.6;
+}
+
+.textarea {
+  resize: vertical;
+  min-height: 5.5rem;
+}
+
+/* The native arrow is hidden on a dark surface, so one is drawn instead. */
+.select {
+  appearance: none;
+  padding-right: 2.5rem;
+  background-image: linear-gradient(45deg, transparent 50%, var(--c-text-3) 50%),
+    linear-gradient(135deg, var(--c-text-3) 50%, transparent 50%);
+  background-position:
+    calc(100% - 1.15rem) calc(50% + 1px),
+    calc(100% - 0.85rem) calc(50% + 1px);
+  background-size: 5px 5px, 5px 5px;
+  background-repeat: no-repeat;
+}
+
+.field[data-invalid] .input {
+  border-color: var(--c-accent);
+}
+
+.fieldError {
+  font-size: var(--t-small);
+  line-height: 1.5;
+  color: var(--c-accent-hi);
+}
+
+.fieldHint {
+  font-size: var(--t-small);
+  line-height: 1.5;
+  color: var(--c-text-4);
+}
+
+/* --- chips ---------------------------------------------------------- */
+
+.chips {
+  display: flex;
+  flex-wrap: wrap;
+  gap: 0.5rem;
+}
+
+.chip {
+  position: relative;
+  display: inline-flex;
+  align-items: center;
+  gap: 0.45rem;
+  padding: 0.6rem 0.95rem;
+  border-radius: 999px;
+  border: 1px solid var(--c-line-2);
+  background: var(--c-surface-2);
+  color: var(--c-text-2);
+  font-size: 0.9375rem;
+  line-height: 1.2;
+  cursor: pointer;
+  transition:
+    border-color 0.2s var(--ease-out),
+    background 0.2s var(--ease-out),
+    color 0.2s var(--ease-out);
+}
+
+.chipInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  padding: 0;
+  overflow: hidden;
+  clip-path: inset(50%);
+  white-space: nowrap;
+  border: 0;
+}
+
+.chip:hover {
+  border-color: var(--c-line-3);
+}
+
+.chip:has(.chipInput:focus-visible) {
+  outline: 2px solid var(--c-accent-line);
+  outline-offset: 2px;
+}
+
+.chip[data-on] {
+  border-color: var(--c-accent-line);
+  background: var(--c-accent-wash);
+  color: var(--c-text);
+}
+
+.chipCheck {
+  flex: none;
+  opacity: 0;
+  color: var(--c-accent-hi);
+  transition: opacity 0.18s var(--ease-out);
+}
+
+.chip[data-on] .chipCheck {
+  opacity: 1;
+}
+
+.chip:has(.chipInput:disabled) {
+  opacity: 0.6;
+  cursor: default;
+}
+
+/* --- errors and submission ------------------------------------------ */
+
+.submitError {
+  padding: 0.75rem 0.95rem;
+  border-radius: var(--r-md);
+  border: 1px solid var(--c-accent-line);
+  background: var(--c-accent-wash);
+  font-size: var(--t-body);
+  color: var(--c-accent-hi);
+}
+
+.submitError:focus-visible {
+  outline: 2px solid var(--c-accent-line);
+  outline-offset: 2px;
+}
+
+.submitRow {
+  display: flex;
+  align-items: center;
+  flex-wrap: wrap;
+  gap: 0.85rem 1.5rem;
+}
+
+.submitNote {
+  flex: 1 1 20rem;
+  font-size: var(--t-small);
+  line-height: 1.55;
+  color: var(--c-text-4);
+}
+
+.quietLink {
+  color: var(--c-text-3);
+  border-bottom: 1px solid var(--c-line-2);
+}
+
+.quietLink:hover {
+  color: var(--c-text);
+}
+
+.quietLink:focus-visible {
+  outline: 2px solid var(--c-accent-line);
+  outline-offset: 3px;
+  border-radius: 2px;
+}
+
+/* --- responsive ------------------------------------------------------ */
+
+@media (max-width: 1040px) {
+  .grid {
+    grid-template-columns: 1fr;
+  }
+
+  .aside {
+    position: static;
+  }
+}
+
+@media (max-width: 700px) {
+  .fields {
+    grid-template-columns: 1fr;
+  }
+
+  .chip {
+    padding: 0.7rem 1rem;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .input,
+  .chip,
+  .chipCheck {
+    transition: none;
+  }
+}

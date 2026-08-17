@@ -38,14 +38,19 @@ export function Hero() {
             {/* Still the secondary button, still dark — the gold is the brand
                 cue in the first viewport, not a second action competing with
                 the orange one. Hero only; the same button elsewhere on the
-                site is unchanged. */}
+                site is unchanged.
+
+                It now opens the self-serve route. The demo request has not
+                gone anywhere: it is the header link, the pricing page's
+                Enterprise card, and the way out of Get started for anyone
+                whose deployment is bigger than a page. */}
             <Button
-              href="/concept-v2/request-demo"
+              href="/concept-v2/get-started"
               tone="secondary"
               size="lg"
               className={styles.secondaryCta}
             >
-              Request a private demo
+              Get started
             </Button>
           </div>
 

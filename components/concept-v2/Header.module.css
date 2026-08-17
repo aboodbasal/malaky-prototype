@@ -60,8 +60,21 @@
 .actions {
   display: flex;
   align-items: center;
-  gap: 0.75rem;
+  gap: 1rem;
   flex: none;
+}
+
+/* The sales-led route, as typography rather than a second button. One filled
+   button in the header, and this beside it. */
+.demoLink {
+  font-size: 0.875rem;
+  color: var(--c-text-2);
+  white-space: nowrap;
+  transition: color 0.2s var(--ease-out);
+}
+
+.demoLink:hover {
+  color: var(--c-text);
 }
 
 /* --- mobile ------------------------------------------------------- */
@@ -120,7 +133,7 @@
   margin-bottom: 1rem;
 }
 
-.panel a {
+.panel ul a {
   display: block;
   padding: 0.7rem 0;
   font-size: 1rem;
@@ -128,8 +141,19 @@
   border-bottom: 1px solid var(--c-line);
 }
 
+.panelActions {
+  display: grid;
+  gap: 0.6rem;
+}
+
 @media (max-width: 1080px) {
   .nav {
+    display: none;
+  }
+
+  /* Below the nav breakpoint the demo route lives in the menu, so the bar
+     keeps one action and nothing competing with it. */
+  .demoLink {
     display: none;
   }
 

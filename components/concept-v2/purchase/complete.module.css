@@ -1,0 +1,164 @@
+/* The last screen. It states what will happen, and is careful never to state
+   that anything already has. */
+
+.wrap {
+  padding-block: clamp(3.5rem, 7vw, 5.5rem) var(--section-y-dense);
+}
+
+.head {
+  display: grid;
+  justify-items: center;
+  text-align: center;
+  max-width: 46rem;
+  margin-inline: auto;
+}
+
+.mark {
+  display: grid;
+  place-items: center;
+  width: 54px;
+  height: 54px;
+  border-radius: 50%;
+  border: 1px solid var(--c-accent-line);
+  background: var(--c-accent-wash);
+  color: var(--c-accent-hi);
+  margin-bottom: 1.5rem;
+}
+
+.title {
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
+  font-size: var(--t-display-2);
+  line-height: 1.06;
+  letter-spacing: var(--track-display);
+  color: var(--c-text);
+}
+
+.lead {
+  margin-top: 1.1rem;
+  max-width: 50ch;
+  font-size: var(--t-lead);
+  line-height: 1.65;
+  color: var(--c-text-2);
+}
+
+/* --- summary --------------------------------------------------------- */
+
+.cards {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: 1rem;
+  margin-top: clamp(2.25rem, 3.5vw, 3rem);
+}
+
+.card {
+  display: grid;
+  align-content: start;
+  gap: 0.75rem;
+  padding: clamp(1.15rem, 1.8vw, 1.5rem);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--c-line);
+  background: linear-gradient(180deg, var(--c-surface-2), var(--c-surface-1));
+  min-width: 0;
+}
+
+.cardLabel {
+  font-size: var(--t-micro);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--c-text-3);
+}
+
+.cardTitle {
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
+  font-size: 1.25rem;
+  line-height: 1.25;
+  letter-spacing: var(--track-display-sm);
+  color: var(--c-text);
+}
+
+.cardRows {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.cardRow {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  gap: 0.75rem;
+  font-size: var(--t-small);
+  line-height: 1.5;
+}
+
+.cardRow dt {
+  color: var(--c-text-4);
+}
+
+.cardRow dd {
+  margin: 0;
+  color: var(--c-text-2);
+  text-align: right;
+}
+
+/* --- what happens next ------------------------------------------------ */
+
+.next {
+  display: grid;
+  grid-template-columns: repeat(3, minmax(0, 1fr));
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  margin-top: clamp(2.25rem, 3.5vw, 3rem);
+  padding-top: clamp(1.5rem, 2.5vw, 2rem);
+  border-top: 1px solid var(--c-line);
+}
+
+.nextItem {
+  display: grid;
+  gap: 0.35rem;
+  align-content: start;
+  min-width: 0;
+}
+
+.nextNum {
+  font-size: var(--t-micro);
+  font-weight: var(--w-strong);
+  letter-spacing: 0.12em;
+  color: var(--c-gold);
+}
+
+.nextTitle {
+  font-size: var(--t-body);
+  font-weight: var(--w-ui);
+  color: var(--c-text);
+}
+
+.nextBody {
+  font-size: var(--t-small);
+  line-height: 1.6;
+  color: var(--c-text-3);
+}
+
+/* --- close ------------------------------------------------------------- */
+
+.close {
+  display: grid;
+  justify-items: center;
+  gap: 1.25rem;
+  margin-top: clamp(2.25rem, 3.5vw, 3rem);
+  text-align: center;
+}
+
+.noticeWrap {
+  display: grid;
+  justify-items: center;
+}
+
+/* --- responsive --------------------------------------------------------- */
+
+@media (max-width: 860px) {
+  .cards,
+  .next {
+    grid-template-columns: 1fr;
+  }
+}

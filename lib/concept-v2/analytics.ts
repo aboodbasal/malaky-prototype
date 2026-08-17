@@ -21,7 +21,22 @@ export type ConceptEvent =
   | "demo_request_interest_selected"
   | "demo_request_submitted"
   | "demo_request_success"
-  | "demo_request_error";
+  | "demo_request_error"
+  /* The self-serve purchase and onboarding journey. */
+  | "get_started_view"
+  | "plan_selected"
+  | "term_selected"
+  | "managed_toggled"
+  | "checkout_view"
+  | "checkout_submitted"
+  | "checkout_error"
+  | "checkout_success"
+  | "onboarding_view"
+  | "onboarding_step_completed"
+  | "onboarding_submitted"
+  | "walkthrough_view"
+  | "walkthrough_requested"
+  | "onboarding_complete_view";
 
 export interface TrackedEvent {
   name: ConceptEvent;

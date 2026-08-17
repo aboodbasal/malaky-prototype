@@ -23,15 +23,37 @@ const NAV = [
   { label: "Pricing", href: "/concept-v2/pricing" },
 ];
 
-/** Where the primary CTA goes, everywhere it appears. */
+/** Where the sales-led route goes, everywhere it appears. */
 export const DEMO_HREF = "/concept-v2/request-demo";
 
+/** Where the self-serve route starts, everywhere it appears. */
+export const START_HREF = "/concept-v2/get-started";
+
+/**
+ * Screens with one job. The header collapses to a logo and a way out: a
+ * customer who is filling in Intelligence Setup should not be offered five
+ * section anchors and two competing calls to action.
+ */
+const FOCUSED = [DEMO_HREF, "/concept-v2/checkout", "/concept-v2/onboarding"];
+
+/**
+ * Two routes to becoming a customer, so the header states which one is the
+ * default.
+ *
+ * The hierarchy is: navigation, then the quiet sales-led route as a text link,
+ * then one filled orange button. Two buttons side by side would make the
+ * visitor choose between them before they have chosen anything else, and the
+ * orange fill is the site's single signal for "this is the action". The demo
+ * route keeps the name it has everywhere else on the site — it is typography
+ * here, not a button.
+ */
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
   const [open, setOpen] = useState(false);
-  /* The request page has one job. Section links and a CTA pointing at the
-     page you are already on would only compete with the form. */
-  const simple = usePathname() === DEMO_HREF;
+  const pathname = usePathname();
+  const focused = FOCUSED.some((p) => pathname === p || pathname.startsWith(`${p}/`));
+  /* The CTA never points at the page it is on. */
+  const onStart = pathname === START_HREF;
 
   useEffect(() => {
     const onScroll = () => setScrolled(window.scrollY > 12);
@@ -47,7 +69,7 @@ export function Header() {
           <MalakyLogo size="nav" />
         </Link>
 
-        {simple ? (
+        {focused ? (
           <Link href="/concept-v2" className={styles.back}>
             Back to Malaky
           </Link>
@@ -66,9 +88,17 @@ export function Header() {
             </nav>
 
             <div className={styles.actions}>
-              <Button href={DEMO_HREF} tone="primary" arrow className={styles.cta}>
+              {/* The site has one name for this action and keeps it, even
+                  though a shorter label would fit more easily beside the
+                  button. Two names for one route is how CTA vocabulary drifts. */}
+              <Link href={DEMO_HREF} className={styles.demoLink}>
                 Request a private demo
-              </Button>
+              </Link>
+              {!onStart && (
+                <Button href={START_HREF} tone="primary" arrow className={styles.cta}>
+                  Get started
+                </Button>
+              )}
               <button
                 type="button"
                 className={styles.burger}
@@ -87,8 +117,8 @@ export function Header() {
       <div
         className={styles.panel}
         id="mobile-nav"
-        data-open={(!simple && open) || undefined}
-        hidden={simple || !open}
+        data-open={(!focused && open) || undefined}
+        hidden={focused || !open}
       >
         <ul>
           {NAV.map((item) => (
@@ -99,9 +129,14 @@ export function Header() {
             </li>
           ))}
         </ul>
-        <Button href={DEMO_HREF} tone="primary" full arrow>
-          Request a private demo
-        </Button>
+        <div className={styles.panelActions}>
+          <Button href={START_HREF} tone="primary" full arrow>
+            Get started
+          </Button>
+          <Button href={DEMO_HREF} tone="secondary" full>
+            Request a private demo
+          </Button>
+        </div>
       </div>
     </header>
   );
