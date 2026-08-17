@@ -35,7 +35,16 @@ export function Hero() {
             <Button href="#brand-demo" tone="primary" size="lg" arrow>
               See Malaky with your brand
             </Button>
-            <Button href="/concept-v2/request-demo" tone="secondary" size="lg">
+            {/* Still the secondary button, still dark — the gold is the brand
+                cue in the first viewport, not a second action competing with
+                the orange one. Hero only; the same button elsewhere on the
+                site is unchanged. */}
+            <Button
+              href="/concept-v2/request-demo"
+              tone="secondary"
+              size="lg"
+              className={styles.secondaryCta}
+            >
               Request a private demo
             </Button>
           </div>
