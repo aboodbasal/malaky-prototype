@@ -3,7 +3,7 @@ import {
   Inter,
   Instrument_Serif,
   IBM_Plex_Sans_Arabic,
-  Newsreader,
+  DM_Sans,
 } from "next/font/google";
 import "./globals.css";
 
@@ -24,16 +24,17 @@ const serif = Instrument_Serif({
 /**
  * Under test for the hero headline only — see components/concept-v2/hero.
  *
- * Newsreader is OFL-licensed and free for commercial use, served here through
+ * DM Sans is OFL-licensed and free for commercial use, served here through
  * next/font/google like every other face on the site. Instrument Serif stays
- * loaded and still sets every other serif on the page, so the two can be
- * compared without touching anything else.
+ * loaded and still sets every other serif on the page, so the test is
+ * contained to one headline.
  *
- * The variable font is requested whole rather than pinned to one instance:
- * the weight range costs nothing extra to serve, and the optical-size axis is
- * what keeps the face from looking like small text blown up at display sizes.
+ * Requested as the whole variable font, with italics, so the headline can be
+ * tried at more than one weight without another network request. The optical
+ * size axis is included because it is what stops a text face from looking
+ * like small type enlarged when it is set at 70px.
  */
-const displayTest = Newsreader({
+const displayTest = DM_Sans({
   subsets: ["latin"],
   style: ["normal", "italic"],
   axes: ["opsz"],

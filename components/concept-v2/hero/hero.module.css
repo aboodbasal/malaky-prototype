@@ -35,25 +35,31 @@
   padding-top: clamp(0rem, 1.5vw, 1.5rem);
 }
 
-/* Newsreader is under test here, and only here — every other serif on the
-   site is still Instrument Serif. */
+/* DM Sans is under test here, and only here — every other line of type on the
+   site is still Inter, Instrument Serif or IBM Plex Sans Arabic. */
 .title {
   font-family: var(--f-display-test);
   font-weight: 400;
-  /* Newsreader sets about 12% wider than Instrument Serif, so at the token
-     size "before you were." no longer fits the copy column and the three
-     authored line breaks turn into five. The size is capped here — and only
-     at this breakpoint, where the column is fixed — to hold them. Below
-     1080px the column is full width and the size below already fits. */
-  font-size: min(2.55vw + 35.5px, 72px);
-  line-height: 1.02;
-  letter-spacing: -0.028em;
+  /* The face sets wider than the serif the size token was drawn around, so at
+     the token size "before you were." no longer fits the fixed copy column
+     and the three authored line breaks become four. Capped here to hold them;
+     below 1080px the column is full width and the size below already fits. */
+  font-size: min(2.4vw + 33.5px, 68px);
+  /* A sans at this size carries a taller x-height than the serif did, so the
+     serif's 1.02 closed the lines up to touching. */
+  line-height: 1.06;
+  letter-spacing: -0.03em;
   color: var(--c-text);
 }
 
+/* One word inside one sentence: the same face, upright, one step of weight
+   and the accent colour. The italic was tried first and read as a second
+   voice cut into the line — nothing here should look like a separate mark. */
 .accent {
   color: var(--c-accent);
-  font-style: italic;
+  font-weight: 500;
+  /* <em> is italic by default in the UA stylesheet — say otherwise. */
+  font-style: normal;
 }
 
 .lead {

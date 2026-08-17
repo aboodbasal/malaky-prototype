@@ -1,8 +1,11 @@
 /**
- * Hero display-font test — Newsreader on the headline only.
+ * Hero display-font test — the face under test is applied to the hero
+ * headline only.
  *
  * Captures the hero at desktop and mobile, and reports the computed family of
- * every other serif on the page so it is provable that nothing else moved.
+ * every other line of type on the page so it is provable that nothing else
+ * moved. The italic variant of the accent word is produced by overriding the
+ * style at runtime, so the comparison shots come from one build.
  */
 import { chromium } from "playwright";
 import { mkdir } from "node:fs/promises";
@@ -14,10 +17,14 @@ const b = await chromium.launch({
   executablePath: "/opt/pw-browsers/chromium-1194/chrome-linux/chrome",
 });
 
-for (const [label, width, height] of [
-  ["desktop-1440", 1440, 900],
-  ["mobile-390", 390, 844],
-]) {
+/** [file name, viewport width, height, accent style] */
+const SHOTS = [
+  ["desktop-1440-upright", 1440, 900, null],
+  ["desktop-1440-italic", 1440, 900, "italic"],
+  ["mobile-390-upright", 390, 844, null],
+];
+
+for (const [label, width, height, accentStyle] of SHOTS) {
   const ctx = await b.newContext({
     viewport: { width, height },
     deviceScaleFactor: 2,
@@ -25,20 +32,26 @@ for (const [label, width, height] of [
   });
   const p = await ctx.newPage();
   await p.goto("http://localhost:3000/concept-v2", { waitUntil: "networkidle" });
+  if (accentStyle) {
+    await p.evaluate((s) => {
+      document.querySelector("#hero-title em").style.fontStyle = s;
+    }, accentStyle);
+  }
   await p.waitForTimeout(900);
 
   const info = await p.evaluate(() => {
     const family = (el) => getComputedStyle(el).fontFamily.split(",")[0].replace(/"/g, "");
     const h1 = document.querySelector("#hero-title");
-    const others = [...document.querySelectorAll("h2, h3, .shell p")]
+    const em = h1.querySelector("em");
+    const others = [...document.querySelectorAll("h2, h3, .shell p, a, button, li")]
       .filter((el) => !h1.contains(el))
       .map(family);
     return {
       headline: family(h1),
-      headlineSize: getComputedStyle(h1).fontSize,
-      headlineWeight: getComputedStyle(h1).fontWeight,
-      italic: getComputedStyle(h1.querySelector("em")).fontStyle,
-      italicColor: getComputedStyle(h1.querySelector("em")).color,
+      size: getComputedStyle(h1).fontSize,
+      weight: getComputedStyle(h1).fontWeight,
+      accent: `${getComputedStyle(em).fontWeight} ${getComputedStyle(em).fontStyle}`,
+      accentColor: getComputedStyle(em).color,
       lines: Math.round(
         h1.getBoundingClientRect().height / parseFloat(getComputedStyle(h1).lineHeight),
       ),
