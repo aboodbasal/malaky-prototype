@@ -81,9 +81,13 @@
   /* --- Rhythm ----------------------------------------------------- */
   --shell: 1240px;
   --gutter: clamp(1.25rem, 4vw, 3rem);
-  /* The hero is the approved reference, and this is its own bottom padding:
-     86px at 1440, 56px at 390. Sections were carrying 130/80, half again as
-     much air as the section everyone likes. */
+  /* FROZEN. The hero is the approved reference, and this is its own bottom
+     padding: 86px at 1440, 56px at 390. Sections were carrying 130/80, half
+     again as much air as the section everyone likes.
+
+     Both tokens, the section-head gap in ui.module.css, and every documented
+     exception are asserted by scripts/spacing-qa.mjs. Change one and that run
+     fails — which is the point. */
   --section-y: clamp(3.5rem, 6vw, 6.5rem);
   /* Functional pages — pricing, forms — run about two thirds of the hero's
      rhythm. Dense because the reader is comparing and filling in, not

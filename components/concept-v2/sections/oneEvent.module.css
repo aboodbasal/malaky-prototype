@@ -85,6 +85,8 @@
   display: grid;
   gap: 0.6rem;
   align-content: start;
+  /* Keeps the tallest card off the closing rule. */
+  padding-bottom: 1rem;
   transition:
     opacity 0.7s var(--ease-out),
     transform 0.7s var(--ease-out);
@@ -102,6 +104,21 @@
   top: -1.25rem;
   left: 0;
   right: 0;
+  height: 1px;
+  background: var(--c-line);
+}
+
+/* Closes the lane the tick opens. The four posts are genuinely different
+   lengths — an executive's text post is shorter than an Instagram card, and
+   flattening them would be a lie about the output — so instead of matching
+   the cards, each column is given equal length and the cards hang inside it.
+   The rag then reads as four different messages in four equal lanes. */
+.col::after {
+  content: "";
+  position: absolute;
+  left: 0;
+  right: 0;
+  bottom: 0;
   height: 1px;
   background: var(--c-line);
 }
