@@ -47,9 +47,11 @@ for (const width of [1440, 390]) {
     const cs = (el) => getComputedStyle(el);
     const secs = [...document.querySelectorAll("main > section")];
     const hero = document.querySelector("section[aria-labelledby=hero-title]");
-    const body = secs.filter((s) => s !== hero && !s.id.includes("request-demo"));
+    const body = secs.filter((s) => s !== hero && s.id !== "get-started");
     const head = document.querySelector("#product .shell > div");
-    const closing = secs.find((s) => s.id === "request-demo");
+    /* The closing CTA. It is the homepage's last section whatever it
+       points at — the id followed the CTA to the self-serve route. */
+    const closing = secs.find((s) => s.id === "get-started");
     return {
       heroPadBottom: px(cs(hero).paddingBottom),
       heroHeadline: Math.round(

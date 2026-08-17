@@ -28,12 +28,19 @@ export default function ConceptHome() {
       <Memory />
       <Arabic />
       <BrandDemo />
+      {/* The homepage closes on the route most visitors take. Business and
+          Scale are self-serve, so the last thing on the page is the start of
+          that journey rather than a request for a conversation — the demo path
+          is still one click away in the header, and it is where the Enterprise
+          card on the pricing page sends anyone whose deployment is scoped. A
+          third button here would only make the visitor choose between two
+          doors before they have chosen anything else. */}
       <ClosingCta
-        id="request-demo"
-        href="/concept-v2/request-demo"
+        id="get-started"
+        href="/concept-v2/get-started"
         title="Let's build Malaky around your business"
-        lead="See how Malaky would be configured around your business, brand and marketing operation."
-        cta="Request a private demo"
+        lead="Choose your deployment and start setting Malaky up around your business, brand and marketing operation."
+        cta="Get started"
         secondary={{ label: "View pricing", href: "/concept-v2/pricing" }}
       />
     </>
