@@ -278,48 +278,45 @@ export const SOURCE_EVENT = {
  * a draft in an executive's voice, and a right-to-left campaign composed in
  * Arabic for a market Alpha Pro actually works in.
  */
-export const EVENT_FANOUT: DrawnPiece[] = [
+export const EVENT_FANOUT: MarketingPiece[] = [
   {
+    /* The square adaptation of their campaign, in their own design language —
+       see ./campaign-creative for what is read off their artwork and what is
+       ours. The caption carries all five deliverables; the creative shows the
+       four their own artwork shows. */
     id: "fanout-instagram",
     customerId: "alpha-pro",
     platform: "instagram",
     label: "Instagram",
     status: "prepared",
     copy: {
-      body: "Before the AI programme, the readiness review.",
-      cta: "Free AI assessment for enterprise leaders.",
+      body:
+        "Not sure where to start with AI? The assessment covers an AI maturity review, a data readiness review, use-case identification and a roadmap — and ends with an opportunity report.",
     },
     media: {
-      scene: "data-lattice",
-      alt: "An abstract lattice of data records with three points flagged",
+      creative: "alpha-pro-assessment-en",
+      alt: "An Alpha Pro MENA Free AI Assessment creative, composed square for a feed",
       aspect: "1:1",
-      overline: "AI assessment",
     },
     engagement: { likes: 88, comments: 6 },
   },
   {
+    /* The campaign as Alpha Pro actually ran it. This is their post, shown
+       whole — which is why it carries no drawn chrome and why the section's
+       note names it as theirs. */
     id: "fanout-linkedin-company",
-    customerId: "alpha-pro",
-    platform: "linkedin-company",
+    platform: "real-screenshot",
+    realPostId: "alpha-pro-ai-assessment",
     label: "LinkedIn Company",
-    status: "prepared",
-    timestamp: "Prepared",
     copy: {
       body:
-        "Our AI assessment covers four things: an AI roadmap, a data readiness review, use-case identification, and an opportunity report you can take to a board.",
+        "Not sure where to start with AI? Our experts will help you assess, prioritize, and move forward with confidence.",
     },
-    media: {
-      scene: "signal-flow",
-      alt: "Streams of data crossing a wide frame, one interrupted and flagged",
-      aspect: "16:9",
-      focal: { x: 0.62, y: 0.55 },
-    },
-    engagement: { likes: 41, comments: 6, reposts: 2 },
   },
   {
-    /* No named executive: Alpha Pro has not assigned one, and putting a real
-       person's name on our copy without them is the exact thing this pass
-       exists to remove. The card shows the draft waiting for a voice. */
+    /* A draft in an executive's register, tied to the same campaign. No name:
+       Alpha Pro has not assigned one, and putting a real person's name on our
+       copy without them is the thing this pass exists to remove. */
     id: "fanout-linkedin-executive",
     customerId: "alpha-pro",
     platform: "linkedin-executive",
@@ -328,16 +325,14 @@ export const EVENT_FANOUT: DrawnPiece[] = [
     timestamp: "Awaiting assignment",
     copy: {
       body:
-        "Every stalled AI programme I have seen stalled for the same reason: nobody could say where the data came from. Start with readiness, not with the model.",
+        "Nobody needs another AI strategy deck. What most teams need is an honest answer to one question: is our data ready? That is why the assessment starts with readiness and not with a model.",
     },
     engagement: { likes: 58, comments: 9 },
   },
   {
-    /* Arabic LinkedIn, not Arabic social: the same professional surface as the
-       English company post, composed independently for an Arabic-speaking
-       business audience. It opens on the question rather than the offer, and
-       nothing in it is a rendering of the English card above — read them side
-       by side and the order of the argument is different. */
+    /* Arabic LinkedIn — the same campaign, composed for an Arabic-speaking
+       business audience rather than translated into one. The creative is
+       composed right to left too, not mirrored. */
     id: "fanout-arabic-linkedin",
     customerId: "alpha-pro",
     platform: "linkedin-company",
@@ -350,14 +345,21 @@ export const EVENT_FANOUT: DrawnPiece[] = [
         "قبل أن تبدأ أي مبادرة للذكاء الاصطناعي: هل بياناتك جاهزة؟ التقييم يبدأ من مراجعة الجاهزية، ثم خارطة الطريق، وينتهي بتقرير يصلح لمجلس الإدارة.",
     },
     media: {
-      scene: "signal-flow",
-      alt: "Streams of data crossing a wide frame, one interrupted and flagged",
-      aspect: "16:9",
-      focal: { x: 0.4, y: 0.55 },
+      creative: "alpha-pro-assessment-ar",
+      alt: "The same Alpha Pro MENA assessment creative, composed in Arabic",
+      aspect: "1:1",
     },
     engagement: { likes: 52, comments: 4 },
   },
 ];
+
+/**
+ * Said under the fan-out. Two different things are on show here and a reader
+ * is owed the difference: one card is the campaign Alpha Pro published, the
+ * other three are Malaky's adaptations of it.
+ */
+export const FANOUT_NOTE =
+  "The LinkedIn card is Alpha Pro MENA's own published campaign. The other three are Malaky adaptations of it, composed in the same campaign's design language. Interface figures are part of the illustration, not performance.";
 
 /* ------------------------------------------------------------------ *
  * Section 4 — approval

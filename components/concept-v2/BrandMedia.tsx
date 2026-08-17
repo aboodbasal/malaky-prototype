@@ -6,7 +6,9 @@ import {
   type FocalPoint,
   type MediaScene,
 } from "@/lib/concept-v2/media";
+import type { CampaignCreativeId } from "@/lib/concept-v2/campaign-creative";
 import { BrandVideo } from "./BrandVideo";
+import { CampaignCreative } from "./CampaignCreative";
 import styles from "./BrandMedia.module.css";
 
 /**
@@ -345,6 +347,8 @@ export interface BrandMediaProps {
   poster?: string;
   /** Malaky-drawn concept creative. */
   scene?: MediaScene;
+  /** Campaign creative composed in the customer's own design language. */
+  creative?: CampaignCreativeId;
   alt: string;
   aspect?: AspectRatio;
   /** Anchors the crop. Omit for centre, which is the historical behaviour. */
@@ -368,6 +372,7 @@ export function BrandMedia({
   srcSet,
   poster,
   scene,
+  creative,
   alt,
   aspect = "16:9",
   focal,
@@ -377,6 +382,19 @@ export function BrandMedia({
 }: BrandMediaProps) {
   const wrapper = [styles.media, className].filter(Boolean).join(" ");
   const frame = { aspectRatio: ASPECT_CSS[aspect] };
+
+  /* Composed campaign creative wins over a neutral scene: where we know how a
+     customer's campaign actually looks, we should not be drawing an abstract
+     stand-in for it. */
+  if (creative) {
+    return (
+      <div className={wrapper} style={frame}>
+        <CampaignCreative id={creative} />
+        {overline ? <span className={styles.overline}>{overline}</span> : null}
+        {children}
+      </div>
+    );
+  }
 
   if (type === "video" && src) {
     return (

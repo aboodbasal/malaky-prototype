@@ -11,6 +11,8 @@
  * creative rather than of whichever component happens to render it.
  */
 
+import type { CampaignCreativeId } from "./campaign-creative";
+
 /* ------------------------------------------------------------------ *
  * Primitives
  * ------------------------------------------------------------------ */
@@ -76,6 +78,12 @@ interface MediaCommon {
   caption?: string;
   /** Malaky-drawn concept creative, used where no real asset is supplied. */
   scene?: MediaScene;
+  /**
+   * Campaign creative composed in the customer's own design language, from a
+   * campaign they really published. Takes precedence over `scene`.
+   * See ./campaign-creative.
+   */
+  creative?: CampaignCreativeId;
 }
 
 export interface ImageMedia extends MediaCommon {

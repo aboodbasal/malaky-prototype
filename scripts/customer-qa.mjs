@@ -87,8 +87,12 @@ ok("One Event uses Alpha Pro MENA", SOURCE_EVENT.customerId === "alpha-pro");
 ok("and its source event is sourced", (SOURCE_EVENT.source ?? "").length > 30);
 ok("and it is a moment the customer really published",
    /AI assessment/i.test(SOURCE_EVENT.title), SOURCE_EVENT.title);
+/* The published card carries its branding inside the screenshot and so has no
+   customerId — it is identified by which real post it points at. */
 ok("every fan-out output is Alpha Pro's",
-   EVENT_FANOUT.every((p) => p.customerId === "alpha-pro"));
+   EVENT_FANOUT.every((p) =>
+     p.customerId === "alpha-pro" || p.realPostId === "alpha-pro-ai-assessment"),
+   EVENT_FANOUT.map((p) => p.customerId ?? p.realPostId).join(", "));
 /* Four channels, by label rather than by platform: the Arabic card is a
    LinkedIn post too, so two of them share a platform and differ in language
    and composition. */
@@ -103,6 +107,14 @@ ok("and it is composed, not translated",
      EVENT_FANOUT.find((p) => p.label === "LinkedIn Company")?.copy.body);
 ok("no fan-out card names an executive Alpha Pro has not assigned",
    EVENT_FANOUT.filter((p) => p.platform === "linkedin-executive").every((p) => !p.executiveId));
+/* One card is the campaign they published; the rest adapt it. Both facts have
+   to hold, and the section has to say which is which. */
+ok("one fan-out card is the customer's own published campaign",
+   EVENT_FANOUT.filter((p) => p.platform === "real-screenshot").length === 1,
+   EVENT_FANOUT.filter((p) => p.platform === "real-screenshot").map((p) => p.realPostId).join(","));
+ok("and the adaptations use the campaign's own creative, not abstract art",
+   EVENT_FANOUT.filter((p) => p.media?.creative).length === 2,
+   EVENT_FANOUT.map((p) => p.media?.creative ?? p.media?.scene ?? "—").join(" "));
 
 ok("Approval uses Baker Tilly Saudi Arabia", APPROVAL_PIECE.customerId === "baker-tilly-sa");
 /* The review item is the customer's own published creative, so the section
@@ -172,6 +184,8 @@ ok("One Event calls no channel Arabic Social", !/Arabic Social/i.test(oneEvent))
 ok("and does name Arabic LinkedIn", /Arabic LinkedIn/i.test(oneEvent));
 ok("engagement figures are disclaimed rather than presented as performance",
    /not performance/i.test(body));
+ok("the fan-out separates the published card from the adaptations",
+   /own published campaign\. The other three are Malaky adaptations/i.test(body));
 ok("the memory correction is disclosed as illustrative", /Illustrative/i.test(body));
 ok("the approval creative is attributed to its owner",
    /own published post, used here to demonstrate the review step/i.test(body));

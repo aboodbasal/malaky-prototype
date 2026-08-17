@@ -1,0 +1,196 @@
+/* The customer's campaign design language, at any size.
+
+   Type is set in container-query units so one composition serves a 280px card
+   in the fan-out and a much larger frame elsewhere without a second layout. */
+
+.creative {
+  container-type: inline-size;
+  position: absolute;
+  inset: 0;
+  display: flex;
+  flex-direction: column;
+  gap: 1cqw;
+  padding: 5.5cqw 5.5cqw 0;
+  background: var(--ground);
+  color: #fff;
+  overflow: hidden;
+}
+
+.logo {
+  height: 15cqw;
+  width: auto;
+  align-self: flex-start;
+  object-fit: contain;
+}
+
+.headline {
+  display: flex;
+  flex-direction: column;
+  font-family: var(--f-display);
+  font-weight: var(--w-strong);
+  font-size: 16cqw;
+  line-height: 1.02;
+  letter-spacing: -0.03em;
+  margin-top: 2cqw;
+}
+
+.headlineAr {
+  font-family: var(--f-arabic);
+  font-size: 10.5cqw;
+  line-height: 1.25;
+  letter-spacing: 0;
+}
+
+.accent {
+  color: var(--accent);
+}
+
+.rule {
+  width: 9cqw;
+  height: 0.7cqw;
+  background: var(--accent);
+  margin: 1.2cqw 0 0.4cqw;
+}
+
+.kicker {
+  font-size: 6.4cqw;
+  font-weight: var(--w-ui);
+  line-height: 1.2;
+}
+
+.sub {
+  font-size: 4.2cqw;
+  line-height: 1.45;
+  color: rgba(255, 255, 255, 0.74);
+  max-width: 34ch;
+}
+
+.ar {
+  font-family: var(--f-arabic);
+  line-height: 1.7;
+}
+
+/* The four deliverables, as the customer's own creative sets them. */
+.items {
+  display: grid;
+  grid-template-columns: repeat(4, minmax(0, 1fr));
+  gap: 2.4cqw;
+  margin-top: auto;
+  padding-bottom: 3.4cqw;
+}
+
+.item {
+  display: grid;
+  gap: 0.9cqw;
+  align-content: start;
+  border-inline-start: 1px solid rgba(255, 255, 255, 0.14);
+  padding-inline-start: 2cqw;
+}
+
+.item:first-child {
+  border-inline-start: 0;
+  padding-inline-start: 0;
+}
+
+.dot {
+  width: 5.4cqw;
+  height: 5.4cqw;
+  border-radius: 50%;
+  border: 0.5cqw solid var(--accent);
+}
+
+.itemTitle {
+  font-size: 3.9cqw;
+  font-weight: var(--w-strong);
+  line-height: 1.25;
+}
+
+.itemDetail {
+  font-size: 3.2cqw;
+  line-height: 1.35;
+  color: rgba(255, 255, 255, 0.62);
+}
+
+/* The market band, in the customer's own words. */
+.footer {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1cqw 2cqw;
+  margin-inline: -5.5cqw;
+  padding: 3cqw 5.5cqw;
+  border-top: 1px solid rgba(255, 255, 255, 0.12);
+  background: rgba(0, 0, 0, 0.45);
+}
+
+.markets,
+.signoff {
+  font-size: 3.3cqw;
+  line-height: 1.3;
+  color: rgba(255, 255, 255, 0.8);
+}
+
+
+/* A card in the fan-out is ~270px across. Four columns of deliverables plus a
+   description each is the customer's landscape composition, and it does not
+   survive that width — so the small container gets two rows of two, the
+   descriptions drop, and the market band gives way to the sign-off. The
+   campaign is the same; only the arrangement adapts, which is the whole
+   argument of the section it sits in. */
+@container (max-width: 420px) {
+  /* One auto margin, not two. The base rule pushes the deliverables down and
+     the footer added a second, so the free space split between them and the
+     column overflowed its own square. At this width the column packs from the
+     top and only the footer takes the slack. */
+  .creative {
+    padding-top: 4.5cqw;
+  }
+
+  .items {
+    margin-top: 3cqw;
+    grid-template-columns: repeat(2, minmax(0, 1fr));
+    gap: 3cqw 3.5cqw;
+    padding-bottom: 4cqw;
+  }
+
+  .item {
+    border-inline-start: 0;
+    padding-inline-start: 0;
+  }
+
+  .itemDetail {
+    display: none;
+  }
+
+  .itemTitle {
+    font-size: 4.4cqw;
+  }
+
+  .sub {
+    display: none;
+  }
+
+  .markets {
+    display: none;
+  }
+
+  .signoff {
+    font-size: 4.2cqw;
+    font-weight: var(--w-ui);
+    color: rgba(255, 255, 255, 0.92);
+  }
+
+  /* The market band and the sign-off are the first things a real designer
+     drops when the frame shrinks, and they are the first things dropped here.
+     Logo, headline, audience and the four deliverables are the campaign; the
+     rest is the landscape version's furniture. */
+  .footer {
+    display: none;
+  }
+
+  .items {
+    margin-top: auto;
+    padding-bottom: 5.5cqw;
+  }
+}

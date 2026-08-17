@@ -1,8 +1,8 @@
 "use client";
 
 import {
-  ENGAGEMENT_NOTE,
   EVENT_FANOUT,
+  FANOUT_NOTE,
   SOURCE_EVENT,
   type DrawnPlatform,
 } from "@/lib/concept-v2/content";
@@ -10,6 +10,7 @@ import { getCustomer } from "@/lib/concept-v2/customers";
 import { useReveal } from "@/hooks/useConceptHooks";
 import { CustomerLogo, isWordmark } from "../CustomerLogo";
 import { PostCard } from "../posts";
+import { RealPostCard } from "../RealPost";
 import { SectionHead, Stop } from "../ui";
 import {
   ArabicIcon,
@@ -77,7 +78,13 @@ export function OneEvent() {
 
           <ol className={styles.grid}>
             {EVENT_FANOUT.map((piece, i) => {
-              const Icon = CHANNEL_ICON[piece.platform];
+              /* One card is the customer's own screenshot, which has no drawn
+                 channel to take an icon from; it takes LinkedIn's, because
+                 that is the channel it ran on. */
+              const Icon =
+                piece.platform === "real-screenshot"
+                  ? LinkedInIcon
+                  : CHANNEL_ICON[piece.platform as DrawnPlatform];
               return (
                 <li
                   key={piece.id}
@@ -89,7 +96,14 @@ export function OneEvent() {
                     <Icon size={13} />
                     {piece.label}
                   </p>
-                  <PostCard piece={piece} />
+                  {piece.platform === "real-screenshot" && piece.realPostId ? (
+                    <RealPostCard
+                      id={piece.realPostId}
+                      sizes="(max-width: 900px) 84vw, 280px"
+                    />
+                  ) : (
+                    <PostCard piece={piece} />
+                  )}
                 </li>
               );
             })}
@@ -99,7 +113,7 @@ export function OneEvent() {
         {/* One line for four cards. The business moment above is Ataccama's
             and is real; everything in the cards is ours. Minimum disclosure,
             said once, rather than a badge on every card. */}
-        <p className={styles.prepared}>{ENGAGEMENT_NOTE}</p>
+        <p className={styles.prepared}>{FANOUT_NOTE}</p>
       </div>
     </section>
   );
