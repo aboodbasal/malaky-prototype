@@ -114,13 +114,6 @@ export interface MarketingPiece {
     cta?: string;
   };
   media?: PieceMedia;
-  /**
-   * A link preview, the way a short-form post carries one. Every field has to
-   * be something the customer publishes about itself — this is a card that
-   * looks like it came from their own site, so it may only ever say what
-   * their own site says.
-   */
-  link?: { domain: string; title: string; detail: string };
   engagement?: Engagement;
   /** Reel duration, e.g. "0:18". */
   duration?: string;
@@ -182,15 +175,14 @@ export const HERO_PIECES: MarketingPiece[] = [
     status: "prepared",
     timestamp: "Prepared 06:02",
     copy: {
+      /* Two paragraphs, split on the blank line the way a post is written. */
       body:
-        "IFRS 18 readiness is a finance-team project before it is a reporting one. We work through it with you — audit and assurance from Riyadh, Jeddah and Khobar.",
+        "IFRS 18 readiness starts before reporting season.\n\n" +
+        "For finance teams, the work begins with understanding the new presentation, " +
+        "subtotals and disclosure requirements — before comparative figures need to be " +
+        "restated.",
     },
-    link: {
-      domain: "bakertilly.sa",
-      title: "IFRS 18 readiness",
-      detail: "Audit & Assurance",
-    },
-    engagement: { likes: 74, comments: 5 },
+    engagement: { likes: 74, comments: 5, reposts: 12 },
   },
   {
     id: "hero-newsletter",

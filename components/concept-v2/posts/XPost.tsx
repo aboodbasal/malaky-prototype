@@ -1,51 +1,92 @@
-import type { MarketingPiece } from "@/lib/concept-v2/content";
-import { CustomerLogo, isWordmark } from "../CustomerLogo";
-import { EngagementRow, PlatformBar, PostShell, pieceCustomer, postStyles as s } from "./shared";
+import { PREPARED_LABEL, type MarketingPiece } from "@/lib/concept-v2/content";
+import {
+  BookmarkIcon,
+  CommentIcon,
+  HeartIcon,
+  RepostIcon,
+  ShareIcon,
+  XIcon,
+} from "../icons";
+import { PostShell, pieceCustomer, postStyles as s } from "./shared";
 
 /**
- * Short-form. One line of text and, where the customer has something of their
- * own to point at, the link card that goes with it.
+ * A post on X, built to X's own shape rather than to this concept's default
+ * card.
  *
- * No image, and that is the design rather than a gap: X is the one channel
- * here whose native post is text, so a card without artwork reads as the
- * format rather than as a missing asset.
+ * The other cards here are portrait, because the channels they depict are
+ * image-first and a feed image wants the height. X is the opposite: the
+ * sentence is the post. So this card is wide and short, the type leads, and
+ * there is no media well at all — on X that is the format, not a gap.
  *
- * No handle either. Every customer's `handle` is null, because none of them
- * has published one to this repository — and an @name we made up is an
- * invented identity, which is the whole thing this concept refuses to do.
- * The account line carries what we do know: their name and their sector.
+ * It also drops the platform bar every other card carries. A labelled header
+ * strip is what made this read as a panel in a product UI; a real post
+ * identifies itself by the account at the top and the mark in the corner.
+ *
+ * Two things it will not do. It shows no handle, because no customer here has
+ * published one to this repository and an @name we made up is an invented
+ * identity. And it says the post is prepared, because Baker Tilly has not
+ * published it — the copy is Malaky's, written around what the firm states
+ * publicly about its own services and offices.
  */
 export function XPost({ piece }: { piece: MarketingPiece }) {
   const customer = pieceCustomer(piece);
+  const paragraphs = piece.copy.body.split(/\n{2,}/);
+  const { likes, comments, reposts } = piece.engagement ?? {};
+
   return (
-    <PostShell>
-      <PlatformBar platform="x" label={piece.label} />
-      <div className={s.account}>
-        <CustomerLogo customer={customer} size={30} />
-        <div className={s.accountText}>
-          {!isWordmark(customer) && <span className={s.accountName}>{customer.name}</span>}
-          {/* Just Malaky's own state. The sector belongs here too, but the
-              two together overrun the account line at card width and truncate,
-              and a clipped line reads as broken chrome rather than as a real
-              account. */}
-          <span className={s.accountMeta}>{piece.timestamp}</span>
-        </div>
+    <PostShell className={s.xCard}>
+      <div className={s.xHead}>
+        {/* The avatar is the supplied lockup, contained on its own plate —
+            never cropped to a circle, which would cut their mark in half.
+
+            The plate follows the artwork rather than the other way round:
+            Baker Tilly's mark is a white knockout on transparency, so a white
+            plate would render it invisible. Only a lockup that arrived with a
+            light background baked in gets a light plate. */}
+        <span
+          className={`${s.xAvatar} ${customer.logo?.background === "light" ? s.xAvatarLight : ""}`}
+        >
+          {customer.logo && (
+            /* eslint-disable-next-line @next/next/no-img-element */
+            <img src={customer.logo.src} alt="" aria-hidden="true" />
+          )}
+        </span>
+        <span className={s.xIdentity}>
+          <span className={s.xName}>{customer.name}</span>
+          <span className={s.xHandleRow}>
+            {customer.shortCategory} · {piece.timestamp}
+          </span>
+        </span>
+        <XIcon size={15} className={s.xMark} />
       </div>
 
-      <p className={s.xBody}>{piece.copy.body}</p>
+      {paragraphs.map((line) => (
+        <p key={line} className={s.xBody}>
+          {line}
+        </p>
+      ))}
 
-      {/* The link preview. Everything in it is what the customer publishes
-          about itself — the domain is theirs and the service is one they
-          list. Nothing here is a claim we made on their behalf. */}
-      {piece.link && (
-        <div className={s.linkCard}>
-          <span className={s.linkDomain}>{piece.link.domain}</span>
-          <span className={s.linkTitle}>{piece.link.title}</span>
-          <span className={s.linkDetail}>{piece.link.detail}</span>
-        </div>
-      )}
+      <p className={s.xPrepared}>{PREPARED_LABEL}</p>
 
-      <EngagementRow {...piece.engagement} />
+      {/* X's own action row. The three counts are illustrative, which the
+          hero says once beneath the stack rather than on every card. */}
+      <div className={s.xActions} dir="ltr">
+        <span className={s.xAction}>
+          <CommentIcon size={14} /> {comments}
+        </span>
+        <span className={s.xAction}>
+          <RepostIcon size={14} /> {reposts}
+        </span>
+        <span className={s.xAction}>
+          <HeartIcon size={14} /> {likes}
+        </span>
+        <span className={s.xAction}>
+          <BookmarkIcon size={14} />
+        </span>
+        <span className={s.xAction}>
+          <ShareIcon size={14} />
+        </span>
+      </div>
     </PostShell>
   );
 }
