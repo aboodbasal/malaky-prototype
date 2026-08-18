@@ -8,12 +8,12 @@ import { getCustomer } from "@/lib/concept-v2/customers";
 import styles from "./CampaignCreative.module.css";
 
 /**
- * A campaign creative composed in the customer's own design language.
+ * A campaign creative composed on the customer's own image.
  *
- * The structure of each layout is read off that customer's published work, and
- * so are the colours — sampled from their file rather than chosen. The logo is
- * the supplied artwork, placed. What is ours is the arrangement, and the
- * sections these sit in say so.
+ * The photograph or render is theirs, reframed and otherwise untouched. The
+ * logo is the supplied artwork, placed. The colours are sampled from their
+ * published work rather than chosen. What is ours is the arrangement and, on
+ * an Arabic card, the Arabic — and the sections these sit in say so.
  *
  * It scales with its frame rather than at fixed sizes: the same composition
  * serves a ~270px card in the fan-out and a much larger campaign panel, so
@@ -28,34 +28,31 @@ export function CampaignCreative({ id }: { id: CampaignCreativeId }) {
 
   return (
     <div
-      className={`${styles.creative} ${styles[creative.layout] ?? ""}`}
+      className={`${styles.creative} ${styles[creative.layout]}`}
       dir={creative.dir}
       role="img"
       aria-label={creative.alt}
       style={{ "--ground": brand.ground, "--accent": brand.accent } as React.CSSProperties}
     >
-      {/* Their own product photography, cropped out of their published post and
-          reframed — the hero the composition is built around. The scrim over it
-          is what makes type legible on a photograph; it changes nothing about
-          the photograph itself. */}
-      {creative.photo && (
-        <>
-          {/* eslint-disable-next-line @next/next/no-img-element */}
-          <img
-            className={styles.photo}
-            src={creative.photo.src}
-            alt=""
-            aria-hidden="true"
-            style={{ objectPosition: creative.photo.focal }}
-          />
-          <span className={styles.scrim} aria-hidden="true" />
-        </>
-      )}
+      {/* Their own image, cropped from their published creative and reframed —
+          the hero the composition is built around. The scrim over it is what
+          resolves it into the ground; it changes nothing about the image. */}
+      {/* eslint-disable-next-line @next/next/no-img-element */}
+      <img
+        className={styles.photo}
+        src={creative.photo.src}
+        alt=""
+        aria-hidden="true"
+        style={{ objectPosition: creative.photo.focal }}
+      />
+      <span className={styles.scrim} aria-hidden="true" />
 
       {customer.logo && (
         /* eslint-disable-next-line @next/next/no-img-element */
         <img className={styles.logo} src={customer.logo.src} alt="" aria-hidden="true" />
       )}
+
+      <p className={`${styles.kicker} ${ar}`}>{creative.kicker}</p>
 
       <p className={`${styles.headline} ${rtl ? styles.headlineAr : ""}`}>
         {creative.headline}
@@ -64,37 +61,22 @@ export function CampaignCreative({ id }: { id: CampaignCreativeId }) {
 
       <span className={styles.rule} aria-hidden="true" />
 
-      <p className={`${styles.kicker} ${ar}`}>{creative.kicker}</p>
-      <p className={`${styles.sub} ${ar}`}>{creative.sub}</p>
-
-      {creative.items && (
-        <ul className={styles.items}>
-          {creative.items.map((item) => (
-            <li key={item.title} className={styles.item}>
-              <span className={styles.dot} aria-hidden="true" />
-              <span className={`${styles.itemTitle} ${ar}`}>{item.title}</span>
-              <span className={`${styles.itemDetail} ${ar}`}>{item.detail}</span>
-            </li>
-          ))}
-        </ul>
-      )}
-
-      {creative.cta && (
+      {creative.cta ? (
         <div className={styles.orderRow}>
           <span className={`${styles.cta} ${ar}`}>{creative.cta}</span>
           <span className={`${styles.productName} ${ar}`}>{creative.productName}</span>
         </div>
+      ) : (
+        creative.productName && (
+          <p className={`${styles.productName} ${styles.standalone} ${ar}`}>
+            {creative.productName}
+          </p>
+        )
       )}
 
-      {creative.footerLead && (
-        <div className={styles.footer}>
-          <p className={`${styles.markets} ${ar}`}>
-            {creative.footerLead} <span className={styles.accent}>{creative.footerMarkets}</span>
-          </p>
-          <p className={`${styles.signoff} ${ar}`}>
-            {creative.signoff} <span className={styles.accent}>{creative.signoffAccent}</span>
-          </p>
-        </div>
+      {/* The markets the customer names on their own creative, in their words. */}
+      {creative.markets && (
+        <p className={`${styles.markets} ${ar}`}>{creative.markets}</p>
       )}
     </div>
   );

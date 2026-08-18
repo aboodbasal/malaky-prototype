@@ -25,6 +25,7 @@ import {
   MEMORY_EXAMPLE,
   SOURCE_EVENT,
 } from "../lib/concept-v2/content.ts";
+import { getCampaignCreative } from "../lib/concept-v2/campaign-creative.ts";
 
 const BASE = "http://localhost:3000/concept-v2";
 const b = await chromium.launch({
@@ -112,9 +113,22 @@ ok("no fan-out card names an executive Alpha Pro has not assigned",
 ok("one fan-out card is the customer's own published campaign",
    EVENT_FANOUT.filter((p) => p.platform === "real-screenshot").length === 1,
    EVENT_FANOUT.filter((p) => p.platform === "real-screenshot").map((p) => p.realPostId).join(","));
-ok("and the adaptations use the campaign's own creative, not abstract art",
-   EVENT_FANOUT.filter((p) => p.media?.creative).length === 2,
-   EVENT_FANOUT.map((p) => p.media?.creative ?? p.media?.scene ?? "—").join(" "));
+/* The point of this one: every image in the fan-out has to be traceable to a
+   file the customer supplied. A neutral drawn scene is a placeholder, and a
+   composed approximation of their creative is a placeholder wearing their
+   colours — both of them make a real customer look invented. So each card's
+   media must resolve to a real asset, either shown directly or composed on. */
+const fanoutArtwork = EVENT_FANOUT.filter((p) => p.media).map((p) => {
+  const m = p.media;
+  if (m.scene) return `scene:${m.scene}`;
+  if (m.src) return m.src;
+  if (m.creative) return getCampaignCreative(m.creative).photo.src;
+  return "—";
+});
+ok("no fan-out card carries a drawn stand-in for Alpha Pro's artwork",
+   fanoutArtwork.length > 0 &&
+     fanoutArtwork.every((src) => src.startsWith("/brand/customers/alpha-pro/")),
+   fanoutArtwork.join(" "));
 
 ok("Approval uses Baker Tilly Saudi Arabia", APPROVAL_PIECE.customerId === "baker-tilly-sa");
 /* The review item is the customer's own published creative, so the section
@@ -194,7 +208,10 @@ ok("and does name Arabic LinkedIn", /Arabic LinkedIn/i.test(oneEvent));
 ok("engagement figures are disclaimed rather than presented as performance",
    /not performance/i.test(body));
 ok("the fan-out separates the published card from the adaptations",
-   /own published campaign\. The other three are Malaky adaptations/i.test(body));
+   /that post shown whole; the Instagram, executive and Arabic cards are Malaky's adaptations/i.test(body));
+ok("and says the artwork is the customer's own, not redrawn",
+   /is Alpha Pro MENA's own, from the campaign they published/i.test(body) &&
+     /never redrawn/i.test(body));
 ok("the memory correction is disclosed as illustrative", /Illustrative/i.test(body));
 ok("the approval creative is attributed to its owner",
    /own published post, used here to demonstrate the review step/i.test(body));

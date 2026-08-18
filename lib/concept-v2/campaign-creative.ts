@@ -1,59 +1,55 @@
 /**
- * Composed campaign creative — built from a customer's real campaign.
+ * Campaign creative composed on a customer's own artwork.
  *
  * The scenes in ./media are neutral by construction, because they stand in
  * where we know nothing about how a customer's marketing looks. This file is
- * the opposite case: Alpha Pro MENA published its Free AI Assessment campaign,
- * that creative is in this repository, and it tells us exactly what their
- * campaign design language is.
+ * the opposite case: where a customer has published a campaign and the file is
+ * in this repository, the composition is built on their photograph or their
+ * render — not on a drawn approximation of it.
  *
- * So the creative below is composed rather than invented. Every element of it
- * is read off the customer's own published artwork:
+ * That distinction is the whole point. A drawn stand-in for a real brand's
+ * creative reads as a placeholder however carefully it is drawn, which is why
+ * the Alpha Pro composition that used to live here is gone: their own artwork
+ * is on disk, so there is nothing for us to approximate.
  *
- * - the headline and the accented second word ("Free AI / Assessment"),
- * - the audience line, "For enterprise leaders",
- * - the supporting line, "A strategic evaluation to accelerate your AI journey",
- * - the four deliverables and their descriptions,
- * - the markets they say they serve, and their sign-off,
- * - the ground colour and the accent, sampled from the file itself
- *   (#1e1e1e and #f83860) rather than chosen by us.
- *
- * What is ours is the adaptation: a square Instagram composition and an Arabic
- * one, neither of which the customer published. Those are Malaky's work, the
- * section says so, and the campaign they are adapting is real.
- *
- * Nothing here recolours, redraws or reletters the logo. The mark is the
- * supplied file, placed.
+ * Nothing here recolours, redraws or reletters a logo or an image. Marks are
+ * the supplied files, placed. Photography and renders are the customers' own,
+ * reframed by scripts/ and otherwise untouched.
  */
 
 import type { CustomerId } from "./customers";
 
 /**
  * Read from public/brand/real-posts/alpha-pro-mena/ by sampling the artwork —
- * the most common saturated value in the creative, and the ground behind it.
- * A brand colour taken from the brand's own published work is not an invented
- * palette; picking one that looked about right would have been.
+ * the accent they letter their headline in, and the ground behind it. A brand
+ * colour taken from the brand's own published work is not an invented palette;
+ * picking one that looked about right would have been.
  */
 export const ALPHA_PRO_BRAND = {
-  ground: "#1e1e1e",
-  accent: "#f83860",
+  ground: "#151515",
+  accent: "#e8375c",
   source:
     "Sampled from Alpha Pro MENA's own published Free AI Assessment creative, held at public/brand/real-posts/alpha-pro-mena/.",
 } as const;
 
-export interface CreativeItem {
-  title: string;
-  detail: string;
-}
+/**
+ * Read from public/brand/real-posts/shrimp-joint/ the same way: the most
+ * common saturated orange in their own published creative, and the near-black
+ * it sits on.
+ */
+export const SHRIMP_JOINT_BRAND = {
+  ground: "#0a0605",
+  accent: "#f87028",
+  source:
+    "Sampled from Shrimp Joint's own published “Crispy. Hot. Loaded.” creative, held at public/brand/real-posts/shrimp-joint/.",
+} as const;
 
 /**
- * Two campaign shapes, because two customers compose differently.
- *
- * "deliverables" is Alpha Pro's: a headline over a strip of what you get.
- * "product" is Shrimp Joint's: the product named large on a dark ground, one
- * line about it, and an order prompt — which is what their own creative does.
+ * One shape, because every composition here works the same way: the
+ * customer's own image, their mark on it, and type set on the ground it
+ * resolves into.
  */
-export type CreativeLayout = "deliverables" | "product";
+export type CreativeLayout = "photoLed";
 
 export interface CampaignCreative {
   customerId: CustomerId;
@@ -63,116 +59,69 @@ export interface CampaignCreative {
   headline: string;
   headlineAccent: string;
   kicker: string;
-  sub: string;
-  /** Deliverables layout only. */
-  items?: CreativeItem[];
-  /** Product layout only: the order prompt, and the product's own name. */
-  cta?: string;
+  /** Sits beside the call to action, or alone under the rule. */
   productName?: string;
+  cta?: string;
+  /** The markets the customer says they serve, in their own words. */
+  markets?: string;
   /**
-   * Product layout only. The customer's own product photography, reframed for
-   * this composition — never generated, never retouched. `focal` is how the
-   * frame is cropped, and it differs between the two languages so the same
-   * photograph is composed twice rather than mirrored once.
+   * The customer's own image, reframed for this composition — never
+   * generated, never retouched. `focal` is how the frame is cropped, and it
+   * differs between languages so one image is composed twice rather than
+   * mirrored once.
    */
-  photo?: { src: string; focal: string; alt: string };
-  /** The footer band: who it is for, and the sign-off. Deliverables only. */
-  footerLead?: string;
-  footerMarkets?: string;
-  signoff?: string;
-  signoffAccent?: string;
+  photo: { src: string; focal: string; alt: string };
   /** What the whole creative says, for anyone who cannot see it. */
   alt: string;
 }
 
 export type CampaignCreativeId =
-  | "alpha-pro-assessment-en"
   | "alpha-pro-assessment-ar"
   | "shrimp-joint-crispy-en"
   | "shrimp-joint-crispy-ar";
 
-/**
- * Read from public/brand/real-posts/shrimp-joint/ the same way Alpha Pro's
- * values were: the most common saturated orange in their own published
- * creative, and the near-black it sits on.
- *
- * The photograph is theirs too. It is cropped out of that same published post
- * by scripts/crop-shrimp-hero.mjs — the hands and the sandwich, above their
- * own lettering, which is left behind so their type never mixes with ours.
- * Reframed, and nothing else: not recoloured, not retouched, not generated.
- */
-export const SHRIMP_JOINT_BRAND = {
-  ground: "#0a0605",
-  accent: "#f87028",
-  source:
-    "Sampled from Shrimp Joint's own published “Crispy. Hot. Loaded.” creative, held at public/brand/real-posts/shrimp-joint/.",
-} as const;
-
 export const CAMPAIGN_CREATIVES: Record<CampaignCreativeId, CampaignCreative> = {
-  /* The square adaptation. Same campaign, composed for a feed rather than for
-     a LinkedIn image slot — four deliverables kept, the hero art dropped
-     because we do not hold it. */
-  "alpha-pro-assessment-en": {
-    customerId: "alpha-pro",
-    layout: "deliverables",
-    dir: "ltr",
-    headline: "Free AI",
-    headlineAccent: "Assessment",
-    kicker: "For enterprise leaders",
-    sub: "A strategic evaluation to accelerate your AI journey.",
-    items: [
-      { title: "AI roadmap", detail: "Clear next steps aligned to your goals." },
-      { title: "Data readiness review", detail: "Assess your data quality and readiness." },
-      { title: "Use-case identification", detail: "Identify high-impact opportunities." },
-      { title: "AI opportunity report", detail: "A tailored report with recommendations." },
-    ],
-    footerLead: "Serving enterprise leaders across",
-    footerMarkets: "Jordan · Saudi Arabia · Oman",
-    signoff: "Let's build what's next,",
-    signoffAccent: "together.",
-    alt:
-      "An Alpha Pro MENA campaign creative headlined “Free AI Assessment”, for enterprise " +
-      "leaders, listing an AI roadmap, a data readiness review, use-case identification and " +
-      "an AI opportunity report, over the markets it serves.",
-  },
-
-  /* The Arabic adaptation. Composed right to left rather than mirrored: the
-     headline leads on the question the audience actually has. */
+  /* The Arabic adaptation of Alpha Pro's assessment campaign.
+  
+     Their English creative runs on this render, so the Arabic one runs on it
+     too — same campaign, same image, composed right to left rather than
+     mirrored. The render is lifted straight out of their published artwork by
+     scripts/crop-alpha-pro-creative.mjs; the Arabic type and the arrangement
+     are Malaky's, and the section says so. */
   "alpha-pro-assessment-ar": {
     customerId: "alpha-pro",
-    layout: "deliverables",
+    layout: "photoLed",
     dir: "rtl",
     headline: "تقييم الذكاء الاصطناعي",
     headlineAccent: "مجانًا",
     kicker: "لقادة المؤسسات",
-    sub: "تقييم استراتيجي يختصر الطريق إلى الذكاء الاصطناعي.",
-    items: [
-      { title: "خارطة الطريق", detail: "خطوات واضحة تتوافق مع أهدافك." },
-      { title: "مراجعة جاهزية البيانات", detail: "تقييم لجودة بياناتك وجاهزيتها." },
-      { title: "تحديد حالات الاستخدام", detail: "الفرص الأعلى أثرًا أولًا." },
-      { title: "تقرير الفرص", detail: "تقرير مخصص مع التوصيات." },
-    ],
-    footerLead: "نخدم قادة المؤسسات في",
-    footerMarkets: "الأردن · السعودية · عُمان",
-    signoff: "لنبنِ ما هو قادم،",
-    signoffAccent: "معًا.",
+    productName: "تقييم استراتيجي يختصر الطريق إلى الذكاء الاصطناعي.",
+    markets: "الأردن · السعودية · عُمان",
+    photo: {
+      src: "/brand/customers/alpha-pro/assessment-render.png",
+      focal: "50% 40%",
+      alt: "The render from Alpha Pro MENA's own Free AI Assessment creative",
+    },
     alt:
       "An Alpha Pro MENA campaign creative composed in Arabic for the same Free AI " +
-      "Assessment campaign, listing the roadmap, data readiness review, use-case " +
-      "identification and opportunity report.",
+      "Assessment campaign, on the render from their own published artwork, for enterprise " +
+      "leaders across Jordan, Saudi Arabia and Oman.",
   },
 
   /* Their own campaign subject — the crispy fish sandwich — set the way their
      creative sets it: the product large, one line under it, an order prompt.
-     Malaky's composition, their product and their brand values. */
+     Malaky's composition, their photograph and their brand values.
+
+     The photograph is cropped from their published post by
+     scripts/crop-shrimp-hero.mjs: the hands and the sandwich, above their own
+     lettering, which is left behind so their type never mixes with ours. */
   "shrimp-joint-crispy-en": {
     customerId: "shrimp-joint",
-    layout: "product",
+    layout: "photoLed",
     dir: "ltr",
     headline: "Crispy",
     headlineAccent: "to the last bite",
     kicker: "Fried to order",
-    sub: "Crisp on the outside, hot all the way through, and it reaches you ready for the first bite.",
     cta: "Order now",
     productName: "The crispy fish sandwich",
     photo: {
@@ -182,20 +131,19 @@ export const CAMPAIGN_CREATIVES: Record<CampaignCreativeId, CampaignCreative> = 
       alt: "Shrimp Joint's crispy fish sandwich, held in gloved hands",
     },
     alt:
-      "A Shrimp Joint campaign creative on a near-black ground, headlined “Crispy Fish”, " +
-      "for the crispy fish sandwich, with an order prompt.",
+      "A Shrimp Joint campaign creative on their own photograph of the crispy fish " +
+      "sandwich, headlined “Crispy, to the last bite”, with an order prompt.",
   },
 
   /* Composed in Arabic rather than translated: it opens on the promise, not on
      the product name, and closes on the order. */
   "shrimp-joint-crispy-ar": {
     customerId: "shrimp-joint",
-    layout: "product",
+    layout: "photoLed",
     dir: "rtl",
     headline: "مقرمش",
     headlineAccent: "لآخر لُقْمَة",
     kicker: "يُحضَّر عند الطلب",
-    sub: "سمك مقرمش ولذيذ، يتم تحضيره عند الطلب ويوصلك جاهزًا ومقرمشًا لآخر لُقْمَة.",
     cta: "اطلبه الآن",
     productName: "ساندويتش السمك المقرمش",
     photo: {

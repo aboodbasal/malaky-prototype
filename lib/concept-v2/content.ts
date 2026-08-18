@@ -281,10 +281,11 @@ export const SOURCE_EVENT = {
  */
 export const EVENT_FANOUT: MarketingPiece[] = [
   {
-    /* The square adaptation of their campaign, in their own design language —
-       see ./campaign-creative for what is read off their artwork and what is
-       ours. The caption carries all five deliverables; the creative shows the
-       four their own artwork shows. */
+    /* Alpha Pro's own campaign artwork, lifted out of the post they published
+       and cropped square for a feed. The image is theirs: reframed by
+       scripts/crop-alpha-pro-creative.mjs and otherwise untouched — not
+       redrawn, not relettered, not approximated. What is Malaky's here is the
+       caption and the decision to run the campaign on this channel. */
     id: "fanout-instagram",
     customerId: "alpha-pro",
     platform: "instagram",
@@ -295,8 +296,8 @@ export const EVENT_FANOUT: MarketingPiece[] = [
         "Not sure where to start with AI? The assessment covers an AI maturity review, a data readiness review, use-case identification and a roadmap — and ends with an opportunity report.",
     },
     media: {
-      creative: "alpha-pro-assessment-en",
-      alt: "An Alpha Pro MENA Free AI Assessment creative, composed square for a feed",
+      src: "/brand/customers/alpha-pro/assessment-creative-square.png",
+      alt: "Alpha Pro MENA's Free AI Assessment campaign artwork, set square for a feed",
       aspect: "1:1",
     },
     engagement: { likes: 88, comments: 6 },
@@ -326,7 +327,7 @@ export const EVENT_FANOUT: MarketingPiece[] = [
     timestamp: "Awaiting assignment",
     copy: {
       body:
-        "Nobody needs another AI strategy deck. What most teams need is an honest answer to one question: is our data ready? That is why the assessment starts with readiness and not with a model.",
+        "Most enterprises I meet don't have an AI problem. They have a data problem wearing an AI costume. The assessment starts there.",
     },
     engagement: { likes: 58, comments: 9 },
   },
@@ -360,7 +361,7 @@ export const EVENT_FANOUT: MarketingPiece[] = [
  * other three are Malaky's adaptations of it.
  */
 export const FANOUT_NOTE =
-  "The LinkedIn card is Alpha Pro MENA's own published campaign. The other three are Malaky adaptations of it, composed in the same campaign's design language. Interface figures are part of the illustration, not performance.";
+  "The artwork across these cards is Alpha Pro MENA's own, from the campaign they published — reframed per channel, never redrawn. The LinkedIn card is that post shown whole; the Instagram, executive and Arabic cards are Malaky's adaptations of it, and the Arabic is composed rather than translated. Interface figures are part of the illustration, not performance.";
 
 /* ------------------------------------------------------------------ *
  * Section 4 — approval
