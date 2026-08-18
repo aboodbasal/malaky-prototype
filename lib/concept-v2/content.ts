@@ -27,6 +27,7 @@
  */
 
 import type { Customer, CustomerExecutive, CustomerId } from "./customers";
+import type { CampaignCreativeId } from "./campaign-creative";
 import type { MediaScene, PieceMedia } from "./media";
 import type { RealPostId } from "./real-posts";
 
@@ -455,24 +456,26 @@ export const BILINGUAL_CAMPAIGN = {
     badge: "EN",
     headline: "Fried to order, not to schedule",
     subhead: "The crispy fish sandwich",
-    body: "It goes in when you order it, and it reaches you while it is still loud.",
-    cta: "See the menu",
-    scene: "still-life" as MediaScene,
-    alt: "A close still life of a plated dish under warm light",
+    body:
+      "Crisp on the outside, hot all the way through, and it reaches you ready for the first bite.",
+    cta: "Order now",
+    creative: "shrimp-joint-crispy-en" as CampaignCreativeId,
+    alt: "A Shrimp Joint campaign creative headlined “Crispy Fish”",
   },
   /**
-   * Composed in Arabic — its own opening, its own rhythm, its own call to
-   * action. Read the two side by side and neither is the other's translation.
+   * Composed in Arabic, not translated across. It opens on the promise rather
+   * than on the product, and closes on the order — a different argument in a
+   * different order, which is the only version of this section worth showing.
    */
   ar: {
     label: "الحملة بالعربية",
     badge: "AR",
-    headline: "تسمعها قبل أن تذوقها",
+    headline: "مقرمش لأول لُقْمَة",
     subhead: "ساندويتش السمك المقرمش",
-    body: "يُقلى عند الطلب، ويصل إليك وهو ما زال يطقطق. لا شيء يُحضَّر قبل أوانه.",
-    cta: "اطلبها الآن",
-    scene: "long-table" as MediaScene,
-    alt: "A long table laid for service under low warm light",
+    body: "سمك مقرمش ولذيذ، يتم تحضيره عند الطلب ويوصلك جاهز لأول لُقْمَة.",
+    cta: "اطلبه الآن",
+    creative: "shrimp-joint-crispy-ar" as CampaignCreativeId,
+    alt: "The same Shrimp Joint campaign composed in Arabic",
   },
   /** Sits beside the customer's mark at the head of each panel. */
   context: "Campaign · The crispy fish sandwich",

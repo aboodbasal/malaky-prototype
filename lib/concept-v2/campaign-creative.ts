@@ -46,25 +46,60 @@ export interface CreativeItem {
   detail: string;
 }
 
+/**
+ * Two campaign shapes, because two customers compose differently.
+ *
+ * "deliverables" is Alpha Pro's: a headline over a strip of what you get.
+ * "product" is Shrimp Joint's: the product named large on a dark ground, one
+ * line about it, and an order prompt — which is what their own creative does.
+ */
+export type CreativeLayout = "deliverables" | "product";
+
 export interface CampaignCreative {
   customerId: CustomerId;
+  layout: CreativeLayout;
   dir: "ltr" | "rtl";
   /** Two-part headline; the second half takes the brand accent. */
   headline: string;
   headlineAccent: string;
   kicker: string;
   sub: string;
-  items: CreativeItem[];
-  /** The footer band: who it is for, and the sign-off. */
-  footerLead: string;
-  footerMarkets: string;
-  signoff: string;
-  signoffAccent: string;
+  /** Deliverables layout only. */
+  items?: CreativeItem[];
+  /** Product layout only: the order prompt, and the product's own name. */
+  cta?: string;
+  productName?: string;
+  /** The footer band: who it is for, and the sign-off. Deliverables only. */
+  footerLead?: string;
+  footerMarkets?: string;
+  signoff?: string;
+  signoffAccent?: string;
   /** What the whole creative says, for anyone who cannot see it. */
   alt: string;
 }
 
-export type CampaignCreativeId = "alpha-pro-assessment-en" | "alpha-pro-assessment-ar";
+export type CampaignCreativeId =
+  | "alpha-pro-assessment-en"
+  | "alpha-pro-assessment-ar"
+  | "shrimp-joint-crispy-en"
+  | "shrimp-joint-crispy-ar";
+
+/**
+ * Read from public/brand/real-posts/shrimp-joint/ the same way Alpha Pro's
+ * values were: the most common saturated orange in their own published
+ * creative, and the near-black it sits on.
+ *
+ * What is deliberately *not* reproduced is the photograph. Their creative is
+ * carried by a food shot we do not hold, and inventing one would be inventing
+ * their product. So the composition is typographic — their ground, their
+ * orange, their product named large — and the panel says it is Malaky's.
+ */
+export const SHRIMP_JOINT_BRAND = {
+  ground: "#0a0605",
+  accent: "#f87028",
+  source:
+    "Sampled from Shrimp Joint's own published “Crispy. Hot. Loaded.” creative, held at public/brand/real-posts/shrimp-joint/.",
+} as const;
 
 export const CAMPAIGN_CREATIVES: Record<CampaignCreativeId, CampaignCreative> = {
   /* The square adaptation. Same campaign, composed for a feed rather than for
@@ -72,6 +107,7 @@ export const CAMPAIGN_CREATIVES: Record<CampaignCreativeId, CampaignCreative> = 
      because we do not hold it. */
   "alpha-pro-assessment-en": {
     customerId: "alpha-pro",
+    layout: "deliverables",
     dir: "ltr",
     headline: "Free AI",
     headlineAccent: "Assessment",
@@ -97,6 +133,7 @@ export const CAMPAIGN_CREATIVES: Record<CampaignCreativeId, CampaignCreative> = 
      headline leads on the question the audience actually has. */
   "alpha-pro-assessment-ar": {
     customerId: "alpha-pro",
+    layout: "deliverables",
     dir: "rtl",
     headline: "تقييم الذكاء الاصطناعي",
     headlineAccent: "مجانًا",
@@ -116,6 +153,41 @@ export const CAMPAIGN_CREATIVES: Record<CampaignCreativeId, CampaignCreative> = 
       "An Alpha Pro MENA campaign creative composed in Arabic for the same Free AI " +
       "Assessment campaign, listing the roadmap, data readiness review, use-case " +
       "identification and opportunity report.",
+  },
+
+  /* Their own campaign subject — the crispy fish sandwich — set the way their
+     creative sets it: the product large, one line under it, an order prompt.
+     Malaky's composition, their product and their brand values. */
+  "shrimp-joint-crispy-en": {
+    customerId: "shrimp-joint",
+    layout: "product",
+    dir: "ltr",
+    headline: "Crispy",
+    headlineAccent: "Fish",
+    kicker: "Fried to order",
+    sub: "Crisp on the outside, hot all the way through, and it reaches you ready for the first bite.",
+    cta: "Order now",
+    productName: "The crispy fish sandwich",
+    alt:
+      "A Shrimp Joint campaign creative on a near-black ground, headlined “Crispy Fish”, " +
+      "for the crispy fish sandwich, with an order prompt.",
+  },
+
+  /* Composed in Arabic rather than translated: it opens on the promise, not on
+     the product name, and closes on the order. */
+  "shrimp-joint-crispy-ar": {
+    customerId: "shrimp-joint",
+    layout: "product",
+    dir: "rtl",
+    headline: "مقرمش",
+    headlineAccent: "لأول لُقْمَة",
+    kicker: "يُحضَّر عند الطلب",
+    sub: "سمك مقرمش ولذيذ، يتم تحضيره عند الطلب ويوصلك جاهز لأول لُقْمَة.",
+    cta: "اطلبه الآن",
+    productName: "ساندويتش السمك المقرمش",
+    alt:
+      "The same Shrimp Joint campaign composed in Arabic, headlined “crispy, to the first " +
+      "bite”, for the crispy fish sandwich, with an order prompt.",
   },
 };
 

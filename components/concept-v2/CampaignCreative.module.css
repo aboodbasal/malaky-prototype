@@ -194,3 +194,112 @@
     padding-bottom: 5.5cqw;
   }
 }
+
+
+/* ------------------------------------------------------------------ *
+ * Product layout — Shrimp Joint
+ *
+ * Their creative is a photograph with the product named over it. We do not
+ * hold the photograph and will not invent one, so the product is named large
+ * on their own near-black ground instead, and the heat their work carries is
+ * rendered as light rather than as fake food.
+ * ------------------------------------------------------------------ */
+
+.product {
+  justify-content: flex-end;
+  gap: 0;
+  padding: 6cqw;
+}
+
+/* Absolute, and it must stay absolute — the stacking rule below deliberately
+   excludes it, because making every child position:relative once cancelled
+   this and the creative lost its warmth entirely. */
+.product .heat {
+  position: absolute;
+  inset: -25% -15% 18% -15%;
+  background:
+    radial-gradient(closest-side, rgba(248, 112, 40, 0.55), transparent 74%),
+    radial-gradient(closest-side at 74% 62%, rgba(248, 112, 40, 0.3), transparent 70%);
+  pointer-events: none;
+}
+
+.product > *:not(.heat) {
+  position: relative;
+}
+
+/* Their mark arrives on a white plate, so it is given one deliberately —
+   a badge in the corner, the way a brand places its own logo on a dark
+   creative. Never cut out, never recoloured. */
+.product .logo {
+  height: auto;
+  width: 30cqw;
+  margin-bottom: auto;
+  background: #fff;
+  border-radius: 2cqw;
+  padding: 1.6cqw 2cqw;
+  object-fit: contain;
+}
+
+.product .kicker {
+  order: -1;
+  margin-bottom: 2cqw;
+  font-size: 4.4cqw;
+  font-weight: var(--w-strong);
+  letter-spacing: 0.14em;
+  text-transform: uppercase;
+  color: var(--accent);
+}
+
+/* The product, at the size their own creative gives it. */
+.product .headline {
+  font-size: 24cqw;
+  line-height: 0.92;
+  margin: 0;
+  text-transform: uppercase;
+  letter-spacing: -0.045em;
+}
+
+.product .headlineAr {
+  font-size: 14cqw;
+  line-height: 1.2;
+  text-transform: none;
+  letter-spacing: 0;
+}
+
+.product .rule {
+  width: 14cqw;
+  height: 1cqw;
+  margin: 3.5cqw 0 3cqw;
+}
+
+/* The body line lives in the panel beside the creative, where it is set at a
+   readable size. Repeating it inside the artwork at a third of that size is
+   how a real creative gets cluttered, so the creative carries the product and
+   the order prompt and stops. */
+.product .sub {
+  display: none;
+}
+
+.orderRow {
+  display: flex;
+  align-items: center;
+  gap: 3cqw;
+  flex-wrap: wrap;
+  margin-top: 5cqw;
+}
+
+.cta {
+  padding: 2.8cqw 5.2cqw;
+  border-radius: 999px;
+  background: var(--accent);
+  color: #120704;
+  font-size: 4.2cqw;
+  font-weight: var(--w-strong);
+  line-height: 1;
+  white-space: nowrap;
+}
+
+.orderRow .product {
+  font-size: 3.5cqw;
+  color: rgba(255, 255, 255, 0.62);
+}

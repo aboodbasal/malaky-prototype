@@ -128,6 +128,15 @@ ok("Arabic uses Shrimp Joint", BILINGUAL_CAMPAIGN.customerId === "shrimp-joint")
 ok("the two Arabic campaigns are not translations of each other",
    BILINGUAL_CAMPAIGN.en.headline !== BILINGUAL_CAMPAIGN.ar.headline &&
      BILINGUAL_CAMPAIGN.en.cta !== BILINGUAL_CAMPAIGN.ar.cta);
+/* Both panels carry branded campaign creative rather than a neutral scene. */
+ok("both Shrimp Joint panels use branded campaign creative",
+   !!BILINGUAL_CAMPAIGN.en.creative && !!BILINGUAL_CAMPAIGN.ar.creative,
+   `${BILINGUAL_CAMPAIGN.en.creative} / ${BILINGUAL_CAMPAIGN.ar.creative}`);
+ok("the Arabic body is the line the founder supplied",
+   BILINGUAL_CAMPAIGN.ar.body ===
+     "سمك مقرمش ولذيذ، يتم تحضيره عند الطلب ويوصلك جاهز لأول لُقْمَة.");
+ok("and the Arabic call to action is Arabic",
+   BILINGUAL_CAMPAIGN.ar.cta === "اطلبه الآن");
 
 const heroCustomers = HERO_PIECES.filter((p) => p.customerId).map((p) => p.customerId);
 ok("the hero spreads across the customer base", new Set(heroCustomers).size >= 3,

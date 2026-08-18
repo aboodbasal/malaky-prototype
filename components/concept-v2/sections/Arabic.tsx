@@ -28,7 +28,7 @@ function CampaignPanel({
           then the language label, which is the smaller fact of the two. */}
       <figcaption className={styles.panelHead}>
         <span className={styles.brandLockup}>
-          <CustomerLogo customer={customer} size={38} />
+          <CustomerLogo customer={customer} size={44} />
           <span className={styles.brandText}>
             <span className={styles.brandName}>{customer.name}</span>
             <span className={styles.brandContext}>{BILINGUAL_CAMPAIGN.context}</span>
@@ -50,7 +50,7 @@ function CampaignPanel({
         </div>
 
         <div className={styles.media}>
-          <BrandMedia scene={side.scene} alt={side.alt} aspect="4:5" />
+          <BrandMedia creative={side.creative} alt={side.alt} aspect="4:5" />
         </div>
       </div>
     </figure>

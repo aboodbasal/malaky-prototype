@@ -1,37 +1,43 @@
-import { getCampaignCreative, ALPHA_PRO_BRAND, type CampaignCreativeId } from "@/lib/concept-v2/campaign-creative";
+import {
+  ALPHA_PRO_BRAND,
+  SHRIMP_JOINT_BRAND,
+  getCampaignCreative,
+  type CampaignCreativeId,
+} from "@/lib/concept-v2/campaign-creative";
 import { getCustomer } from "@/lib/concept-v2/customers";
 import styles from "./CampaignCreative.module.css";
 
 /**
  * A campaign creative composed in the customer's own design language.
  *
- * Everything structural here — the two-part headline, the audience line, the
- * four circled deliverables, the market band and the sign-off — is the layout
- * of the customer's own published campaign. The colours are sampled from that
- * file rather than chosen. The logo is the supplied artwork, placed.
+ * The structure of each layout is read off that customer's published work, and
+ * so are the colours — sampled from their file rather than chosen. The logo is
+ * the supplied artwork, placed. What is ours is the arrangement, and the
+ * sections these sit in say so.
  *
- * It scales with its frame rather than at fixed sizes: the card is ~280px wide
- * in the fan-out and much larger elsewhere, so type is set in cqw units
- * against the creative's own container. One composition, any size.
+ * It scales with its frame rather than at fixed sizes: the same composition
+ * serves a ~270px card in the fan-out and a much larger campaign panel, so
+ * type is set in container-query units against the creative's own box.
  */
 export function CampaignCreative({ id }: { id: CampaignCreativeId }) {
   const creative = getCampaignCreative(id);
   const customer = getCustomer(creative.customerId);
   const rtl = creative.dir === "rtl";
+  const brand = creative.customerId === "shrimp-joint" ? SHRIMP_JOINT_BRAND : ALPHA_PRO_BRAND;
+  const ar = rtl ? styles.ar : "";
 
   return (
     <div
-      className={styles.creative}
+      className={`${styles.creative} ${styles[creative.layout]}`}
       dir={creative.dir}
       role="img"
       aria-label={creative.alt}
-      style={
-        {
-          "--ground": ALPHA_PRO_BRAND.ground,
-          "--accent": ALPHA_PRO_BRAND.accent,
-        } as React.CSSProperties
-      }
+      style={{ "--ground": brand.ground, "--accent": brand.accent } as React.CSSProperties}
     >
+      {/* The warmth their own creative carries, without pretending to be the
+          photograph it carries it in. */}
+      {creative.layout === "product" && <span className={styles.heat} aria-hidden="true" />}
+
       {customer.logo && (
         /* eslint-disable-next-line @next/next/no-img-element */
         <img className={styles.logo} src={customer.logo.src} alt="" aria-hidden="true" />
@@ -44,27 +50,38 @@ export function CampaignCreative({ id }: { id: CampaignCreativeId }) {
 
       <span className={styles.rule} aria-hidden="true" />
 
-      <p className={`${styles.kicker} ${rtl ? styles.ar : ""}`}>{creative.kicker}</p>
-      <p className={`${styles.sub} ${rtl ? styles.ar : ""}`}>{creative.sub}</p>
+      <p className={`${styles.kicker} ${ar}`}>{creative.kicker}</p>
+      <p className={`${styles.sub} ${ar}`}>{creative.sub}</p>
 
-      <ul className={styles.items}>
-        {creative.items.map((item) => (
-          <li key={item.title} className={styles.item}>
-            <span className={styles.dot} aria-hidden="true" />
-            <span className={`${styles.itemTitle} ${rtl ? styles.ar : ""}`}>{item.title}</span>
-            <span className={`${styles.itemDetail} ${rtl ? styles.ar : ""}`}>{item.detail}</span>
-          </li>
-        ))}
-      </ul>
+      {creative.items && (
+        <ul className={styles.items}>
+          {creative.items.map((item) => (
+            <li key={item.title} className={styles.item}>
+              <span className={styles.dot} aria-hidden="true" />
+              <span className={`${styles.itemTitle} ${ar}`}>{item.title}</span>
+              <span className={`${styles.itemDetail} ${ar}`}>{item.detail}</span>
+            </li>
+          ))}
+        </ul>
+      )}
 
-      <div className={styles.footer}>
-        <p className={`${styles.markets} ${rtl ? styles.ar : ""}`}>
-          {creative.footerLead} <span className={styles.accent}>{creative.footerMarkets}</span>
-        </p>
-        <p className={`${styles.signoff} ${rtl ? styles.ar : ""}`}>
-          {creative.signoff} <span className={styles.accent}>{creative.signoffAccent}</span>
-        </p>
-      </div>
+      {creative.cta && (
+        <div className={styles.orderRow}>
+          <span className={`${styles.cta} ${ar}`}>{creative.cta}</span>
+          <span className={`${styles.product} ${ar}`}>{creative.productName}</span>
+        </div>
+      )}
+
+      {creative.footerLead && (
+        <div className={styles.footer}>
+          <p className={`${styles.markets} ${ar}`}>
+            {creative.footerLead} <span className={styles.accent}>{creative.footerMarkets}</span>
+          </p>
+          <p className={`${styles.signoff} ${ar}`}>
+            {creative.signoff} <span className={styles.accent}>{creative.signoffAccent}</span>
+          </p>
+        </div>
+      )}
     </div>
   );
 }
