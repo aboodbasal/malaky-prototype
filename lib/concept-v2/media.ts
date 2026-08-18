@@ -154,7 +154,7 @@ export type ChannelKey =
   | "linkedin-company"
   | "instagram"
   | "linkedin-executive"
-  | "arabic-social"
+  | "x"
   | "newsletter"
   | "reel";
 
@@ -163,7 +163,7 @@ export const CHANNEL_ASPECT: Record<ChannelKey, AspectRatio> = {
   "linkedin-company": "16:9",
   instagram: "1:1",
   "linkedin-executive": "16:9",
-  "arabic-social": "1:1",
+  x: "16:9",
   newsletter: "3:2",
   reel: "9:16",
 };

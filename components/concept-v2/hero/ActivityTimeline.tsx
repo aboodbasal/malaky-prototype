@@ -1,5 +1,5 @@
 import { ACTIVITY_TIMELINE } from "@/lib/concept-v2/content";
-import { ArabicIcon, InstagramIcon, LinkedInIcon, MailIcon, TargetIcon } from "../icons";
+import { InstagramIcon, LinkedInIcon, MailIcon, TargetIcon, XIcon } from "../icons";
 import styles from "./timeline.module.css";
 
 const ICONS = {
@@ -7,7 +7,7 @@ const ICONS = {
   instagram: InstagramIcon,
   linkedin: LinkedInIcon,
   mail: MailIcon,
-  arabic: ArabicIcon,
+  x: XIcon,
 } as const;
 
 /**

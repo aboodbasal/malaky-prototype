@@ -2,7 +2,7 @@ import type { ReactNode } from "react";
 import { getCustomer, type Customer, type CustomerId } from "@/lib/concept-v2/customers";
 import type { DrawnPlatform, MarketingPiece } from "@/lib/concept-v2/content";
 import {
-  ArabicIcon,
+  XIcon,
   CommentIcon,
   HeartIcon,
   InstagramIcon,
@@ -49,7 +49,7 @@ const PLATFORM_META: Record<
   instagram: { label: "Instagram", icon: <InstagramIcon size={13} />, tone: "#e1568f" },
   "linkedin-company": { label: "LinkedIn Company", icon: <LinkedInIcon size={13} />, tone: "#4a9bd6" },
   "linkedin-executive": { label: "LinkedIn · Executive", icon: <LinkedInIcon size={13} />, tone: "#4a9bd6" },
-  "arabic-social": { label: "Arabic Social", icon: <ArabicIcon size={13} />, tone: "#e0a866" },
+  x: { label: "X", icon: <XIcon size={12} />, tone: "#d6dade" },
   newsletter: { label: "Newsletter", icon: <MailIcon size={13} />, tone: "#7fbf9e" },
   reel: { label: "Reel / Video", icon: <ReelIcon size={13} />, tone: "#c08cd6" },
 };

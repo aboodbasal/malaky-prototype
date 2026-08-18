@@ -96,8 +96,9 @@ interface OrbitSlot {
 const LAYOUT: Record<string, OrbitSlot> = {
   // Inception DAP — dense packaging creative, needs the size to be worth it.
   "hero-instagram": { phase: 0, width: 192, y: -14, roll: -1.2, scaleMax: 1.19, opacityMin: 0.56 },
-  // The Arabic card — the bilingual proof point, pulled back so it stops dominating.
-  "hero-arabic-social": { phase: 0.24, width: 164, y: -34, roll: -1, scaleMax: 0.95 },
+  // The short-form card — text where everything around it is image, pulled
+  // back so the quiet one stops competing with the loud ones.
+  "hero-x": { phase: 0.24, width: 164, y: -34, roll: -1, scaleMax: 0.95 },
   // Shrimp Joint — the strongest single image in the set; it leads.
   "hero-facebook": { phase: 0.47, width: 208, y: 30, roll: 1.4, scaleMax: 1.24, opacityMin: 0.56 },
   // Ataccama — the tallest card, so it gains reach through opacity as much as scale.

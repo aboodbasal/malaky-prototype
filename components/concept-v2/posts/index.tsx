@@ -1,19 +1,19 @@
 import type { MarketingPiece } from "@/lib/concept-v2/content";
 import { RealPostCard } from "../RealPost";
-import { ArabicSocialPost } from "./ArabicSocialPost";
 import { InstagramPost } from "./InstagramPost";
 import { LinkedInCompanyPost } from "./LinkedInCompanyPost";
 import { LinkedInExecutivePost } from "./LinkedInExecutivePost";
 import { NewsletterPreview } from "./NewsletterPreview";
 import { ReelPreview } from "./ReelPreview";
+import { XPost } from "./XPost";
 
 export {
-  ArabicSocialPost,
   InstagramPost,
   LinkedInCompanyPost,
   LinkedInExecutivePost,
   NewsletterPreview,
   ReelPreview,
+  XPost,
 };
 
 /**
@@ -34,8 +34,8 @@ export function PostCard({ piece }: { piece: MarketingPiece }) {
       return <LinkedInCompanyPost piece={piece} />;
     case "linkedin-executive":
       return <LinkedInExecutivePost piece={piece} />;
-    case "arabic-social":
-      return <ArabicSocialPost piece={piece} />;
+    case "x":
+      return <XPost piece={piece} />;
     case "newsletter":
       return <NewsletterPreview piece={piece} />;
     case "reel":

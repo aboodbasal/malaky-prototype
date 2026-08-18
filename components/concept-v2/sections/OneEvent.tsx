@@ -13,7 +13,7 @@ import { PostCard } from "../posts";
 import { RealPostCard } from "../RealPost";
 import { SectionHead, Stop } from "../ui";
 import {
-  ArabicIcon,
+  XIcon,
   CalendarIcon,
   InstagramIcon,
   LinkedInIcon,
@@ -28,7 +28,7 @@ const CHANNEL_ICON: Record<DrawnPlatform, typeof InstagramIcon> = {
   instagram: InstagramIcon,
   "linkedin-company": LinkedInIcon,
   "linkedin-executive": LinkedInIcon,
-  "arabic-social": ArabicIcon,
+  x: XIcon,
   newsletter: MailIcon,
   reel: ReelIcon,
 } as const;

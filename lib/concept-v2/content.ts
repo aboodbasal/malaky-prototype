@@ -35,7 +35,7 @@ export type Platform =
   | "instagram"
   | "linkedin-company"
   | "linkedin-executive"
-  | "arabic-social"
+  | "x"
   | "newsletter"
   | "reel"
   /**
@@ -114,6 +114,13 @@ export interface MarketingPiece {
     cta?: string;
   };
   media?: PieceMedia;
+  /**
+   * A link preview, the way a short-form post carries one. Every field has to
+   * be something the customer publishes about itself — this is a card that
+   * looks like it came from their own site, so it may only ever say what
+   * their own site says.
+   */
+  link?: { domain: string; title: string; detail: string };
   engagement?: Engagement;
   /** Reel duration, e.g. "0:18". */
   duration?: string;
@@ -159,24 +166,29 @@ export const HERO_PIECES: MarketingPiece[] = [
     copy: { body: "Crispy. Hot. Loaded. Our crispy fish sandwich is here." },
   },
   {
-    /* Composed in Arabic for a restaurant, not translated from an English
-       original. The subject is the sandwich Shrimp Joint markets publicly. */
-    id: "hero-arabic-social",
-    customerId: "shrimp-joint",
-    platform: "arabic-social",
-    label: "Arabic Social",
-    dir: "rtl",
+    /* Short-form, for the one customer here whose work is professional
+       services — a register nothing else in the hero covers.
+    
+       It carries no image, because X is the one channel where that is the
+       native shape rather than a missing asset: a line of text and the firm's
+       own link. Both the service and the three cities are things Baker Tilly
+       states publicly about itself; the sentence around them is ours, and the
+       card says it is prepared. No handle is shown — they have not published
+       one to us, and an invented @name is an invented identity. */
+    id: "hero-x",
+    customerId: "baker-tilly-sa",
+    platform: "x",
+    label: "X Post",
     status: "prepared",
-    timestamp: "أُعدّ 06:02",
+    timestamp: "Prepared 06:02",
     copy: {
-      headline: "مقرمشة. ساخنة. للتو.",
-      body: "ساندويتش السمك المقرمش — يُقلى عند الطلب، ويُقدَّم وهو لا يزال يطقطق.",
-      cta: "شوف القائمة",
+      body:
+        "IFRS 18 readiness is a finance-team project before it is a reporting one. We work through it with you — audit and assurance from Riyadh, Jeddah and Khobar.",
     },
-    media: {
-      scene: "still-life",
-      alt: "A close still life of a plated dish under warm light",
-      aspect: "1:1",
+    link: {
+      domain: "bakertilly.sa",
+      title: "IFRS 18 readiness",
+      detail: "Audit & Assurance",
     },
     engagement: { likes: 74, comments: 5 },
   },
@@ -238,7 +250,7 @@ export interface ActivityEntry {
   label: string;
   /** The first entry is the trigger — it reads as the moment of noticing. */
   kind: "trigger" | "output";
-  icon: "target" | "instagram" | "linkedin" | "mail" | "arabic";
+  icon: "target" | "instagram" | "linkedin" | "mail" | "x";
 }
 
 export const ACTIVITY_TIMELINE: ActivityEntry[] = [
@@ -246,7 +258,7 @@ export const ACTIVITY_TIMELINE: ActivityEntry[] = [
   { time: "05:47", label: "Instagram prepared", kind: "output", icon: "instagram" },
   { time: "05:51", label: "Executive LinkedIn prepared", kind: "output", icon: "linkedin" },
   { time: "05:56", label: "Newsletter prepared", kind: "output", icon: "mail" },
-  { time: "06:02", label: "Arabic campaign prepared", kind: "output", icon: "arabic" },
+  { time: "06:02", label: "X post prepared", kind: "output", icon: "x" },
 ];
 
 /* ------------------------------------------------------------------ *

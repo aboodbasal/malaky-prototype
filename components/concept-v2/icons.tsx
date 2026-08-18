@@ -78,6 +78,14 @@ export function ArabicIcon({ size = 16, ...rest }: IconProps) {
   );
 }
 
+export function XIcon({ size = 16, ...rest }: IconProps) {
+  return (
+    <svg width={size} height={size} viewBox="0 0 24 24" fill="currentColor" aria-hidden="true" {...rest}>
+      <path d="M17.53 3h3.02l-6.6 7.54L21.7 21h-6.07l-4.76-6.22L5.42 21H2.4l7.06-8.07L2.6 3h6.23l4.3 5.69L17.53 3Zm-1.06 16.17h1.67L7.6 4.74H5.81l10.66 14.43Z" />
+    </svg>
+  );
+}
+
 /* --- Engagement + UI --------------------------------------------- */
 
 export function HeartIcon(props: IconProps) {
