@@ -470,9 +470,9 @@ export const BILINGUAL_CAMPAIGN = {
   ar: {
     label: "الحملة بالعربية",
     badge: "AR",
-    headline: "مقرمش لأول لُقْمَة",
+    headline: "مقرمش لآخر لُقْمَة",
     subhead: "ساندويتش السمك المقرمش",
-    body: "سمك مقرمش ولذيذ، يتم تحضيره عند الطلب ويوصلك جاهز لأول لُقْمَة.",
+    body: "سمك مقرمش ولذيذ، يتم تحضيره عند الطلب ويوصلك جاهزًا ومقرمشًا لآخر لُقْمَة.",
     cta: "اطلبه الآن",
     creative: "shrimp-joint-crispy-ar" as CampaignCreativeId,
     alt: "The same Shrimp Joint campaign composed in Arabic",

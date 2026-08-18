@@ -193,9 +193,9 @@ export const CAMPAIGN_CREATIVES: Record<CampaignCreativeId, CampaignCreative> = 
     layout: "product",
     dir: "rtl",
     headline: "مقرمش",
-    headlineAccent: "لأول لُقْمَة",
+    headlineAccent: "لآخر لُقْمَة",
     kicker: "يُحضَّر عند الطلب",
-    sub: "سمك مقرمش ولذيذ، يتم تحضيره عند الطلب ويوصلك جاهز لأول لُقْمَة.",
+    sub: "سمك مقرمش ولذيذ، يتم تحضيره عند الطلب ويوصلك جاهزًا ومقرمشًا لآخر لُقْمَة.",
     cta: "اطلبه الآن",
     productName: "ساندويتش السمك المقرمش",
     photo: {
@@ -207,7 +207,7 @@ export const CAMPAIGN_CREATIVES: Record<CampaignCreativeId, CampaignCreative> = 
       alt: "Shrimp Joint's crispy fish sandwich, held in gloved hands",
     },
     alt:
-      "The same Shrimp Joint campaign composed in Arabic, headlined “crispy, to the first " +
+      "The same Shrimp Joint campaign composed in Arabic, headlined “crispy, to the last " +
       "bite”, for the crispy fish sandwich, with an order prompt.",
   },
 };

@@ -134,7 +134,7 @@ ok("both Shrimp Joint panels use branded campaign creative",
    `${BILINGUAL_CAMPAIGN.en.creative} / ${BILINGUAL_CAMPAIGN.ar.creative}`);
 ok("the Arabic body is the line the founder supplied",
    BILINGUAL_CAMPAIGN.ar.body ===
-     "سمك مقرمش ولذيذ، يتم تحضيره عند الطلب ويوصلك جاهز لأول لُقْمَة.");
+     "سمك مقرمش ولذيذ، يتم تحضيره عند الطلب ويوصلك جاهزًا ومقرمشًا لآخر لُقْمَة.");
 ok("and the Arabic call to action is Arabic",
    BILINGUAL_CAMPAIGN.ar.cta === "اطلبه الآن");
 
