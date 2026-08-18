@@ -28,15 +28,29 @@ export function CampaignCreative({ id }: { id: CampaignCreativeId }) {
 
   return (
     <div
-      className={`${styles.creative} ${styles[creative.layout]}`}
+      className={`${styles.creative} ${styles[creative.layout] ?? ""}`}
       dir={creative.dir}
       role="img"
       aria-label={creative.alt}
       style={{ "--ground": brand.ground, "--accent": brand.accent } as React.CSSProperties}
     >
-      {/* The warmth their own creative carries, without pretending to be the
-          photograph it carries it in. */}
-      {creative.layout === "product" && <span className={styles.heat} aria-hidden="true" />}
+      {/* Their own product photography, cropped out of their published post and
+          reframed — the hero the composition is built around. The scrim over it
+          is what makes type legible on a photograph; it changes nothing about
+          the photograph itself. */}
+      {creative.photo && (
+        <>
+          {/* eslint-disable-next-line @next/next/no-img-element */}
+          <img
+            className={styles.photo}
+            src={creative.photo.src}
+            alt=""
+            aria-hidden="true"
+            style={{ objectPosition: creative.photo.focal }}
+          />
+          <span className={styles.scrim} aria-hidden="true" />
+        </>
+      )}
 
       {customer.logo && (
         /* eslint-disable-next-line @next/next/no-img-element */
@@ -68,7 +82,7 @@ export function CampaignCreative({ id }: { id: CampaignCreativeId }) {
       {creative.cta && (
         <div className={styles.orderRow}>
           <span className={`${styles.cta} ${ar}`}>{creative.cta}</span>
-          <span className={`${styles.product} ${ar}`}>{creative.productName}</span>
+          <span className={`${styles.productName} ${ar}`}>{creative.productName}</span>
         </div>
       )}
 

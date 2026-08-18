@@ -162,9 +162,9 @@
     grid-template-columns: 1fr;
   }
 
-  .media > div {
-    aspect-ratio: 16 / 9 !important;
-  }
+  /* The frame stays portrait here. It used to flatten to 16:9, which suited a
+     drawn scene but not this one: what sits in it is a social post, and a
+     social post cropped to a letterbox stops looking like one. */
 }
 
 

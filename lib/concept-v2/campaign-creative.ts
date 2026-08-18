@@ -69,6 +69,13 @@ export interface CampaignCreative {
   /** Product layout only: the order prompt, and the product's own name. */
   cta?: string;
   productName?: string;
+  /**
+   * Product layout only. The customer's own product photography, reframed for
+   * this composition — never generated, never retouched. `focal` is how the
+   * frame is cropped, and it differs between the two languages so the same
+   * photograph is composed twice rather than mirrored once.
+   */
+  photo?: { src: string; focal: string; alt: string };
   /** The footer band: who it is for, and the sign-off. Deliverables only. */
   footerLead?: string;
   footerMarkets?: string;
@@ -89,10 +96,10 @@ export type CampaignCreativeId =
  * values were: the most common saturated orange in their own published
  * creative, and the near-black it sits on.
  *
- * What is deliberately *not* reproduced is the photograph. Their creative is
- * carried by a food shot we do not hold, and inventing one would be inventing
- * their product. So the composition is typographic — their ground, their
- * orange, their product named large — and the panel says it is Malaky's.
+ * The photograph is theirs too. It is cropped out of that same published post
+ * by scripts/crop-shrimp-hero.mjs — the hands and the sandwich, above their
+ * own lettering, which is left behind so their type never mixes with ours.
+ * Reframed, and nothing else: not recoloured, not retouched, not generated.
  */
 export const SHRIMP_JOINT_BRAND = {
   ground: "#0a0605",
@@ -163,11 +170,17 @@ export const CAMPAIGN_CREATIVES: Record<CampaignCreativeId, CampaignCreative> = 
     layout: "product",
     dir: "ltr",
     headline: "Crispy",
-    headlineAccent: "Fish",
+    headlineAccent: "to the last bite",
     kicker: "Fried to order",
     sub: "Crisp on the outside, hot all the way through, and it reaches you ready for the first bite.",
     cta: "Order now",
     productName: "The crispy fish sandwich",
+    photo: {
+      src: "/brand/customers/shrimp-joint/crispy-fish-hero.png",
+      /* Centred: the sandwich squarely in the band. */
+      focal: "50% 52%",
+      alt: "Shrimp Joint's crispy fish sandwich, held in gloved hands",
+    },
     alt:
       "A Shrimp Joint campaign creative on a near-black ground, headlined “Crispy Fish”, " +
       "for the crispy fish sandwich, with an order prompt.",
@@ -185,6 +198,14 @@ export const CAMPAIGN_CREATIVES: Record<CampaignCreativeId, CampaignCreative> = 
     sub: "سمك مقرمش ولذيذ، يتم تحضيره عند الطلب ويوصلك جاهز لأول لُقْمَة.",
     cta: "اطلبه الآن",
     productName: "ساندويتش السمك المقرمش",
+    photo: {
+      src: "/brand/customers/shrimp-joint/crispy-fish-hero.png",
+      /* Set a little right of centre and higher in the frame than the English
+         panel: the same photograph, composed a second time rather than
+         repeated, so the type falls on a different part of it. */
+      focal: "57% 44%",
+      alt: "Shrimp Joint's crispy fish sandwich, held in gloved hands",
+    },
     alt:
       "The same Shrimp Joint campaign composed in Arabic, headlined “crispy, to the first " +
       "bite”, for the crispy fish sandwich, with an order prompt.",
