@@ -1,0 +1,60 @@
+/* One card, centred, on the site's own ground. No new spacing tokens: the
+   page borrows the dense section rhythm the rest of the site already uses. */
+
+.main {
+  display: grid;
+  place-items: center;
+  min-height: 68vh;
+  padding: var(--section-y-dense) 1.25rem;
+}
+
+.card {
+  display: grid;
+  justify-items: center;
+  gap: 0.9rem;
+  width: min(100%, 420px);
+  padding: 2.4rem 2rem;
+  text-align: center;
+  border: 1px solid var(--c-line);
+  border-radius: var(--r-lg);
+  background: var(--c-surface);
+}
+
+.title {
+  margin-top: 0.6rem;
+  font-family: var(--f-display);
+  font-size: clamp(1.6rem, 3vw, 2rem);
+  font-weight: var(--w-strong);
+  letter-spacing: -0.02em;
+  color: var(--c-text);
+}
+
+.lead {
+  font-size: 0.95rem;
+  line-height: 1.55;
+  color: var(--c-text-2);
+  max-width: 30ch;
+}
+
+/* The shape of the action, at the weight the action will have — and inert,
+   because there is nothing behind it yet. */
+.action {
+  display: block;
+  width: 100%;
+  margin-top: 0.5rem;
+  padding: 0.85rem 1.4rem;
+  border-radius: 999px;
+  background: var(--c-accent);
+  color: #12060a;
+  font-size: 0.95rem;
+  font-weight: var(--w-strong);
+  opacity: 0.55;
+  cursor: not-allowed;
+  user-select: none;
+}
+
+.note {
+  font-size: 0.78rem;
+  line-height: 1.5;
+  color: var(--c-text-3);
+}

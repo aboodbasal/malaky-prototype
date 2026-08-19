@@ -28,6 +28,34 @@ const CONFIGURED = process.env.NEXT_PUBLIC_SITE_URL?.trim();
 
 export const SITE_URL = CONFIGURED && CONFIGURED.length > 0 ? CONFIGURED : "http://localhost:3000";
 
+/* ------------------------------------------------------------------ *
+ * The customer dashboard
+ *
+ * Same seam as the hostname above, for the same reason. Engineering is
+ * building the dashboard and its sign-in; where it will live is their
+ * decision, not this concept's. `NEXT_PUBLIC_DASHBOARD_URL` is where that
+ * answer arrives, and until it does, Login points at a concept page that
+ * says as much rather than at an invented /dashboard, an auth vendor or
+ * somebody's deploy host.
+ * ------------------------------------------------------------------ */
+
+const DASHBOARD = process.env.NEXT_PUBLIC_DASHBOARD_URL?.trim();
+
+/** The configured dashboard, or null while there is nothing to point at. */
+export const DASHBOARD_URL = DASHBOARD && DASHBOARD.length > 0 ? DASHBOARD : null;
+
+/**
+ * Where Login goes.
+ *
+ * Configured: straight to the dashboard, because an existing customer wants
+ * the product and not a page about the product. Unconfigured: the concept's
+ * own holding page, which signs nobody in and says so.
+ */
+export const LOGIN_HREF = DASHBOARD_URL ?? "/concept-v2/login";
+
+/** True while Login is a concept page rather than the real dashboard. */
+export const LOGIN_IS_PLACEHOLDER = DASHBOARD_URL === null;
+
 /** One card for the whole site. See scripts/social-card.mjs. */
 export const OG_IMAGE = {
   url: "/og/malaky-social.png",

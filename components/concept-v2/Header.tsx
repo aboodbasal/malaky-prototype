@@ -3,6 +3,7 @@
 import Link from "next/link";
 import { usePathname } from "next/navigation";
 import { useEffect, useState } from "react";
+import { LOGIN_HREF } from "@/lib/site";
 import { MalakyLogo } from "./MalakyLogo";
 import { Button } from "./ui";
 import styles from "./Header.module.css";
@@ -34,18 +35,31 @@ export const START_HREF = "/concept-v2/get-started";
  * customer who is filling in Intelligence Setup should not be offered five
  * section anchors and two competing calls to action.
  */
-const FOCUSED = [DEMO_HREF, "/concept-v2/checkout", "/concept-v2/onboarding"];
+const FOCUSED = [
+  DEMO_HREF,
+  "/concept-v2/checkout",
+  "/concept-v2/onboarding",
+  /* Sign-in is a screen with one job like the others, so the header collapses
+     there too — including the Login link itself, which would otherwise point
+     at the page you are standing on. */
+  "/concept-v2/login",
+];
 
 /**
  * Two routes to becoming a customer, so the header states which one is the
  * default.
  *
- * The hierarchy is: navigation, then the quiet sales-led route as a text link,
- * then one filled orange button. Two buttons side by side would make the
- * visitor choose between them before they have chosen anything else, and the
- * orange fill is the site's single signal for "this is the action". The demo
- * route keeps the name it has everywhere else on the site — it is typography
- * here, not a button.
+ * The hierarchy is: navigation, then two quiet text links, then one filled
+ * orange button. More than one button would make the visitor choose between
+ * them before they have chosen anything else, and the orange fill is the
+ * site's single signal for "this is the action". The demo route keeps the
+ * name it has everywhere else on the site — it is typography here, not a
+ * button.
+ *
+ * Login joins that quiet tier rather than becoming a third competing shape.
+ * It is the only entry here addressed to someone who is already a customer,
+ * and a customer looking for the way in scans for the word, not for a colour.
+ * Reading left to right: already with us, talking to us, new to us.
  */
 export function Header() {
   const [scrolled, setScrolled] = useState(false);
@@ -88,10 +102,13 @@ export function Header() {
             </nav>
 
             <div className={styles.actions}>
+              <Link href={LOGIN_HREF} className={styles.quietLink}>
+                Login
+              </Link>
               {/* The site has one name for this action and keeps it, even
                   though a shorter label would fit more easily beside the
                   button. Two names for one route is how CTA vocabulary drifts. */}
-              <Link href={DEMO_HREF} className={styles.demoLink}>
+              <Link href={DEMO_HREF} className={styles.quietLink}>
                 Request a private demo
               </Link>
               {!onStart && (
@@ -136,6 +153,12 @@ export function Header() {
           <Button href={DEMO_HREF} tone="secondary" full>
             Request a private demo
           </Button>
+          {/* Third in the panel, as it is third in the bar: the two commercial
+              routes come first, and the customer who already has an account
+              knows what they are looking for. */}
+          <Link href={LOGIN_HREF} className={styles.panelLogin} onClick={() => setOpen(false)}>
+            Login
+          </Link>
         </div>
       </div>
     </header>

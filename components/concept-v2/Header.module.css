@@ -64,16 +64,17 @@
   flex: none;
 }
 
-/* The sales-led route, as typography rather than a second button. One filled
-   button in the header, and this beside it. */
-.demoLink {
+/* The quiet tier: everything in the header that is not the one filled button.
+   Login and the sales-led route share it, so neither can drift into looking
+   like a second call to action. */
+.quietLink {
   font-size: 0.875rem;
   color: var(--c-text-2);
   white-space: nowrap;
   transition: color 0.2s var(--ease-out);
 }
 
-.demoLink:hover {
+.quietLink:hover {
   color: var(--c-text);
 }
 
@@ -153,7 +154,8 @@
 
   /* Below the nav breakpoint the demo route lives in the menu, so the bar
      keeps one action and nothing competing with it. */
-  .demoLink {
+  /* Both quiet links move into the panel together. */
+  .quietLink {
     display: none;
   }
 
@@ -200,4 +202,20 @@
   .actions .cta svg {
     display: none;
   }
+}
+
+
+/* Login in the mobile panel. A text link under the two buttons, so the panel
+   keeps the same order of priority the bar has. */
+.panelLogin {
+  display: block;
+  padding: 0.55rem 0;
+  text-align: center;
+  font-size: 0.9rem;
+  color: var(--c-text-2);
+  transition: color 0.2s var(--ease-out);
+}
+
+.panelLogin:hover {
+  color: var(--c-text);
 }

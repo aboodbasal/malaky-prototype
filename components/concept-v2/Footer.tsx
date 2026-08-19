@@ -1,4 +1,5 @@
 import Link from "next/link";
+import { LOGIN_HREF } from "@/lib/site";
 import { MalakyLogo } from "./MalakyLogo";
 import styles from "./Footer.module.css";
 
@@ -24,7 +25,12 @@ const COLUMNS = [
   },
   {
     title: "Company",
-    links: [{ label: "Contact", href: "/concept-v2/request-demo" }],
+    links: [
+      { label: "Contact", href: "/concept-v2/request-demo" },
+      /* Existing customers, in the group that already holds the ways to
+         reach us — not a column of its own for one link. */
+      { label: "Client login", href: LOGIN_HREF },
+    ],
   },
   {
     title: "Legal",

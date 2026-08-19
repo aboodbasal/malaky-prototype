@@ -103,8 +103,29 @@ const headerButtons = await page
   .allInnerTexts();
 ok("the header carries one filled action", headerButtons.length === 1, headerButtons.join(" | "));
 ok("and it is Get started", headerButtons[0]?.trim() === "Get started");
-ok("the demo route stays in the header as a link, not a second button",
-   (await page.locator("header [class*=demoLink]").count()) === 1);
+/* Two quiet text links beside one filled button: Login for a customer who
+   already has an account, the demo route for a sales-led one. Neither may
+   become a second button, and Login in particular must not turn orange. */
+const quietLinks = await page.locator("header [class*=quietLink]").allInnerTexts();
+ok("the header's quiet tier is Login and the demo route, in that order",
+   quietLinks.map((t) => t.trim()).join(" | ") === "Login | Request a private demo",
+   quietLinks.join(" | "));
+ok("and neither of them is a button",
+   (await page.locator("header [class*=quietLink][class*=btn]").count()) === 0);
+
+const loginHref = await page.locator("header [class*=quietLink]").first().getAttribute("href");
+ok("Login points at the configured seam, not an invented dashboard",
+   loginHref === "/concept-v2/login" || /^https?:\/\//.test(loginHref ?? ""),
+   loginHref ?? "(none)");
+
+const ctaColour = await page
+  .locator("header [class*=actions] a[class*=btn]")
+  .evaluate((el) => getComputedStyle(el).backgroundColor);
+const loginColour = await page
+  .locator("header [class*=quietLink]")
+  .first()
+  .evaluate((el) => getComputedStyle(el).backgroundColor);
+ok("Login carries no fill of its own", loginColour !== ctaColour, `${loginColour} vs ${ctaColour}`);
 
 await go("/pricing");
 const pricingCtas = await page.locator("article a[class*=btn]").evaluateAll((els) =>
