@@ -1,0 +1,166 @@
+/* The order summary. Present on both /get-started and /checkout, identical in
+   both, so the number a customer agrees to never changes shape between the
+   screen where they chose it and the screen where they pay it. */
+
+.summary {
+  padding: clamp(1.25rem, 2vw, 1.6rem);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--c-line);
+  background: linear-gradient(180deg, var(--c-surface-2), var(--c-surface-1));
+  min-width: 0;
+}
+
+.head {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-bottom: 0.9rem;
+  border-bottom: 1px solid var(--c-line);
+}
+
+.title {
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
+  font-size: 1.25rem;
+  line-height: 1.25;
+  letter-spacing: var(--track-display-sm);
+  color: var(--c-text);
+}
+
+.termTag {
+  font-size: var(--t-micro);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--c-text-3);
+}
+
+.lines {
+  display: grid;
+  gap: 0.8rem;
+  padding-block: 1rem;
+}
+
+.line {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-items: baseline;
+  gap: 0.5rem 1rem;
+}
+
+.lineLabel {
+  font-size: var(--t-body);
+  color: var(--c-text);
+  min-width: 0;
+}
+
+.lineDetail {
+  display: block;
+  font-size: var(--t-small);
+  color: var(--c-text-4);
+}
+
+.lineAmount {
+  font-size: var(--t-body);
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text-2);
+  white-space: nowrap;
+}
+
+/* Setup prints words where an amount would be. It is not $0 — it is included,
+   and the two are different commercial statements. */
+.lineIncluded {
+  font-size: var(--t-small);
+  color: var(--c-gold);
+  white-space: nowrap;
+}
+
+.totals {
+  display: grid;
+  gap: 0.6rem;
+  padding-top: 1rem;
+  border-top: 1px solid var(--c-line);
+}
+
+.row {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  font-size: var(--t-small);
+  color: var(--c-text-3);
+}
+
+.rowAmount {
+  font-variant-numeric: tabular-nums;
+}
+
+.discount {
+  color: var(--c-ok);
+}
+
+.total {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+  padding-top: 0.7rem;
+  margin-top: 0.2rem;
+  border-top: 1px solid var(--c-line);
+}
+
+.totalLabel {
+  font-size: var(--t-body);
+  font-weight: var(--w-ui);
+  color: var(--c-text);
+}
+
+.totalAmount {
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
+  font-size: 1.75rem;
+  line-height: 1.1;
+  letter-spacing: var(--track-display-sm);
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text);
+}
+
+.cadence {
+  display: block;
+  font-family: var(--f-sans);
+  font-size: var(--t-small);
+  font-weight: 400;
+  letter-spacing: 0;
+  color: var(--c-text-3);
+  text-align: right;
+}
+
+.notes {
+  display: grid;
+  gap: 0.5rem;
+  margin-top: 1rem;
+  padding-top: 0.9rem;
+  border-top: 1px solid var(--c-line);
+  font-size: var(--t-small);
+  line-height: 1.55;
+  color: var(--c-text-4);
+}
+
+.cta {
+  margin-top: 1.1rem;
+}
+
+.edit {
+  margin-top: 0.9rem;
+  font-size: var(--t-small);
+  color: var(--c-text-3);
+}
+
+.editLink {
+  border-bottom: 1px solid var(--c-line-2);
+}
+
+.editLink:hover {
+  color: var(--c-text);
+}

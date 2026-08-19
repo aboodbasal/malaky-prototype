@@ -1,0 +1,680 @@
+/* Intelligence Setup. A rail on the left that never moves, one step at a time
+   on the right. The rail is the whole navigation model: eight numbered steps,
+   three states, no progress bar and no percentage. */
+
+.layout {
+  display: grid;
+  grid-template-columns: minmax(0, 260px) minmax(0, 1fr);
+  gap: clamp(2rem, 4vw, 4rem);
+  align-items: start;
+}
+
+/* --- rail ------------------------------------------------------------- */
+
+.rail {
+  position: sticky;
+  top: calc(var(--header-h, 76px) + 1.5rem);
+  display: grid;
+  gap: 0.15rem;
+  min-width: 0;
+}
+
+.railHead {
+  font-size: var(--t-micro);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--c-text-3);
+  margin-bottom: 0.75rem;
+}
+
+.railItem {
+  display: grid;
+  grid-template-columns: 1.9rem minmax(0, 1fr);
+  align-items: baseline;
+  gap: 0.15rem 0.5rem;
+  padding: 0.5rem 0.6rem;
+  border-radius: var(--r-sm);
+  border-left: 1px solid transparent;
+}
+
+/* A completed step is a button so it can be returned to; it keeps the exact
+   shape of the ones that are not. */
+button.railItem {
+  width: 100%;
+  text-align: left;
+  font: inherit;
+}
+
+button.railItem:hover .railTitle {
+  color: var(--c-text-2);
+}
+
+.railNum {
+  font-size: var(--t-micro);
+  font-weight: var(--w-strong);
+  letter-spacing: 0.1em;
+  font-variant-numeric: tabular-nums;
+  color: var(--c-text-4);
+}
+
+.railTitle {
+  font-size: var(--t-small);
+  line-height: 1.4;
+  color: var(--c-text-4);
+}
+
+.railPurpose {
+  grid-column: 2;
+  font-size: var(--t-micro);
+  line-height: 1.5;
+  color: var(--c-text-4);
+  display: none;
+}
+
+/* Behind you. The gold is brand, not state — done is simply legible again. */
+.railItem[data-state="done"] .railNum,
+.railItem[data-state="done"] .railTitle {
+  color: var(--c-text-3);
+}
+
+/* Where you are. The only orange in the rail. */
+.railItem[data-state="current"] {
+  background: var(--c-surface-2);
+  border-left-color: var(--c-accent);
+}
+
+.railItem[data-state="current"] .railNum {
+  color: var(--c-accent-hi);
+}
+
+.railItem[data-state="current"] .railTitle {
+  color: var(--c-text);
+  font-weight: var(--w-ui);
+}
+
+.railItem[data-state="current"] .railPurpose {
+  display: block;
+  color: var(--c-text-3);
+}
+
+/* --- step ------------------------------------------------------------- */
+
+.step {
+  display: grid;
+  gap: clamp(1.5rem, 2.6vw, 2rem);
+  min-width: 0;
+}
+
+.stepHead {
+  display: grid;
+  gap: 0.5rem;
+}
+
+.stepEyebrow {
+  display: flex;
+  align-items: baseline;
+  gap: 0.6rem;
+  font-size: var(--t-micro);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--c-text-3);
+}
+
+.stepNum {
+  color: var(--c-gold);
+}
+
+.stepTitle {
+  font-family: var(--f-display);
+  font-weight: var(--w-display);
+  font-size: var(--t-display-3);
+  line-height: 1.12;
+  letter-spacing: var(--track-display);
+  color: var(--c-text);
+}
+
+.stepLead {
+  max-width: 56ch;
+  font-size: var(--t-body);
+  line-height: 1.65;
+  color: var(--c-text-2);
+}
+
+.stepBody {
+  display: grid;
+  gap: clamp(1.25rem, 2vw, 1.75rem);
+  min-width: 0;
+}
+
+.group {
+  display: grid;
+  gap: 0.9rem;
+  min-width: 0;
+  /* Several groups are fieldsets; none of them wants the UA's box. */
+  border: 0;
+  padding: 0;
+  margin: 0;
+}
+
+.group > legend {
+  padding: 0;
+}
+
+.groupLabel {
+  font-size: var(--t-body);
+  font-weight: var(--w-ui);
+  color: var(--c-text-2);
+}
+
+.groupHint {
+  font-size: var(--t-small);
+  line-height: 1.55;
+  color: var(--c-text-4);
+  margin-top: -0.5rem;
+}
+
+/* The line that keeps a step honest. Gold rule, never a link, never a button. */
+.truth {
+  padding-left: 0.85rem;
+  border-left: 1px solid var(--c-gold-line);
+  font-size: var(--t-small);
+  line-height: 1.6;
+  color: var(--c-text-3);
+  max-width: 64ch;
+}
+
+/* --- upload zone ------------------------------------------------------- */
+
+.drop {
+  position: relative;
+  display: grid;
+  justify-items: center;
+  gap: 0.35rem;
+  padding: clamp(1.5rem, 3vw, 2.25rem);
+  border-radius: var(--r-lg);
+  border: 1px dashed var(--c-line-2);
+  background: var(--c-surface-1);
+  text-align: center;
+  transition:
+    border-color 0.2s var(--ease-out),
+    background 0.2s var(--ease-out);
+}
+
+.drop:hover {
+  border-color: var(--c-line-3);
+}
+
+.drop[data-over] {
+  border-color: var(--c-accent-line);
+  background: var(--c-accent-wash);
+}
+
+.drop:has(.fileInput:focus-visible) {
+  outline: 2px solid var(--c-accent-line);
+  outline-offset: 3px;
+}
+
+.fileInput {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.dropTitle {
+  font-size: var(--t-body);
+  font-weight: var(--w-ui);
+  color: var(--c-text);
+  cursor: pointer;
+}
+
+.dropTitle::after {
+  content: "";
+  position: absolute;
+  inset: 0;
+}
+
+.dropHint {
+  font-size: var(--t-small);
+  color: var(--c-text-3);
+}
+
+.dropNote {
+  font-size: var(--t-micro);
+  letter-spacing: 0.02em;
+  color: var(--c-text-4);
+}
+
+.files {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.file {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  gap: 1rem;
+  padding: 0.6rem 0.85rem;
+  border-radius: var(--r-md);
+  border: 1px solid var(--c-line);
+  background: var(--c-surface-2);
+  font-size: var(--t-small);
+  color: var(--c-text-2);
+}
+
+.fileMeta {
+  display: flex;
+  align-items: center;
+  gap: 0.75rem;
+  color: var(--c-text-4);
+  font-variant-numeric: tabular-nums;
+}
+
+.fileRemove {
+  color: var(--c-text-3);
+  padding: 0.2rem;
+  border-radius: 4px;
+}
+
+.fileRemove:hover {
+  color: var(--c-accent-hi);
+}
+
+/* --- executive voices --------------------------------------------------- */
+
+.voice {
+  display: grid;
+  gap: 1rem;
+  padding: clamp(1.1rem, 1.8vw, 1.4rem);
+  border-radius: var(--r-lg);
+  border: 1px solid var(--c-line);
+  background: linear-gradient(180deg, var(--c-surface-2), var(--c-surface-1));
+}
+
+.voiceHead {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  gap: 1rem;
+}
+
+.voiceTitle {
+  font-size: var(--t-micro);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--c-text-3);
+}
+
+.voiceRemove {
+  font-size: var(--t-small);
+  color: var(--c-text-3);
+}
+
+.voiceRemove:hover {
+  color: var(--c-accent-hi);
+}
+
+/* Sits under the last voice rather than spanning the column. */
+.addVoice {
+  justify-self: start;
+}
+
+.voiceLimit {
+  display: flex;
+  align-items: baseline;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 0.5rem 1rem;
+  font-size: var(--t-small);
+  color: var(--c-text-4);
+}
+
+/* --- channels -----------------------------------------------------------
+   One left edge. Title, description and scope label all start at the card's
+   padding, and the selection mark sits opposite them rather than in a gutter
+   the text has to be indented past — the indent was what made the card read
+   as two things instead of one.
+
+   The minimum column is 260px rather than 220px: it is the width at which
+   every channel name in the list holds a single line, and it lands the grid
+   on 3 / 3 / 2 / 1 columns at 1440 / 1024 / 768 / 390.
+   ----------------------------------------------------------------------- */
+
+.channels {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(260px, 1fr));
+  gap: 0.6rem;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.channel {
+  position: relative;
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) auto;
+  align-content: start;
+  gap: 0.2rem 0.75rem;
+  /* ~18% less vertical padding than the tiles this replaces. */
+  padding: 0.66rem 0.85rem 0.72rem;
+  border-radius: var(--r-md);
+  border: 1px solid var(--c-line);
+  background: var(--c-surface-1);
+  cursor: pointer;
+  transition:
+    border-color 0.2s var(--ease-out),
+    background 0.2s var(--ease-out);
+}
+
+.channel:hover {
+  border-color: var(--c-line-2);
+  background: var(--c-surface-2);
+}
+
+/* Selected: an orange edge and a lift, never an orange card. Orange stays the
+   action cue; the surface is what tells you the card is chosen. */
+.channel[data-on] {
+  border-color: rgba(255, 78, 45, 0.42);
+  background: var(--c-surface-3);
+}
+
+.channel:has(.control:focus-visible) {
+  outline: 2px solid var(--c-accent-line);
+  outline-offset: 2px;
+}
+
+.channelLabel {
+  grid-column: 1;
+  grid-row: 1;
+  font-size: var(--t-body);
+  line-height: 1.3;
+  color: var(--c-text);
+  /* Channel names are short and the column is sized to hold them; a name
+     broken over two lines is never the better reading. */
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+.channelDetail {
+  grid-column: 1;
+  grid-row: 2;
+  font-size: var(--t-small);
+  line-height: 1.45;
+  color: var(--c-text-2);
+}
+
+/* A scope fact, not a workflow state — so it is gold, and quiet. */
+.scopedTag {
+  grid-column: 1;
+  grid-row: 3;
+  margin-top: 0.3rem;
+  font-size: var(--t-micro);
+  font-weight: var(--w-strong);
+  letter-spacing: var(--track-caps);
+  text-transform: uppercase;
+  color: var(--c-gold);
+  opacity: 0.85;
+}
+
+.channelBox {
+  grid-column: 2;
+  grid-row: 1;
+  display: grid;
+  place-items: center;
+  width: 18px;
+  height: 18px;
+  /* Optically level with the title's cap height. */
+  margin-top: 0.1rem;
+  border-radius: 5px;
+  border: 1px solid var(--c-line-2);
+  color: transparent;
+  transition:
+    border-color 0.2s var(--ease-out),
+    background 0.2s var(--ease-out),
+    color 0.2s var(--ease-out);
+}
+
+.channel[data-on] .channelBox {
+  border-color: var(--c-accent);
+  background: var(--c-accent);
+  color: #fff;
+}
+
+/* --- calendar ------------------------------------------------------------ */
+
+.calendarSplit {
+  display: grid;
+  grid-template-columns: minmax(0, 1fr) minmax(0, 320px);
+  gap: clamp(1.25rem, 2.5vw, 2rem);
+  align-items: start;
+}
+
+.calendarLines {
+  display: grid;
+  gap: 0.3rem;
+  font-family: var(--f-display);
+  font-size: clamp(1.125rem, 1.6vw, 1.375rem);
+  line-height: 1.35;
+  letter-spacing: var(--track-display-sm);
+}
+
+.calendarYou {
+  color: var(--c-text);
+}
+
+.calendarUs {
+  color: var(--c-text-3);
+}
+
+.prompts {
+  display: grid;
+  gap: 0.4rem;
+}
+
+.prompts li {
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  gap: 0.5rem;
+  font-size: var(--t-small);
+  line-height: 1.5;
+  color: var(--c-text-3);
+}
+
+.dot {
+  width: 4px;
+  height: 4px;
+  margin-top: 0.55rem;
+  border-radius: 50%;
+  background: var(--c-text-4);
+}
+
+.dotGold {
+  background: var(--c-gold);
+}
+
+/* --- approvals ----------------------------------------------------------- */
+
+.models {
+  display: grid;
+  gap: 0.6rem;
+  border: 0;
+  padding: 0;
+  margin: 0;
+  min-width: 0;
+}
+
+.model {
+  position: relative;
+  display: grid;
+  grid-template-columns: auto minmax(0, 1fr);
+  align-items: start;
+  gap: 0.15rem 0.7rem;
+  padding: 0.9rem 1rem;
+  border-radius: var(--r-md);
+  border: 1px solid var(--c-line);
+  background: var(--c-surface-1);
+  cursor: pointer;
+  transition:
+    border-color 0.2s var(--ease-out),
+    background 0.2s var(--ease-out);
+}
+
+.model:hover {
+  border-color: var(--c-line-2);
+}
+
+.model[data-on] {
+  border-color: var(--c-accent-line);
+  background: var(--c-accent-wash);
+}
+
+.model:has(.control:focus-visible) {
+  outline: 2px solid var(--c-accent-line);
+  outline-offset: 2px;
+}
+
+.modelDot {
+  grid-row: 1 / 3;
+  width: 16px;
+  height: 16px;
+  margin-top: 0.28rem;
+  border-radius: 50%;
+  border: 1px solid var(--c-line-2);
+}
+
+.model[data-on] .modelDot {
+  border-color: var(--c-accent);
+  border-width: 5px;
+}
+
+.modelLabel {
+  font-size: var(--t-body);
+  color: var(--c-text);
+}
+
+.modelDetail {
+  font-size: var(--t-small);
+  line-height: 1.55;
+  color: var(--c-text-3);
+}
+
+/* --- footer -------------------------------------------------------------- */
+
+.control {
+  position: absolute;
+  width: 1px;
+  height: 1px;
+  margin: -1px;
+  overflow: hidden;
+  clip-path: inset(50%);
+}
+
+.nav {
+  display: flex;
+  align-items: center;
+  justify-content: space-between;
+  flex-wrap: wrap;
+  gap: 1rem;
+  padding-top: clamp(1.25rem, 2vw, 1.75rem);
+  border-top: 1px solid var(--c-line);
+}
+
+.navLeft {
+  display: flex;
+  align-items: center;
+  gap: 1rem;
+}
+
+.progress {
+  font-size: var(--t-small);
+  color: var(--c-text-4);
+  font-variant-numeric: tabular-nums;
+}
+
+/* --- responsive ----------------------------------------------------------- */
+
+@media (max-width: 980px) {
+  .layout {
+    grid-template-columns: 1fr;
+  }
+
+  /* The rail becomes an eight-segment bar above the step. Titles come off it
+     entirely — at this width they would either truncate or force a scroll,
+     and the step's own heading says where you are anyway. */
+  .rail {
+    position: static;
+  }
+
+  .rail ol {
+    display: grid;
+    grid-auto-flow: column;
+    grid-auto-columns: minmax(0, 1fr);
+    gap: 0.3rem;
+  }
+
+  .railItem {
+    grid-template-columns: minmax(0, 1fr);
+    justify-items: center;
+    border-left: 0;
+    border-top: 1px solid var(--c-line);
+    border-radius: 0;
+    padding: 0.55rem 0 0;
+  }
+
+  .railItem[data-state="done"] {
+    border-top-color: var(--c-line-2);
+  }
+
+  .railItem[data-state="current"] {
+    background: none;
+    border-top-color: var(--c-accent);
+  }
+
+  .railTitle,
+  .railPurpose,
+  .railItem[data-state="current"] .railTitle,
+  .railItem[data-state="current"] .railPurpose {
+    display: none;
+  }
+
+  .calendarSplit {
+    grid-template-columns: 1fr;
+  }
+}
+
+@media (max-width: 620px) {
+  .channels {
+    grid-template-columns: 1fr;
+  }
+
+  .nav {
+    flex-direction: column-reverse;
+    align-items: stretch;
+  }
+
+  .navLeft {
+    justify-content: space-between;
+  }
+}
+
+@media (prefers-reduced-motion: reduce) {
+  .drop,
+  .channel,
+  .model {
+    transition: none;
+  }
+}
+
+/* The market side of the calendar step, inside its panel. */
+.panelList {
+  margin-top: 0.9rem;
+  margin-bottom: 0.9rem;
+}
